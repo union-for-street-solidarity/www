@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import logo from '../images/USS.jpg'
+import logo from '../images/logo.jpg'
 
 const Header = props => (
   <header id="header" style={props.timeout ? { display: 'none' } : {}}>
