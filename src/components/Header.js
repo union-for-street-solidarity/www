@@ -18,7 +18,7 @@ const Header = props => (
     <div className="content">
       <div className="inner">
         <h1>Union for Street Solidarity</h1>
-        <p>TODO - some intro copy should go here. 😸</p>
+        <p>Landing Page Subtitle 😸</p>
       </div>
     </div>
     <nav>
