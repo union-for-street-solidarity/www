@@ -18,7 +18,7 @@ const Header = props => (
     <div className="content">
       <div className="inner">
         <h1>Union for Street Solidarity</h1>
-        <p>Solidarity not charity</p>
+        <p>TODO - some intro copy should go here. 😸</p>
       </div>
     </div>
     <nav>
@@ -47,13 +47,13 @@ const Header = props => (
           <a
             href="javascript:;"
             onClick={() => {
-              props.onOpenArticle('distributions')
+              props.onOpenArticle('about')
             }}
           >
-            Distributions
+            About
           </a>
         </li>
-        {/* <li>
+        <li>
           <a
             href="javascript:;"
             onClick={() => {
@@ -62,7 +62,7 @@ const Header = props => (
           >
             Contact
           </a>
-        </li> */}
+        </li>
       </ul>
     </nav>
   </header>

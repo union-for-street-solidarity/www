@@ -34,21 +34,24 @@ class Main extends React.Component {
             <img src={pic01} alt="" />
           </span>
           <p>
-            Union for Street Solidarity is a group of socialists working to
-            improve the immediate and long-term material conditions of the
-            working poor and homeless in Salt Lake City. We believe that
-            homelessness is a structural condition of capitalist society, not
-            the result of the moral failing of any individual, and a problem
-            which cannot be solved under capitalism. USS practices mutual aid
-            through the distribution of free survival essentials while engaging
-            in political action through collective struggle.
+            Aenean ornare velit lacus, ac varius enim ullamcorper eu. Proin
+            aliquam facilisis ante interdum congue. Integer mollis, nisl amet
+            convallis, porttitor magna ullamcorper, amet egestas mauris. Ut
+            magna finibus nisi nec lacinia. Nam maximus erat id euismod egestas.
+            By the way, check out my <a href="#work">awesome work</a>.
           </p>
           <p>
-            USS believes that people experiencing poverty and homelessness are
-            the ones who should tell us what their needs are and how best to
-            improve their circumstances. We conduct research through
-            conversation and surveys, and use the information we gather to
-            direct future political action and material aid.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis
+            dapibus rutrum facilisis. Class aptent taciti sociosqu ad litora
+            torquent per conubia nostra, per inceptos himenaeos. Etiam tristique
+            libero eu nibh porttitor fermentum. Nullam venenatis erat id
+            vehicula viverra. Nunc ultrices eros ut ultricies condimentum.
+            Mauris risus lacus, blandit sit amet venenatis non, bibendum vitae
+            dolor. Nunc lorem mauris, fringilla in aliquam at, euismod in
+            lectus. Pellentesque habitant morbi tristique senectus et netus et
+            malesuada fames ac turpis egestas. In non lorem sit amet elit
+            placerat maximus. Pellentesque aliquam maximus risus, vel sed
+            vehicula.
           </p>
           {close}
         </article>
@@ -65,76 +68,47 @@ class Main extends React.Component {
             <img src={pic02} alt="" />
           </span>
           <p>
-            Union for Street Solidarity receives no grant money or charitable
-            funding -- we pay for distributions out of our own pockets and rely
-            on donations to help us keep providing aid. All contributions we
-            receive go directly to purchases of supplies and equipment.
+            Adipiscing magna sed dolor elit. Praesent eleifend dignissim arcu,
+            at eleifend sapien imperdiet ac. Aliquam erat volutpat. Praesent
+            urna nisi, fringila lorem et vehicula lacinia quam. Integer
+            sollicitudin mauris nec lorem luctus ultrices.
           </p>
           <p>
-            If you’re able, please consider a recurring donation. Our DonorBox
-            makes it easy, just set it up once and donations will automatically
-            be sent each month.
+            Nullam et orci eu lorem consequat tincidunt vivamus et sagittis
+            libero. Mauris aliquet magna magna sed nunc rhoncus pharetra.
+            Pellentesque condimentum sem. In efficitur ligula tate urna.
+            Maecenas laoreet massa vel lacinia pellentesque lorem ipsum dolor.
+            Nullam et orci eu lorem consequat tincidunt. Vivamus et sagittis
+            libero. Mauris aliquet magna magna sed nunc rhoncus amet feugiat
+            tempus.
           </p>
-          <div>
-            <script
-              src="https://donorbox.org/install-popup-button.js"
-              type="text/javascript"
-              defer
-            />
-            <a
-              class="dbox-donation-button"
-              href="https://donorbox.org/uss-distribution-funding?default_interval=m"
-              style={{
-                background: '#2d81c5',
-                color: '#fff',
-                textDecoration: 'none',
-                fontFamily: 'Verdana,sans-serif',
-                display: 'inline-block',
-                fontSize: '16px',
-                padding: '15px 38px 15px 38px',
-                borderRadius: '2px',
-                boxShadow: '0 1px 0 0 #1f5a89',
-                textShadow: '0 1px rgba(0, 0, 0, 0.3)',
-              }}
-            >
-              {/* style="background:#2d81c5; color: #fff;text-decoration: none;font-family: Verdana,sans-serif;display: inline-block;font-size: 16px;padding: 15px 38px 15px 38px; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; box-shadow: 0 1px 0 0 #1f5a89; text-shadow: 0 1px rgba(0, 0, 0, 0.3);" */}
-              Donate
-            </a>
-          </div>
           {close}
         </article>
 
         <article
-          id="distributions"
-          className={`${
-            this.props.article === 'distributions' ? 'active' : ''
-          } ${this.props.articleTimeout ? 'timeout' : ''}`}
+          id="about"
+          className={`${this.props.article === 'about' ? 'active' : ''} ${
+            this.props.articleTimeout ? 'timeout' : ''
+          }`}
           style={{ display: 'none' }}
         >
-          <h2 className="major">Distributions</h2>
+          <h2 className="major">About</h2>
           <span className="image main">
             <img src={pic03} alt="" />
           </span>
           <p>
-            USS conducts distributions every other Saturday next door to the
-            Gateway Inn on North Temple and in the southwest corner of Pioneer
-            Park. We share coffee, food, vitamins, socks, clothing, and other
-            goods to aid in survival on the street. We also conduct surveys and
-            spend time talking with those who come to visit. Through material
-            aid and conversation, we aim to build solidarity, learn from our
-            community, and help people live more safely and happily.
-          </p>
-          <p>
-            If you are interested in volunteering, please email{' '}
-            <a href="mailto:unionforstreetsolidarity@gmail.com?subject=Interested in Volunteering!">
-              unionforstreetsolidarity@gmail.com
-            </a>
-            .
+            Lorem ipsum dolor sit amet, consectetur et adipiscing elit. Praesent
+            eleifend dignissim arcu, at eleifend sapien imperdiet ac. Aliquam
+            erat volutpat. Praesent urna nisi, fringila lorem et vehicula
+            lacinia quam. Integer sollicitudin mauris nec lorem luctus ultrices.
+            Aliquam libero et malesuada fames ac ante ipsum primis in faucibus.
+            Cras viverra ligula sit amet ex mollis mattis lorem ipsum dolor sit
+            amet.
           </p>
           {close}
         </article>
 
-        {/* <article
+        <article
           id="contact"
           className={`${this.props.article === 'contact' ? 'active' : ''} ${
             this.props.articleTimeout ? 'timeout' : ''
@@ -187,7 +161,7 @@ class Main extends React.Component {
             </li>
           </ul>
           {close}
-        </article> */}
+        </article>
       </div>
     )
   }

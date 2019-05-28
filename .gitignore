@@ -6,6 +6,5 @@ package-lock.json
 yarn.lock
 
 # Build directory
-/public/*
-!/public/static/
+/public
 .DS_Store

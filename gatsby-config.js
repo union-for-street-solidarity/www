@@ -4,6 +4,7 @@ module.exports = {
     author: 'USS',
     description: 'TODO',
   },
+  pathPrefix: '/www',
   plugins: [
     'gatsby-plugin-react-helmet',
     {
