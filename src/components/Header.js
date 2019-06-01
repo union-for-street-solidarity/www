@@ -18,7 +18,7 @@ const Header = props => (
     <div className="content">
       <div className="inner">
         <h1>Union for Street Solidarity</h1>
-        <p>Landing Page Subtitle 😸</p>
+        <p>Solidarity not Charity</p>
       </div>
     </div>
     <nav>
