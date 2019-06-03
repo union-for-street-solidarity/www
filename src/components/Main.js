@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import pic01 from '../images/pic01.jpg'
-import pic02 from '../images/pic02.jpg'
-import pic03 from '../images/pic03.jpg'
+import clothes from '../images/clothes.jpeg'
+import coffee from '../images/coffee.jpeg'
+import menu_quesadilla from '../images/menu_quesadilla.jpeg'
 
 class Main extends React.Component {
   render() {
@@ -31,7 +31,7 @@ class Main extends React.Component {
         >
           <h2 className="major">Intro</h2>
           <span className="image main">
-            <img src={pic01} alt="" />
+            <img src={menu_quesadilla} alt="" />
           </span>
           <p>
             Union for Street Solidarity is a group of socialists working to
@@ -62,7 +62,7 @@ class Main extends React.Component {
         >
           <h2 className="major">Donate</h2>
           <span className="image main">
-            <img src={pic02} alt="" />
+            <img src={clothes} alt="" />
           </span>
           <p>
             Union for Street Solidarity receives no grant money or charitable
@@ -113,7 +113,7 @@ class Main extends React.Component {
         >
           <h2 className="major">Distributions</h2>
           <span className="image main">
-            <img src={pic03} alt="" />
+            <img src={coffee} alt="" />
           </span>
           <p>
             USS conducts distributions every other Saturday next door to the
