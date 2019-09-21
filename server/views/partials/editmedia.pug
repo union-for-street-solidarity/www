@@ -1,0 +1,24 @@
+input(v-bind:id="'inputthumb'+img.index", v-bind:name="'thumb'+img.index", v-bind:value="img.thumb", type="hidden")
+input(v-bind:id="'inputimg'+img.index", v-bind:name="'img'+img.index", v-bind:value="img.image", type="hidden")
+input(v-bind:id="'orientation'+img.index", v-bind:name="'orientation'+img.index", v-bind:value="img.orientation", type="hidden")
+canvas(v-bind:id="'canvas'+img.index", style="display: none;")
+img(v-bind:id="'return'+img.index", v-bind:src="img.image+'?version='+Math.random(100).toFixed(0)", style="display:none;")
+div.row
+	div.tb-10-m0.tb-02-m3
+		div.row(style="height: auto;")
+			span.img(v-bind:id="img.index", v-bind:name="doc._id", style="height:150px;")
+				img(v-bind:id="'view'+img.index", v-bind:src="img.image+'?version='+Math.random(100).toFixed()")
+		
+	div.tb-10-m0.tb-06-m3.shift-00
+		div.row
+			label(v-bind:for="'img'+img.index+'_caption'") Image Caption
+			textarea.tb-font-s(type="text", v-bind:name="'img'+img.index+'_caption'", v-bind:id="'img'+img.index+'_caption'", v-text="img.caption")
+	div.tb-10-m0.tb-02-m3.shift-00
+		div.row
+			label.block(for="media") Switch out image:
+			input.block.spacer.success(v-bind:id="'media_'+img.index", v-on:change="handleFile(doc._id,img.index)", v-bind:class="'editmedia@'+img.index", type="file", style="padding: 18px;color:#fff;")
+			label.block(v-bind:for="'deletemedia_'+img.index")
+			a.danger.block.spacer(role="button", v-on:click="deleteMedia(img.index)", v-bind:id="'deletemedia_'+img.index")
+				span Delete Media
+div.row
+	hr

@@ -1,0 +1,8 @@
+.blog {
+  background-color: #333;
+  margin: 50px 50px 0 50px;
+  display: inline-block;
+  left: 20px;
+  right: 20px;
+  position: absolute;
+}
