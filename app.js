@@ -61,7 +61,7 @@ app.get('/', (req, res) => res.sendFile(htmlpath));
 app
 .set('views', './server/views')
 .set('view engine', 'pug')
-.use(favicon(path.join(__dirname, 'client/src/images', 'logo.jpg')))
+.use(favicon(path.join(__dirname, 'client/src/images', 'favicon.ico')))
 .use('/', express.static(staticPath))
 .use(express.static(publicPath))
 .use(function (req, res, next) {
