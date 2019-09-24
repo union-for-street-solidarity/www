@@ -3,6 +3,7 @@ function ensureAdmin(req, res, next) {
 	if (!req.isAuthenticated() || !req.user || !req.user.admin) {
 		return res.redirect('/login')
 	} else {
+		console.log(req.user)
 		return next()
 	} 
 }

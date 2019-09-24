@@ -136,7 +136,9 @@ app.get('/blog/:id', (req, res, next) => {
 		}
 	})
 })
-app.all('/api', ensureAdmin)
+app.all('/api/*'
+// , ensureAdmin
+)
 
 app.post('/api/newstory', upload.array(), parseBody
 // , csrfProtection
