@@ -67,34 +67,5 @@ exports.createPages = async ({ graphql, actions }) => {
         },
       })
     } 
-    // if (node.category === 'blog') {
-    //   const itemTemplate = path.resolve(`./src/templates/${node.category}.js`)
-    //   const editTemplate = path.resolve(`./src/templates/edit.js`)
-    //   // createPage({
-    //   //   // Each page is required to have a `path` as well
-    //   //   // as a template component. The `context` is
-    //   //   // optional but is often necessary so the template
-    //   //   // can query data specific to each page.
-    //   //   path: `/${node.category}?q=${node.id}`,
-    //   //   component: itemTemplate,
-    //   //   context: {
-    //   //     id: node.id,
-    //   //     category: node.category,
-    //   //   },
-    //   // })
-    // 
-    //   createPage({
-    //     // Each page is required to have a `path` as well
-    //     // as a template component. The `context` is
-    //     // optional but is often necessary so the template
-    //     // can query data specific to each page.
-    //     path: `/edit/${node.category}?q=${node.id}`,
-    //     component: editTemplate,
-    //     context: {
-    //       id: node.id,
-    //       category: node.category,
-    //     },
-    //   })
-    // }
   }
 }

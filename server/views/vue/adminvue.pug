@@ -20,7 +20,7 @@ script(type="text/javascript").
 				accordions: [],
 				file: null,
 				//items to hide in the viewer
-				exclude: ['_id', '__v', 'date', 'image', 'image_abs', 'thumb', 'thumb_abs', 'author', 'tags'],
+				exclude: ['_id', '__v', 'date', 'image', 'image_abs', 'thumb', 'thumb_abs', 'author', 'tags', 'body', 'footnotes', 'id', 'category', 'geometry', 'media'],
 				tinymce: null,
 				progressBar: null,
 				message: '',
@@ -118,7 +118,7 @@ script(type="text/javascript").
 			},
 			deletemedia(id, i) {
 				var self = this;
-				$.post('/b/edit/deletemedia/'+id+'/'+i+'')
+				$.post('/blog/api/deletemedia/'+id+'/'+i+'')
 				.then((result) => {
 					console.log(result)
 				})
@@ -128,7 +128,7 @@ script(type="text/javascript").
 			},
 			deleteentry(id) {
 				var self = this;
-				$.post('/b/edit/deleteentry/'+id+'')
+				$.post('/blog/api/deleteentry/'+id+'')
 				.then((result) => {
 					console.log(result)
 				})
@@ -143,28 +143,29 @@ script(type="text/javascript").
 				formData.append('img', self.file, self.file.name);
 				//https://www.codedodle.com/2016/10/nodejs-image-uploader-using-express-and.html
 				$.ajax({
-					url: '/b/edit/uploadimg/'+id+'',
+					url: '/blog/api/uploadimg/'+id+'',
 					method: 'POST',
 					data: formData,
 					processData: false,
-					contentType: false,
-					xhr: function () {
-						var xhr = new XMLHttpRequest();
-
-						// Add progress event listener to the upload.
-						xhr.upload.addEventListener('progress', function (event) {
-							self.progressBar = $('.progress-bar');
-
-							if (event.lengthComputable) {
-								var percent = (event.loaded / event.total) * 100;
-								self.progressBar.width(percent + '%');
-
-								if (percent === 100) {
-									self.progressBar.removeClass('active');
-								}
-							}
-						});
-						return xhr;
+					contentType: false
+					//- ,
+					//- xhr: function () {
+					//- 	var xhr = new XMLHttpRequest();
+					//- 
+					//- 	// Add progress event listener to the upload.
+					//- 	xhr.upload.addEventListener('progress', function (event) {
+					//- 		self.progressBar = $('.progress-bar');
+					//- 
+					//- 		if (event.lengthComputable) {
+					//- 			var percent = (event.loaded / event.total) * 100;
+					//- 			self.progressBar.width(percent + '%');
+					//- 
+					//- 			if (percent === 100) {
+					//- 				self.progressBar.removeClass('active');
+					//- 			}
+					//- 		}
+					//- 	});
+					//- 	return xhr;
 					}
 				}).done((result) => {
 					console.log(result)

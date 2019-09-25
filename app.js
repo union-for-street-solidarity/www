@@ -28,7 +28,7 @@ const app = express();
 const store = new MongoDBStore(
 	{
 		mongooseConnection: mongoose.connection,
-		uri: config.mongourl,
+		uri: config.fullMongoUrl,
 		// keeping as 'shopSession' even though it's the whole app's session
 		collection: 'shopSession'
 	}
@@ -136,11 +136,11 @@ app.get('/blog/:id', (req, res, next) => {
 		}
 	})
 })
-app.all('/api/*'
+app.all('/blog/api/*'
 // , ensureAdmin
 )
 
-app.post('/api/newstory', upload.array(), parseBody
+app.post('/blog/api/newstory', upload.array(), parseBody
 // , csrfProtection
 , async (req, res, next) => {
   const body = req.body;
@@ -150,8 +150,11 @@ app.post('/api/newstory', upload.array(), parseBody
   return res.sendFile(htmlpath);
 })
 
-app.get('/api/editstory/:type/:id', async (req, res, next) => {
-  const doc = await Blog.findOne({_id: req.params.id}).lean().then((doc) => doc).catch((err) => next(err));
+app.get('/blog/api/editstory/:type/:id', async (req, res, next) => {
+	const data = await Blog.find({}).then((data) => data).catch((err) => next(err));
+	console.log(data)
+  const doc = await Blog.findOne({_id: req.params.id}).then((doc) => doc).catch((err) => next(err));
+	console.log(doc)
   // let author;
   // if (doc) author = await User.findById(doc.author).lean().then((author) => author).catch((err) => next(err));
   res.render('edit', {
@@ -165,7 +168,7 @@ app.get('/api/editstory/:type/:id', async (req, res, next) => {
 
 })
 
-app.post('/api/editstory/:type/:id', upload.array(), parseBody, (req, res, next) => {
+app.post('/blog/api/editstory/:type/:id', upload.array(), parseBody, (req, res, next) => {
   var media = req.body.media || []
   const set = {$set: req.body}
   Blog.findOneAndUpdate({_id: req.params.id}, set, {new:true}, (err, doc) => {
@@ -217,9 +220,9 @@ app
 if (mongoose.connection.readyState === 0) {
   // connect to mongo db
   const mongoUri = config.fullMongoUrl;
-
+console.log(mongoUri)
   const promise = mongoose.connect(
-    mongoUri, { useNewUrlParser: true }
+    mongoUri, { useNewUrlParser: true, useUnifiedTopology: true }
   );
   promise
     .then(() => {

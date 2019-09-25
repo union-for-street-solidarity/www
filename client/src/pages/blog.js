@@ -6,7 +6,6 @@ import StoryItem from '../components/story-item.js'
 import Header from '../components/Header.js'
 import Footer from '../components/Footer.js'
 
-// const Blog = props => {
 class Blog extends React.Component {
   constructor(props) {
     super(props)
@@ -115,19 +114,6 @@ class Blog extends React.Component {
 
   }
 }
-  // if (data) {
-
-  // } else {
-  //   return (
-  //     <Layout>
-  //       <h1>Hi from the blog</h1>
-  //       <Link to="/">Go back to the homepage</Link>
-  //       <h3>No data yet</h3>
-  //     </Layout>
-  //   )
-  // }
-  
-// }
 
 export default Blog
 

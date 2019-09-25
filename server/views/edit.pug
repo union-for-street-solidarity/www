@@ -7,17 +7,27 @@ block content
 
 		div.body
 			div#wrapper
-				label.tb-10-m0(for="description") Document description:
-				div.description.tb-10-m0#description(v-html="doc.body", style="border-bottom: 1px solid #e1e1e1;")
+				include partials/modal.pug
+				if (csrfToken)
+					input(type="hidden" name="_csrf" value= csrfToken)
+				p(v-for="(key, i) in Object.keys(doc)", v-if="exclude.indexOf(key) === -1")
+					label(:for="key", v-text="key")
+					input(v-if="key !== 'lede'" :id="key", :name="key", :value="doc[key]")
+					textarea(v-if="key === 'lede'" :id="key", :name="key", v-html="doc[key]")
+				p
+					label(for="description") Document body:
+					div.description#description(v-html="doc.body", style="border-bottom: 1px solid #e1e1e1;")
 				p(v-for="(foot, k) in doc.footnotes")
 					label(:for="'footnote'+k+''", v-text="'Footnote #'+ (k+1)")
-					input.tb-font-s(type="text", :name="'footnote'+k+''", :id="'footnote'+k+''", :value="foot")
+					input(type="text", :name="'footnote'+k+''", :id="'footnote'+k+''", :value="foot")
 				div.row.spacer(
 
 					v-for="(img, j) in doc.media"
 					)
 					include partials/editmedia.pug
 					hr
+				button(@click="addNewMedia(doc._id, doc.properties.media.length)")
+					span Add image
 
 
 	include vue/adminvue.pug

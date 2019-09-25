@@ -11,7 +11,6 @@ class StoryItem extends React.Component {
           {
             keys.map((key) => {
               const it = item[key]
-              console.log(it)
               if (key !== 'body') {
                 return (
                   <p key={item.id+key}><strong>{key}</strong><span>: </span><span>{it}</span></p>
@@ -30,7 +29,7 @@ class StoryItem extends React.Component {
             })
           }
           <Link to={`/${item.category}?q=${item.id}`}>more details</Link>
-          <Link to={`/api/editstory/${item.category}/${item.mongodb_id}`}>edit</Link>
+          <a href={`/blog/api/editstory/${item.category}/${item.mongodb_id}`}>edit</a>
         </div>
       </li>
     )

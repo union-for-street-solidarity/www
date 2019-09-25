@@ -15,14 +15,6 @@ const Layout = ({ children, location }) => {
         {children}
       </div>
     )
-  } else if (location && location.pathname === '/blog') {
-    content = (
-      <div id="wrapper" className="page">
-        <div>
-          {children}
-        </div>
-      </div>
-    )
   } else {
     content = (
       <div id="wrapper" className="page">

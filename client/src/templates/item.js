@@ -28,18 +28,3 @@ class Item extends React.Component {
 }
 
 export default Item
-
-export const pageQuery = graphql`
-  query($id: String!) {
-    mongodbUssBlog(id: { eq: $id }) {
-      mongodb_id
-      id
-      title
-      lede
-      category
-      date
-      author
-      body
-    }
-  }
-`

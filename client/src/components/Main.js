@@ -16,18 +16,6 @@ class Main extends React.Component {
         }}
       />
     )
-    // const { allMongodbUssBlog } = this.props.data
-    // return (
-    //     <div>
-    //       <h1>Website information stored in MongoDB</h1>
-    //       <ul>
-    //         {allMongodbUssBlog.edges.map(({ node }) => (
-    //           <StoryItem item={node} key={node.id} />
-    //         ))}
-    //       </ul>
-    //     </div>
-    // )
-    
     
     return (
       <div
@@ -217,22 +205,3 @@ Main.propTypes = {
 }
 
 export default Main
-
-export const pageQuery = graphql`
-  query {
-    allMongodbUssBlog {
-      edges {
-        node {
-          mongodb_id
-          id
-          title
-          lede
-          category
-          date
-          author
-          body
-        }
-      }
-    }
-  }
-`

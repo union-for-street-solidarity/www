@@ -24,10 +24,18 @@
     "save-dev": "^2.0.0",
     "serve-favicon": "^2.5.0"
   },
+  "nodemonConfig": {
+    "exec": "npm start",
+    "watch": [
+      ".env",
+      "."
+    ]
+  },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "node-sass client/src/assets/scss/main.scss server/public/styles/style.css && cd ./client && npm run build",
+    "develop": "cd ./client && npm run build && cd ../ && npm run start",
     "start": "node app.js"
   },
   "repository": {

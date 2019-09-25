@@ -10,6 +10,10 @@ module.exports = {
     author: 'USS',
     description: 'TODO',
   },
+  proxy: {
+    prefix: '/blog/api',
+    url: 'http://localhost:8000'
+  },
   plugins: [
     'gatsby-plugin-react-helmet',
     {
