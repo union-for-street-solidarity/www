@@ -1,6 +1,9 @@
 require('dotenv').config();
 const config = require('./utils/config.js');
 const path = require('path');
+const fs = require('fs');
+const mkdirp = require('mkdirp');
+const multer = require('multer');
 const favicon = require('serve-favicon');
 const bodyParser = require("body-parser");
 const urlparser = require('url');
@@ -19,9 +22,11 @@ const parseForm = bodyParser.urlencoded({ extended: false });
 const parseJSONBody = bodyParser.json();
 const parseBody = [parseJSONBody, parseForm];
 const cookieParser = require("cookie-parser");
+const sharp = require('sharp');
 const { User, Blog } = require('./server/models/index.js');
 const staticPath = path.join(__dirname, '.', 'client', 'public');
 const publicPath = path.join(__dirname, '.', 'server', 'public');
+var uploadedImages = '../uploads/img/';
 // const sass = require('node-sass');
 mongoose.Promise = promise;
 const app = express();
@@ -55,6 +60,30 @@ const sess = {
 	store: store,
 	cookie: { maxAge: 180 * 60 * 1000 }
 }
+var storage = multer.diskStorage({
+	destination: async (req, file, cb) => {
+		var p = (path.join(__dirname, uploadedImages) + req.params.id);
+		var exists = await fs.existsSync(p);//.catch((err) => console.log(err));
+		if (!exists) {
+			mkdirp(p, (err) => {
+				if (err) {
+					cb(err)
+				} else {
+					cb(null, p)
+				}
+			})
+		} else {
+			cb(null, p)
+		}
+  },
+	filename: (req, file, cb) => {
+		var newPath = file.originalname.replace(/\.(tiff|jpg|jpeg)$/, '.png');
+		cb(null, newPath) //Appending extension
+	}
+})
+
+var uploadmedia = multer({ storage: storage });
+
 const htmlpath = path.join(__dirname, './client/public/index.html');
 app.get('/', (req, res) => res.sendFile(htmlpath));
 
@@ -194,6 +223,71 @@ app.post('/blog/api/editstory/:type/:id', upload.array(), parseBody, (req, res, 
   // });
 
 })
+.post('/blog/api/uploadimg/:id', uploadmedia.single('img'), parseBody/*, csrfProtection*/, (req, res, next) => {
+	const imagePath = req.file.path;
+	const thumbPath = req.file.path.replace(/\.(png)$/, '.thumb.png');
+	sharp(req.file.path).resize({ height: 200 }).toFile(thumbPath)
+	.then(function(newFileInfo) {
+		console.log("resize success")
+		console.log(newFileInfo)
+	})
+	.catch(function(err) {
+		console.log("resize error occured");
+		console.log(err)
+	});
+	const media = {
+		image: '/uploadedImages/'+req.params.id+'/'+req.file.filename,
+		image_abs: req.file.path,
+		thumb: '/uploadedImages/'+req.params.id+'/'+req.file.filename.replace(/\.(png)$/, '.thumb.png'),
+		thumb_abs: thumbPath,
+		caption: 'Edit me'
+	}
+	Blog.findOneAndUpdate({_id: req.params.id}, {$push: {media: media}}, {safe: true, upsert: false, new: true}, (err, doc) => {
+		if (err) {
+			return next(err)
+		} else {
+			return res.status(200).send(doc)
+		}
+	})
+})
+.post('/blog/api/deleteentry/:id', async function(req, res, next) {
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
+	var id = req.params.id;
+	Blog.findById(id).lean().exec(async (err, doc) => {
+		if (err) {
+			return next(err)
+		}
+		var item = doc.media[0]
+		var existsImg = await fs.existsSync(item.image_abs);
+		if (existsImg) {
+			var p = (path.join(__dirname, uploadedImages) + id);
+			await fs.rmdirSync(p);
+		}
+		return res.status(200).send('ok');
+	})
+})
+.post('/blog/api/deletemedia/:id/:index', function(req, res, next) {
+	var id = req.params.id;
+	var index = parseInt(req.params.index, 10);
+	Blog.findOne({_id: id}).lean().exec(async function(err, thisdoc){
+		if (err) {
+			return next(err)
+		}
+		var oip = (!thisdoc.media[index] || !thisdoc.media[index].image_abs ? null : thisdoc.media[index].image_abs);
+		var otp = (!thisdoc.media[index] || !thisdoc.media[index].thumb_abs ? null : thisdoc.media[index].thumb_abs);
+		var existsImg = await fs.existsSync(oip);
+		var existsThumb = await fs.existsSync(otp);
+		if (existsImg) await fs.unlinkSync(oip);
+		if (existsThumb) await fs.unlinkSync(otp);
+		Blog.findOneAndUpdate({_id: id}, {$pull: {media: {_id: thisdoc.media[index]._id}}}, {multi: false, new: true}, function(err, doc) {
+			if (err) {
+				return next(err) 
+			}
+			return res.status(200).send(doc);
+		})	
+	})
+});
 
 app
 .use(function (req, res, next) {

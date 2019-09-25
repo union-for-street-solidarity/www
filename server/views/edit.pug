@@ -8,26 +8,22 @@ block content
 		div.body
 			div#wrapper
 				include partials/modal.pug
+				form.container#form(method="POST" enctype="multipart/form-data" :action="(!doc || doc === '' ? '' : ('/blog/api/newstory/'+doc._id))")
 				if (csrfToken)
 					input(type="hidden" name="_csrf" value= csrfToken)
-				p(v-for="(key, i) in Object.keys(doc)", v-if="exclude.indexOf(key) === -1")
-					label(:for="key", v-text="key")
-					input(v-if="key !== 'lede'" :id="key", :name="key", :value="doc[key]")
-					textarea(v-if="key === 'lede'" :id="key", :name="key", v-html="doc[key]")
+				p(v-for="(key, i) in Object.keys(doc)" v-if="exclude.indexOf(key) === -1")
+					label(:for="key" v-text="key")
+					input(v-if="key !== 'lede'" :id="key" :name="key", :value="doc[key]")
+					textarea(v-if="key === 'lede'" :id="key" :name="key", v-html="doc[key]")
 				p
 					label(for="description") Document body:
-					div.description#description(v-html="doc.body", style="border-bottom: 1px solid #e1e1e1;")
+					div.description#description(v-html="doc.body" style="border-bottom: 1px solid #e1e1e1;")
 				p(v-for="(foot, k) in doc.footnotes")
 					label(:for="'footnote'+k+''", v-text="'Footnote #'+ (k+1)")
-					input(type="text", :name="'footnote'+k+''", :id="'footnote'+k+''", :value="foot")
-				div.row.spacer(
-
-					v-for="(img, j) in doc.media"
-					)
-					include partials/editmedia.pug
-					hr
-				button(@click="addNewMedia(doc._id, doc.properties.media.length)")
-					span Add image
+					input(type="text" :name="'footnote'+k+''" :id="'footnote'+k+''" :value="foot")
+				p
+					label.text-uppercase(for="newimg" v-text="'Add image'")
+					input.form-control#newimg(@change="handleFile(doc._id, doc.media.length, $event)" type="file" style="min-height: 52px;")
 
 
 	include vue/adminvue.pug
