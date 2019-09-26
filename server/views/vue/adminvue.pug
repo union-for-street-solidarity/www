@@ -26,7 +26,8 @@ script(type="text/javascript").
 				message: '',
 				modal: false,
 				deleteWhich: '',
-				confirmed: false
+				confirmed: false,
+				edit: false
 			}
 		},
 		watch: {
@@ -42,12 +43,17 @@ script(type="text/javascript").
 			var self = this;
 			var editable = $('#description')[0]//document.getElementById('description')[0];
 			console.log(editable)
-			if (self.tinymce === '' && editable) {
+			if (self.tinymce === '' && editable && self.doc && self.doc !== '') {
 				self.loadTinyMCE()
 			} else {
 				setTimeout(function(){
 					self.loadTinyMCE()
 				}, 2000)
+			}
+			if (self.doc && self.doc !== '') {
+				self.edit = true
+			} else {
+				self.edit = false
 			}
 		},
 		methods: {
@@ -148,25 +154,27 @@ script(type="text/javascript").
 					data: formData,
 					processData: false,
 					contentType: false
-					//- ,
-					//- xhr: function () {
-					//- 	var xhr = new XMLHttpRequest();
-					//- 
-					//- 	// Add progress event listener to the upload.
-					//- 	xhr.upload.addEventListener('progress', function (event) {
-					//- 		self.progressBar = $('.progress-bar');
-					//- 
-					//- 		if (event.lengthComputable) {
-					//- 			var percent = (event.loaded / event.total) * 100;
-					//- 			self.progressBar.width(percent + '%');
-					//- 
-					//- 			if (percent === 100) {
-					//- 				self.progressBar.removeClass('active');
-					//- 			}
-					//- 		}
-					//- 	});
-					//- 	return xhr;
-					//- }
+					,
+					xhr: function () {
+						var xhr = new XMLHttpRequest();
+					
+						// Add progress event listener to the upload.
+						xhr.upload.addEventListener('progress', function (event) {
+							self.progressBar = 
+								//document.getElementById('progress-bar')
+								$('.progress-bar');
+					
+							if (event.lengthComputable) {
+								var percent = (event.loaded / event.total) * 100;
+								self.progressBar.width(percent + '%');
+					
+								if (percent === 100) {
+									self.progressBar.removeClass('active');
+								}
+							}
+						});
+						return xhr;
+					}
 				}).done((result) => {
 					console.log(result)
 					self.doc = result;

@@ -6,3 +6,6 @@
   right: 20px;
   position: absolute;
 }
+input.block {
+  width: 100%!important;
+}

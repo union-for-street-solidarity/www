@@ -26,7 +26,7 @@ const sharp = require('sharp');
 const { User, Blog } = require('./server/models/index.js');
 const staticPath = path.join(__dirname, '.', 'client', 'public');
 const publicPath = path.join(__dirname, '.', 'server', 'public');
-var uploadedImages = '../uploads/img/';
+const uploadedImages = '../uploads/img/';
 // const sass = require('node-sass');
 mongoose.Promise = promise;
 const app = express();
@@ -35,7 +35,7 @@ const store = new MongoDBStore(
 		mongooseConnection: mongoose.connection,
 		uri: config.fullMongoUrl,
 		// keeping as 'shopSession' even though it's the whole app's session
-		collection: 'shopSession'
+		collection: 'session'
 	}
 );
 store.on('error', function(error){
@@ -92,6 +92,7 @@ app
 .set('view engine', 'pug')
 .use(favicon(path.join(__dirname, 'client/src/images', 'favicon.ico')))
 .use('/', express.static(staticPath))
+.use('/uploadedImages',express.static(path.join(__dirname, uploadedImages)))
 .use(express.static(publicPath))
 .use(function (req, res, next) {
   res.locals.session = req.session;
@@ -128,37 +129,50 @@ app.use((request, response, next) => {
 //   });
 // });
 
+app.get('/logout', function(req, res){
+  req.logout();
+	if (req.session) {
+		req.session.destroy((err) => {
+			if (err) {
+				req.session = null;
+			}
+			res.redirect('/'); 
+		})
+	} else {
+		res.redirect('/')
+	}
+})
 
-app.get('/blog', ensureBlogData, (req, res, next) => {
-  return res.render('server/views/blogs', {
+app.get('/streetstories', ensureBlogData, (req, res, next) => {
+  return res.render('blogs', {
 		data: req.featuredblogs
     // ,
 		// vData: JSON.stringify(req.featuredblogs)
   })
 })
 
-app.get('/blog/:id', (req, res, next) => {
+app.get('/streetstory/:id', (req, res, next) => {
   Blog.findById(req.params.id).lean().exec((err, doc) => {
 		if (err) {
 			return next(err)
 		}
 		if (doc && doc.author) {
-			User.findById(doc.author).lean().exec((err, author) => {
-				if (err) {
-					console.log(err)
-				} else {
-					return res.render('server/views/partials/blog', {
-						user: (!req.user ? req.session.user : req.user),
+			// User.findById(doc.author).lean().exec((err, author) => {
+			// 	if (err) {
+			// 		console.log(err)
+			// 	} else {
+					return res.render('blog', {
+						user: (!req.user ? (!req.session || !req.session.user ? 'anon' : req.session.user) : req.user),
 						doc: doc,
 						// vDoc: JSON.stringify(doc),
-						author: author
+						author: (!doc.author ? {username: 'anon'} : doc.author)
 				  });
-				}
-			})
+			// 	}
+			// })
 		} else {
 			// console.log(doc)
-			return res.render('server/views/partials/blog', {
-				user: (!req.user ? req.session.user : req.user),
+			return res.render('blog', {
+				user:  (!req.user ? (!req.session || !req.session.user ? 'anon' : req.session.user) : req.user),
 				// vDoc: JSON.stringify(doc),
 				doc: doc//JSON.parse(JSON.stringify(doc))//JSON.stringify(doc)
 			});
@@ -181,12 +195,13 @@ app.post('/blog/api/newstory', upload.array(), parseBody
 
 app.get('/blog/api/editstory/:type/:id', async (req, res, next) => {
 	const data = await Blog.find({}).then((data) => data).catch((err) => next(err));
-	console.log(data)
+	// console.log(data)
   const doc = await Blog.findOne({_id: req.params.id}).then((doc) => doc).catch((err) => next(err));
-	console.log(doc)
+	// console.log(doc)
   // let author;
   // if (doc) author = await User.findById(doc.author).lean().then((author) => author).catch((err) => next(err));
-  res.render('edit', {
+  return res.render('edit', {
+		data: data,
     doc: doc,
     vDoc: JSON.stringify(doc),
     // csrfToken: req.csrfToken(),
@@ -198,13 +213,14 @@ app.get('/blog/api/editstory/:type/:id', async (req, res, next) => {
 })
 
 app.post('/blog/api/editstory/:type/:id', upload.array(), parseBody, (req, res, next) => {
-  var media = req.body.media || []
+  var media = req.body.media || [];
+	console.log(req.body)
   const set = {$set: req.body}
   Blog.findOneAndUpdate({_id: req.params.id}, set, {new:true}, (err, doc) => {
     if (err) {
       return next(err)
     }
-    return res.redirect('/blog/'+doc._id);
+    return res.redirect('/streetstory/'+doc._id);
   
   })
   // const post = new Blog({
@@ -314,9 +330,8 @@ app
 if (mongoose.connection.readyState === 0) {
   // connect to mongo db
   const mongoUri = config.fullMongoUrl;
-console.log(mongoUri)
   const promise = mongoose.connect(
-    mongoUri, { useNewUrlParser: true, useUnifiedTopology: true }
+    mongoUri, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }
   );
   promise
     .then(() => {

@@ -8,22 +8,53 @@ block content
 		div.body
 			div#wrapper
 				include partials/modal.pug
-				form.container#form(method="POST" enctype="multipart/form-data" :action="(!doc || doc === '' ? '' : ('/blog/api/newstory/'+doc._id))")
-				if (csrfToken)
-					input(type="hidden" name="_csrf" value= csrfToken)
-				p(v-for="(key, i) in Object.keys(doc)" v-if="exclude.indexOf(key) === -1")
-					label(:for="key" v-text="key")
-					input(v-if="key !== 'lede'" :id="key" :name="key", :value="doc[key]")
-					textarea(v-if="key === 'lede'" :id="key" :name="key", v-html="doc[key]")
-				p
-					label(for="description") Document body:
-					div.description#description(v-html="doc.body" style="border-bottom: 1px solid #e1e1e1;")
-				p(v-for="(foot, k) in doc.footnotes")
-					label(:for="'footnote'+k+''", v-text="'Footnote #'+ (k+1)")
-					input(type="text" :name="'footnote'+k+''" :id="'footnote'+k+''" :value="foot")
-				p
-					label.text-uppercase(for="newimg" v-text="'Add image'")
-					input.form-control#newimg(@change="handleFile(doc._id, doc.media.length, $event)" type="file" style="min-height: 52px;")
+				form.container#form(v-if="doc && doc !== ''" method="POST" enctype="multipart/form-data" :action="(!edit ? ('/blog/api/newstory/') : ('/blog/api/editstory/'+doc.category+'/'+doc._id))")
+					if (csrfToken)
+						input(type="hidden" name="_csrf" value= csrfToken)
+					p(v-for="(key, i) in Object.keys(doc)" v-if="exclude.indexOf(key) === -1")
+						label(:for="key" v-text="key")
+						input(type="text" v-if="key !== 'lede'" :id="key" :name="key", :value="doc[key]")
+						textarea(v-if="key === 'lede'" :id="key" :name="key", v-html="doc[key]")
+					div.row
+						label(for="description") Document body:
+						div#description(v-html="doc.body" style="border-bottom: 1px solid #e1e1e1;")
+					div.row(v-for="(foot, k) in doc.footnotes")
+						label(:for="'footnote'+k+''", v-text="'Footnote #'+ (k+1)")
+						input(type="text" :name="'footnote'+k+''" :id="'footnote'+k+''" :value="foot")
+					div.row
+						p &nbsp
+						//- hr
+						
+					div.row(v-for="(img, l) in doc.media")
+						//- p(v-for="(img, l) in doc.media")
+						label.text-uppercase(:for="('switchimg' + l)" v-text="'switch image ' + (l + 1)")
+						input.form-control(:id="('switchimg' + l)" @change="handleFile(doc._id, l, $event)" type="file" style="min-height: 52px;")
+						img(:src="img.image+'?version='+Math.random()" style="width: 100%")
+						div.form-group(v-for="(o, m) in Object.keys(doc.media[0])" v-if="exclude.indexOf(o) === -1")
+							//- label(:for="'media'+l" v-text="'Image '+(l+1)")
+							//- input(type="text" :name="")
+							label.text-uppercase(:for="''+(o + l)+''" v-text="o + ' ' + (l+1) ")
+							// v-html="doc.media[l][o]"
+							textarea.form-control(:id="''+(o + l)+''" type="text" :name="'media['+l+']['+o+']'")
+						input(:id="'inputthumb'+l" :name="'media['+l+'][thumb]'", :value="img.thumb", type="hidden")
+						input(:id="'inputimg'+l" :name="'media['+l+'][image]'" :value="img.image" type="hidden")
+						input(:id="'orientation'+l", :name="'media['+l+'][orientation]'", :value="img.orientation", type="hidden")
 
+						div.row
+						
+							a.btn.btn-light.btn-block(role="button" @click="initDeleteMedia(doc._id, l)" v-text="'Delete image '+ (l+1)")
+							p &nbsp
+					div.row
+						label.text-uppercase(for="newimg" v-text="'Add image'")
+						input.form-control#newimg(@change="handleFile(doc._id, doc.media.length, $event)" type="file" style="min-height: 52px;")
+						div.row.progress
+							div.progress-bar.progress-bar-striped.active#progress-bar(role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%")
+								span.sr-only
+						div.row
+							input#submitButton.btn.btn-primary.btn-block.block(type="submit" :disabled="progressBar !== null")
+							p &nbsp
+						div.row
+							h4 Danger: This cannot be undone:
+							a.btn.btn-warning.btn-block(role="button" @click="initDeleteEntry(doc._id)" v-text="'Delete this entry'")
 
 	include vue/adminvue.pug

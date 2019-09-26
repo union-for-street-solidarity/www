@@ -18,7 +18,7 @@ var schema= new Schema({
 		title: String,
 		author: String,
 		lede: String,
-		body: String,
+		description: String,
 		date: Date,
 		media: [Media],
 		tags: [String],

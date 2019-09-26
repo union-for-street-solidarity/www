@@ -8,7 +8,7 @@ const User = new Schema({
 	admin: Boolean,
 	date: Date,
 	about: String,
-	slack: {
+	mm: {
 		oauthID: String
 	}
 },{collection: 'userInfo'});
