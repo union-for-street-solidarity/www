@@ -10,7 +10,7 @@ const urlparser = require('url');
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
+const OAuth2Strategy = require('passport-oauth2').Strategy;
 const MongoDBStore = require('connect-mongodb-session')(session);
 const { ensureAdmin, ensureAuthenticated, ensureBlogData, ensureBlogDocument } = require('./utils/middleware.js');
 const mongoose = require('mongoose');
@@ -50,7 +50,20 @@ passport.deserializeUser(function(id, cb) {
 		cb(err, user);
   });
 });
-passport.use(new LocalStrategy(User.authenticate()));
+// passport.use(new LocalStrategy(User.authenticate()));
+// passport.use(new OAuth2Strategy({
+//     authorizationURL: 'https://www.example.com/oauth2/authorize',
+//     tokenURL: 'https://www.example.com/oauth2/token',
+//     clientID: EXAMPLE_CLIENT_ID,
+//     clientSecret: EXAMPLE_CLIENT_SECRET,
+//     callbackURL: "http://localhost:3000/auth/example/callback"
+//   },
+//   function(accessToken, refreshToken, profile, cb) {
+//     User.findOrCreate({ exampleId: profile.id }, function (err, user) {
+//       return cb(err, user);
+//     });
+//   }
+// ));
 
 const sess = {
 	secret: config.secret,

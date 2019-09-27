@@ -9,3 +9,55 @@
 input.block {
   width: 100%!important;
 }
+
+
+.carousel-item {
+	transition: opacity 1s ease-in-out!important;
+	display: block!important;
+  max-height: 100vh;
+  overflow-y: hidden;
+	/* transition-property: opacity!important;
+	transition-duration: 1s!important; */
+}
+
+@supports ((perspective: 1px) and (not (-webkit-overflow-scrolling: touch))) {
+  /* ... parallax styles ... */
+  .w-100 {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    -webkit-transform: translateZ(-1px) scale(2);
+    -moz-transform: translateZ(-1px) scale(2);
+    transform: translateZ(-1px) scale(2);
+  }
+
+  .carousel-item {
+  	transition: opacity 1s ease-in-out!important;
+  	display: block!important;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    -webkit-perspective: 10px;
+    -moz-perspective: 10px;
+    perspective: 2px;
+    /* transform-style: preserve-3d; */
+  	/* transition-property: opacity!important;
+  	transition-duration: 1s!important; */
+  }
+  .ParallaxContainer {
+    display: flex;
+    flex: 1 0 auto;
+    position: relative;
+    z-index: -1;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    transform: translateZ(-1px) scale(2);
+    background: url(https://www.toptal.com/designers/subtlepatterns/patterns/sakura.png);
+    background-color: rgb(250,228, 216);
+  }
+}
+

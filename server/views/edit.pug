@@ -8,16 +8,17 @@ block content
 		div.body
 			div#wrapper
 				include partials/modal.pug
-				form.container#form(v-if="doc && doc !== ''" method="POST" enctype="multipart/form-data" :action="(!edit ? ('/blog/api/newstory/') : ('/blog/api/editstory/'+doc.category+'/'+doc._id))")
+				form.container#form.row(v-if="doc && doc !== ''" method="POST" enctype="multipart/form-data" :action="(!edit ? ('/blog/api/newstory/') : ('/blog/api/editstory/'+doc.category+'/'+doc._id))")
 					if (csrfToken)
 						input(type="hidden" name="_csrf" value= csrfToken)
+					input(type="hidden" value= (new Date()) name="date")
 					p(v-for="(key, i) in Object.keys(doc)" v-if="exclude.indexOf(key) === -1")
 						label(:for="key" v-text="key")
-						input(type="text" v-if="key !== 'lede'" :id="key" :name="key", :value="doc[key]")
-						textarea(v-if="key === 'lede'" :id="key" :name="key", v-html="doc[key]")
-					div.row
-						label(for="description") Document body:
-						div#description(v-html="doc.body" style="border-bottom: 1px solid #e1e1e1;")
+						input(type="text" v-if="key !== 'lede' && key !== 'description' && key !== 'body'" :id="key" :name="key", :value="doc[key]")
+						textarea(v-else :id="key" :name="key" v-html="doc[key]" :style="{height: (key === 'description' ? '100vh' : 'auto')}")
+					//- div.row
+					//- 	label(for="description") Document body:
+					//- 	div#description(v-html="doc.body" style="border-bottom: 1px solid #e1e1e1;")
 					div.row(v-for="(foot, k) in doc.footnotes")
 						label(:for="'footnote'+k+''", v-text="'Footnote #'+ (k+1)")
 						input(type="text" :name="'footnote'+k+''" :id="'footnote'+k+''" :value="foot")
@@ -38,15 +39,17 @@ block content
 							textarea.form-control(:id="''+(o + l)+''" type="text" :name="'media['+l+']['+o+']'")
 						input(:id="'inputthumb'+l" :name="'media['+l+'][thumb]'", :value="img.thumb", type="hidden")
 						input(:id="'inputimg'+l" :name="'media['+l+'][image]'" :value="img.image" type="hidden")
-						input(:id="'orientation'+l", :name="'media['+l+'][orientation]'", :value="img.orientation", type="hidden")
+						//- input(:id="'orientation'+l", :name="'media['+l+'][orientation]'", :value="img.orientation", type="hidden")
 
 						div.row
-						
+							p &nbsp
 							a.btn.btn-light.btn-block(role="button" @click="initDeleteMedia(doc._id, l)" v-text="'Delete image '+ (l+1)")
 							p &nbsp
 					div.row
 						label.text-uppercase(for="newimg" v-text="'Add image'")
 						input.form-control#newimg(@change="handleFile(doc._id, doc.media.length, $event)" type="file" style="min-height: 52px;")
+						div.row
+							p &nbsp
 						div.row.progress
 							div.progress-bar.progress-bar-striped.active#progress-bar(role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%")
 								span.sr-only

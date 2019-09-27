@@ -20,14 +20,16 @@ script(type="text/javascript").
 				accordions: [],
 				file: null,
 				//items to hide in the viewer
-				exclude: ['_id', '__v', 'date', 'image', 'image_abs', 'thumb', 'thumb_abs', 'author', 'tags', 'body', 'footnotes', 'id', 'category', 'geometry', 'media'],
+				exclude: ['_id', '__v', 'date', 'image', 'image_abs', 'thumb', 'thumb_abs', 'author', 'tags', 'footnotes', 'id', 'category', 'geometry', 'media', 'orientation'],
 				tinymce: null,
 				progressBar: null,
 				message: '',
 				modal: false,
 				deleteWhich: '',
 				confirmed: false,
-				edit: false
+				edit: false,
+				sliderIndex: 0,
+				sliderInterval: null
 			}
 		},
 		watch: {
@@ -52,6 +54,15 @@ script(type="text/javascript").
 			}
 			if (self.doc && self.doc !== '') {
 				self.edit = true
+				var length = self.doc.media.length;
+				self.sliderInterval = setInterval(function(){
+					if (self.sliderIndex < (length - 1)){
+						self.sliderIndex++;
+					} else {
+						self.sliderIndex = 0;
+					}
+				}, 5000)
+
 			} else {
 				self.edit = false
 			}
@@ -71,13 +82,38 @@ script(type="text/javascript").
 			},
 			loadTinyMCE() {
 				var self = this;
+				var imglist = self.doc.media.map((item) => {
+					return {
+						title: item.image.split('/')[item.image.split('/').length - 1],
+						value: item.image
+					}
+				});
 				self.tinymce = tinymce.init({
-					menubar: false,
+					selector: "#description",
+					//- menubar: false,
 					statusbar: false,
 					// theme: 'inlite',
 					// inline: true,
-					selector: "#description",
-					plugins: 'lists, link',
+					menubar: "insert",
+					toolbar: "image",
+					image_list: imglist,
+					image_description: false,
+					style_formats: [
+						{title: 'Image Left', selector: 'img', styles: {
+							'float' : 'left',
+							'margin': '0 10px 0 10px'
+						}},
+						{title: 'Image Right', selector: 'img', styles: {
+							'float' : 'right',
+							'margin': '0 10px 0 10px'
+						}}
+					],
+					image_dimensions: false,
+					//- [
+					//- 	{title: 'My image 1', value: 'https://www.tinymce.com/my1.gif'},
+					//- 	{title: 'My image 2', value: 'http://www.moxiecode.com/my2.gif'}
+					//- ]
+					plugins: 'lists, link, image',
 					valid_elements: '*[*]',
 					toolbar: 'bold italic underline strikethrough | bullist numlist | outdent indent blockquote | subscript superscript | link',
 					default_link_target: '_blank'
