@@ -58,6 +58,10 @@
 		margin: 0 0 _size(element-margin) 0;
 	}
 
+	small {
+		font-size: 0.6rem;
+	}
+	
 	h1, h2, h3, h4, h5, h6 {
 		color: _palette(fg-bold);
 		font-weight: _font(weight-bold);

@@ -10,7 +10,8 @@ const urlparser = require('url');
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
-const OAuth2Strategy = require('passport-oauth2').Strategy;
+const LocalStrategy = require('passport-local').Strategy;
+// const OAuth2Strategy = require('passport-oauth2').Strategy;
 const MongoDBStore = require('connect-mongodb-session')(session);
 const { ensureAdmin, ensureAuthenticated, ensureBlogData, ensureBlogDocument } = require('./utils/middleware.js');
 const mongoose = require('mongoose');
@@ -50,7 +51,7 @@ passport.deserializeUser(function(id, cb) {
 		cb(err, user);
   });
 });
-// passport.use(new LocalStrategy(User.authenticate()));
+passport.use(new LocalStrategy(User.authenticate()));
 // passport.use(new OAuth2Strategy({
 //     authorizationURL: 'https://www.example.com/oauth2/authorize',
 //     tokenURL: 'https://www.example.com/oauth2/token',
@@ -107,6 +108,12 @@ app
 .use('/', express.static(staticPath))
 .use('/uploadedImages',express.static(path.join(__dirname, uploadedImages)))
 .use(express.static(publicPath))
+.use(session(sess),
+	passport.initialize(),
+	passport.session(),
+	// handle bodyParser separately to ensure it comes before csrfProtection
+	cookieParser(sess.secret),
+)
 .use(function (req, res, next) {
   res.locals.session = req.session;
   next();
@@ -141,6 +148,75 @@ app.use((request, response, next) => {
 //     }
 //   });
 // });
+
+
+app.post('/auth/check/:username', async (req, res, next) => {
+	var username = req.params.username;
+	const user = await User.findOne({username: username}).then((user) => user).catch((err) => next(err));
+	if (!user) {
+		return res.status(200).send('')
+	} else {
+		return res.status(200).send(user.username)
+	}
+})
+
+app.get('/register', csrfProtection, function(req, res, next){
+	return res.render('login', { csrfToken: req.csrfToken(), menu: 'register' } );
+})
+
+app.post('/register', upload.array(), parseBody, csrfProtection, function(req, res, next) {
+	User.find({}, function(err, data){
+		if (err) {
+			return next(err)
+		}
+		var admin;
+		if (config.admin.split(',').indexOf(req.body.username) !== -1) {
+			admin = true;
+		} else {
+			admin = false;
+		}
+		User.register(new User(
+			{ username : req.body.username, 
+				email: req.body.email, 
+				admin: admin,
+				date: new Date()
+			}
+		), req.body.password, function(err, user) {
+			if (err) {
+				return res.render('login', {info: "Sorry. That Name already exists. Try again.", languages: langs});
+			}
+			req.session.username = req.body.username;
+			passport.authenticate('local')(req, res, function () {
+				User.findOne({username: req.body.username}, function(error, doc){
+					if (error) {
+						return next(error)
+					}
+					req.session.userId = doc._id;
+					req.session.loggedin = doc.username;
+					
+					return res.redirect('/streetstories')
+				})
+			});
+		});
+	})
+
+});
+
+app.get('/login', csrfProtection, (req, res, next) => {
+	return res.render('login', {
+		csrfToken: req.csrfToken(),
+		menu: 'login'
+	})
+})
+
+app.post('/login', upload.array(), parseBody, csrfProtection, passport.authenticate('local', {
+	failureRedirect: '/login'
+}), function(req, res, next) {
+
+	req.session.userId = req.user._id;
+	req.session.loggedin = req.user.username;
+	res.redirect('/');
+});
 
 app.get('/logout', function(req, res){
   req.logout();
@@ -197,7 +273,7 @@ app.all('/blog/api/*'
 )
 
 app.post('/blog/api/newstory', upload.array(), parseBody
-// , csrfProtection
+, csrfProtection
 , async (req, res, next) => {
   const body = req.body;
   console.log(body);
@@ -225,7 +301,7 @@ app.get('/blog/api/editstory/:type/:id', async (req, res, next) => {
 
 })
 
-app.post('/blog/api/editstory/:type/:id', upload.array(), parseBody, (req, res, next) => {
+app.post('/blog/api/editstory/:type/:id', upload.array(), parseBody, csrfProtection, (req, res, next) => {
   var media = req.body.media || [];
 	console.log(req.body)
   const set = {$set: req.body}
@@ -252,7 +328,7 @@ app.post('/blog/api/editstory/:type/:id', upload.array(), parseBody, (req, res, 
   // });
 
 })
-.post('/blog/api/uploadimg/:id', uploadmedia.single('img'), parseBody/*, csrfProtection*/, (req, res, next) => {
+.post('/blog/api/uploadimg/:id', uploadmedia.single('img'), parseBody, csrfProtection, (req, res, next) => {
 	const imagePath = req.file.path;
 	const thumbPath = req.file.path.replace(/\.(png)$/, '.thumb.png');
 	sharp(req.file.path).resize({ height: 200 }).toFile(thumbPath)

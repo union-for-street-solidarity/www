@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'gatsby'
+import { Link, navigate } from 'gatsby'
 
 import logo from '../images/logo.jpg'
 
@@ -52,15 +52,24 @@ const Header = props => (
           </button>
         </li>
         <li>
-          <Link to={`/blog/`}>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              navigate('/blog/')
+            }}
+          >
             Blog
-      
-            {
-              /* Article */
-            }
-          </Link>
+          </button>
 
-          {// <a
+          {
+            // <Link to={`/blog/`}>
+            //   Blog
+            // 
+            //   {
+            //     /* Article */
+            //   }
+            // </Link>
+          // <a
           //   href="javascript:;"
           //   onClick={() => {
           //     props.onOpenArticle('blog')

@@ -16,7 +16,7 @@ const envVarsSchema = Joi.object({
   SERVER_PORT: Joi.string(),
   AUTH_USER: Joi.string(),
   AUTH_PASSWORD: Joi.string(),
-  ADMIN: Joi.boolean()
+  ADMIN: Joi.string()
 })
   .unknown()
   .required();

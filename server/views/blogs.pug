@@ -10,7 +10,7 @@ block content
 		div.body
 			div#wrapper
 				
-				div.row(v-for="(doc, i) in data")
+				ul.alt.blog(v-for="(doc, i) in data")
 					include partials/article.pug
 				
-	include vue/adminvue.pug
+	include vue/loggedoutvue.pug

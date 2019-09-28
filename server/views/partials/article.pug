@@ -1,37 +1,38 @@
-div.col-lg-6
-	h1.py-4(v-text="doc.title")
+li.blog
+	div.col-lg-6
+		h1.py-4(v-text="doc.title")
 
+		//- <% if (locals.author) { %>
+		//- 	<p class="text-muted my-0">By</p>
+		//- 	<h4><%= author.username %></h4>
+		//- <% } %>
+		p.text-muted.my-0(v-text="moment(doc.date).format('MMMM Do YYYY') + ' at ' + moment(doc.date).format('hh:mm a')")
+		
+		h5.py-3
+			small(v-text="doc.lede")
+
+	//- style="left:0;right:0;top:unset;bottom:unset;"
+	div.col-lg-6.py-4(v-if="doc.media && doc.media.length > 0" style="min-height: 100vh;")
+		div.parallax-container(v-for="(item, j) in doc.media" :class="(sliderIndex === j ? 'active' : '')"
+		:style="{opacity: (sliderIndex === j ? 1 : 0 ) }")
+			p(v-text="item.caption")
+
+
+		div.carousel-inner(style="position:absolute;left:0;right:0;")
+			div.carousel-item.carousel-item(v-for="(item, j) in doc.media" :class="(sliderIndex === j ? 'active' : '')"
+			:style="{opacity: (sliderIndex === j ? 1 : 0 ) }")
+				div.w-100(:style="{'background': 'url('+item.image+'?version='+Math.random()+')', 'background-size': 'cover'}" :alt="'Slide '+ j")
+			div.carousel-caption.d-md-block(v-for="(item, j) in doc.media" :class="(sliderIndex === j ? 'active' : '')"
+			:style="{opacity: (sliderIndex === j ? 1 : 0 ) }")
+			//- h5(v-text="doc.category")
+
+	hr.py-2(style="max-width:75%;")
+
+	div#content(v-html="doc.description")
+
+	hr.py-2(style="max-width:75%;")
 	//- <% if (locals.author) { %>
-	//- 	<p class="text-muted my-0">By</p>
-	//- 	<h4><%= author.username %></h4>
+	//- 	<p class="text-muted my-2">ABOUT THE AUTHOR</p>
+	//- 	<h5><small><%= author.about %></small></h5>
 	//- <% } %>
-	p.text-muted.my-0(v-text="moment(doc.date).format('MMMM Do YYYY') + ' at ' + moment(doc.date).format('hh:mm a')")
-	
-	h5.py-3
-		small(v-text="doc.lede")
-
-//- style="left:0;right:0;top:unset;bottom:unset;"
-div.col-lg-6.py-4(v-if="doc.media && doc.media.length > 0" style="min-height: 100vh;")
-	div.parallax-container(v-for="(item, j) in doc.media" :class="(sliderIndex === j ? 'active' : '')"
-	:style="{opacity: (sliderIndex === j ? 1 : 0 ) }")
-		p(v-text="item.caption")
-
-
-	div.carousel-inner(style="position:absolute;left:0;right:0;")
-		div.carousel-item.carousel-item(v-for="(item, j) in doc.media" :class="(sliderIndex === j ? 'active' : '')"
-		:style="{opacity: (sliderIndex === j ? 1 : 0 ) }")
-			div.w-100(:style="{'background': 'url('+item.image+'?version='+Math.random()+')', 'background-size': 'cover'}" :alt="'Slide '+ j")
-		div.carousel-caption.d-md-block(v-for="(item, j) in doc.media" :class="(sliderIndex === j ? 'active' : '')"
-		:style="{opacity: (sliderIndex === j ? 1 : 0 ) }")
-		//- h5(v-text="doc.category")
-
-hr.py-2(style="max-width:75%;")
-
-div#content(v-html="doc.description")
-
-hr.py-2(style="max-width:75%;")
-//- <% if (locals.author) { %>
-//- 	<p class="text-muted my-2">ABOUT THE AUTHOR</p>
-//- 	<h5><small><%= author.about %></small></h5>
-//- <% } %>
-//- <% } %>
+	//- <% } %>

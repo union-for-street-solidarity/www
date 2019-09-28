@@ -31,7 +31,7 @@ exports.createPages = async ({ graphql, actions }) => {
             category
             date
             author
-            body
+            description
           }
         }
       }
@@ -63,7 +63,7 @@ exports.createPages = async ({ graphql, actions }) => {
           date: node.date,
           author: node.author,
           lede: node.lede,
-          body: node.body
+          description: node.description
         },
       })
     } 

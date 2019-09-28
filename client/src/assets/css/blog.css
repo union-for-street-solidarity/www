@@ -1,10 +1,11 @@
+/*this is a test*/
 .blog {
   background-color: #333;
-  margin: 50px 50px 0 50px;
+  margin: 50px 0 0 0;
   display: inline-block;
-  left: 20px;
-  right: 20px;
-  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%
 }
 input.block {
   width: 100%!important;
@@ -20,6 +21,35 @@ input.block {
 	transition-duration: 1s!important; */
 }
 
+.modal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #333;
+  margin: 10%;
+  padding: 2.5rem;
+}
+.story > p > img {
+  width: auto;
+}
+.blog ul {
+    display: -moz-flex;
+    display: -ms-flex;
+    display: flex;
+    margin-bottom: 20px;
+    list-style: none;
+    padding-left: 0;
+}
+ul.blog {
+  height:auto;
+  min-height:100vh;
+  width:100%;
+  margin-bottom:2rem; 
+  overflow:auto;
+  display:flex;
+}
 @supports ((perspective: 1px) and (not (-webkit-overflow-scrolling: touch))) {
   /* ... parallax styles ... */
   .w-100 {
@@ -61,3 +91,10 @@ input.block {
   }
 }
 
+@media (min-width: 600px) {
+  .blog {
+    margin: 50px 50px 0 50px;
+    left: 20px;
+    right: 20px;
+  }
+}

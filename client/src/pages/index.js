@@ -1,5 +1,5 @@
 import React from 'react'
-import { graphql, Link } from "gatsby"
+import { graphql, Link, navigate } from "gatsby"
 
 import Layout from '../components/layout'
 
@@ -28,6 +28,12 @@ class IndexPage extends React.Component {
         this.setState({loading: ''});
     }, 100);
     document.addEventListener('mousedown', this.handleClickOutside);
+    
+    var queryRx = /(?:\/\?a=)(.+)/g
+    if (queryRx.test(window.location.toString())) {
+      var query = window.location.toString().match(queryRx)[0].replace('/?a=', '')
+      this.handleOpenArticle(query)
+    }
   }
 
   componentWillUnmount () {
@@ -35,6 +41,7 @@ class IndexPage extends React.Component {
         clearTimeout(this.timeoutId);
     }
     document.removeEventListener('mousedown', this.handleClickOutside);
+    
   }
 
   setWrapperRef(node) {
@@ -42,12 +49,18 @@ class IndexPage extends React.Component {
   }
 
   handleOpenArticle(article) {
-
+    
+    var hrefRx = new RegExp(article, 'g')
+    console.log(hrefRx.test(window.location.toString()))
+    if (!hrefRx.test(window.location.toString())) {
+      navigate(`/?a=${article}`)
+    }
+    
     this.setState({
       isArticleVisible: !this.state.isArticleVisible,
       article
     })
-
+        
     setTimeout(() => {
       this.setState({
         timeout: !this.state.timeout
@@ -80,7 +93,8 @@ class IndexPage extends React.Component {
         article: ''
       })
     }, 350)
-
+    
+    navigate('/')
   }
 
   handleClickOutside(event) {
@@ -143,7 +157,7 @@ export const pageQuery = graphql`
           category
           date
           author
-          body
+          description
         }
       }
     }

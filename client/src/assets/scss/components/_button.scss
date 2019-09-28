@@ -10,6 +10,7 @@
 	input[type="reset"],
 	input[type="button"],
 	button,
+	a[role="button"],
 	.button {
 		@include vendor('appearance', 'none');
 		@include vendor('transition', 'background-color #{_duration(transition)} ease-in-out, color #{_duration(transition)} ease-in-out');
@@ -31,7 +32,8 @@
 		text-decoration: none;
 		text-transform: uppercase;
 		white-space: nowrap;
-
+		width: 100%;
+		
 		&:hover {
 			background-color: _palette(border-bg);
 		}
@@ -75,6 +77,7 @@
 	input[type="submit"],
 	input[type="reset"],
 	input[type="button"],
+	a[role="button"],
 	button {
 		line-height: calc(#{_size(element-height)} - 2px);
 	}

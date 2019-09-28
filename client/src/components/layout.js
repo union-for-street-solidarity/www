@@ -17,10 +17,8 @@ const Layout = ({ children, location }) => {
     )
   } else {
     content = (
-      <div id="wrapper" className="page">
-        <div>
+      <div id="wrapper" className="page" style={{overflowX:'hidden'}}>
           {children}
-        </div>
       </div>
     )
   }

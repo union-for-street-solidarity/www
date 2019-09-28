@@ -12,3 +12,5 @@ yarn.lock
 /client/public
 .DS_Store
 !/client/public/static
+
+/server/public/stylesheets/*

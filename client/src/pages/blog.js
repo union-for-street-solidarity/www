@@ -1,5 +1,5 @@
 import React from 'react'
-import { graphql, Link } from 'gatsby'
+import { graphql, Link, navigate } from 'gatsby'
 
 import Layout from '../components/layout'
 import StoryItem from '../components/story-item.js'
@@ -25,6 +25,11 @@ class Blog extends React.Component {
         this.setState({loading: ''});
     }, 100);
     document.addEventListener('mousedown', this.handleClickOutside);
+    // var queryRx = /(?:\/\?a=)(.+)/g
+    // if (queryRx.test(window.location.toString())) {
+    //   var query = window.location.toString().match(queryRx)[0].replace('/?a=', '')
+    //   this.handleOpenArticle(query)
+    // }
   }
 
   componentWillUnmount () {
@@ -39,7 +44,11 @@ class Blog extends React.Component {
   }
 
   handleOpenArticle(article) {
-
+    var hrefRx = new RegExp(article, 'g')
+    console.log(hrefRx.test(window.location.toString()))
+    if (!hrefRx.test(window.location.toString())) {
+      navigate(`/?a=${article}`)
+    }
     this.setState({
       isArticleVisible: !this.state.isArticleVisible,
       article
@@ -78,6 +87,7 @@ class Blog extends React.Component {
       })
     }, 350)
 
+    window.location.query = ''
   }
 
   handleClickOutside(event) {
@@ -96,7 +106,8 @@ class Blog extends React.Component {
         <div className={`body ${this.state.loading} ${this.state.isArticleVisible ? 'is-article-visible' : ''}`}>
           <div id="wrapper">
             <Header onOpenArticle={this.handleOpenArticle} timeout={this.state.timeout} />
-            <ul style={{height:'auto',minHeight:'100vh'}}>
+            {/*<div style={{display:'inline-block'}}>*/}
+            <ul className="alt blog">
             {
               allMongodbUssBlog.edges.map(({ node }) => (
                 <StoryItem item={node} key={node.id} />
@@ -104,6 +115,7 @@ class Blog extends React.Component {
             }
             
             </ul>
+            {/*</div>*/}
             <Footer timeout={this.state.timeout} />
           </div>
           <div id="bg"></div>
@@ -129,7 +141,7 @@ export const pageQuery = graphql`
           category
           date
           author
-          body
+          description
         }
       }
     }

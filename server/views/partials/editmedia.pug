@@ -18,7 +18,7 @@ div.row
 			label.block(for="media") Switch out image:
 			input.block.spacer.success(:id="'media_'+img.index", @change="handleFile(doc._id,img.index)", :class="'editmedia@'+img.index", type="file", style="padding: 18px;color:#fff;")
 			label.block(:for="'deletemedia_'+img.index")
-			a.danger.block.spacer(role="button" @click="deleteMedia(img.index)" :id="'deletemedia_'+img.index")
+			a.danger.block.spacer(role="button" @click="deleteMedia(img._id)" :id="'deletemedia_'+img.index")
 				span Delete Media
 div.row
 	hr
