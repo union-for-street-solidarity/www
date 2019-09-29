@@ -34,9 +34,9 @@ exports.createPages = async ({ graphql, actions }) => {
             description
             media {
               index
-                caption
-                image
-                thumb
+              caption
+              image
+              thumb
               
             }
           }
@@ -70,10 +70,15 @@ exports.createPages = async ({ graphql, actions }) => {
           date: node.date,
           author: node.author,
           lede: node.lede,
-          description: node.description,
-          media: node.media
+          description: node.description
         },
       })
+      // node.media.forEach((item) => {
+      //   createPage({
+      //     path: `/${node.category}/${node.index}/`,
+      //     component
+      //   })
+      // })
     } 
   }
 }

@@ -16,7 +16,8 @@ const envVarsSchema = Joi.object({
   SERVER_PORT: Joi.string(),
   AUTH_USER: Joi.string(),
   AUTH_PASSWORD: Joi.string(),
-  ADMIN: Joi.string()
+  ADMIN: Joi.string(),
+  SERVER_URL: Joi.string()
 })
   .unknown()
   .required();
@@ -38,7 +39,8 @@ const config = {
   serverPort: envVars.SERVER_PORT,
   authUser: envVars.AUTH_USER,
   authPassword: envVars.AUTH_PASSWORD,
-	admin: envVars.ADMIN
+	admin: envVars.ADMIN,
+  serverUrl: envVars.SERVER_URL
 };
 
 module.exports = config;

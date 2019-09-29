@@ -13,7 +13,7 @@ script(type="text/javascript").
 		el: '#vue',
 		data: function data(){
 			return {
-				user: '',
+				user: this.parseObj(!{JSON.stringify(user)}),
 				author: '',
 				data: this.parseObj(!{JSON.stringify(data)}),
 				doc: this.parseObj(!{JSON.stringify(doc)}),
@@ -90,12 +90,12 @@ script(type="text/javascript").
 				});
 				self.tinymce = tinymce.init({
 					selector: "#description",
-					//- menubar: false,
+					menubar: false,
 					statusbar: false,
 					// theme: 'inlite',
 					// inline: true,
-					menubar: "insert",
-					toolbar: "image",
+					//- toolbar: "image",
+					//- menubar: "insert",
 					image_list: imglist,
 					image_description: false,
 					style_formats: [
@@ -115,7 +115,7 @@ script(type="text/javascript").
 					//- ]
 					plugins: 'lists, link, image',
 					valid_elements: '*[*]',
-					toolbar: 'bold italic underline strikethrough | bullist numlist | outdent indent blockquote | subscript superscript | link',
+					toolbar: 'bold italic underline strikethrough | bullist numlist | outdent indent blockquote | subscript superscript | link | image',
 					default_link_target: '_blank'
 				});
 			},

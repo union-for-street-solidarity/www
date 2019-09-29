@@ -1,13 +1,13 @@
 import React from 'react'
 import { graphql, navigate } from "gatsby"
 import moment from 'moment'
-import Item from './Item.js'
+import MediaItem from './media-item.js'
 class StoryItem extends React.Component {
   render() {
     const item = this.props.item
     const keys = Object.keys(item)
     return (
-      <li className="blog">
+      <li className="blog content-container">
 
         <div style={{display:'inline-block', width:'100%', overflow:'hidden'}}>
           {
@@ -26,24 +26,7 @@ class StoryItem extends React.Component {
                   return (
                     <h5 key={item.id+key}>{moment(it).format('MMMM Do, YYYY @ hh:mm a')}</h5>
                   )
-                } else {
-                  if (it.media) {
-                    return (
-                      <div key={item.id+key} style={{display:'none'}}>{
-                        it.media.map((result) => {
-                          return (
-                            <Item item={result} key={result.mongodb_id+key} />
-                          )
-                        })
-                      }</div>
-                    )
-                  } else {
-                    return (
-                      <div>No media</div>
-                    )
-                  }
-                }
-                
+                } 
               } else {
                 return (
                   <div key={item.id+key}
@@ -103,9 +86,34 @@ export const storyFragment = graphql`
     description
     media {
       index
+      caption
+      image
+      thumb
     }
   }
 `
+// {
+//   else {
+//     if (it.media) {
+//       return (
+//         <div key={item.id+key} style={{display:'none'}}>{
+//           it.media.map((result) => {
+//             return (
+//               <MediaItem item={result} key={`${result.mongodb_id}${key}${result.index}`} />
+//             )
+//           })
+//         }</div>
+//       )
+//     } else {
+//       return (
+//         <div>No media</div>
+//       )
+//     }
+//   }
+// 
+// }
+// } 
+
 /* {
   caption
   image

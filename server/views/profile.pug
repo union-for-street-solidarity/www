@@ -1,0 +1,50 @@
+extends layout
+block page
+	- var menu = "profile"
+block content
+	
+	div#vue
+
+		div.body
+			div#wrapper
+				div.container#page-top
+					section
+						if (user)
+							p(v-text="'Logged in as '+ user.username +'.'")
+							a(role="button" href="/logout" v-text="'Logout'")
+							hr
+							form(method="POST" action= ("/loggedin/"+user._id) enctype="multipart/form-data")
+								if (csrfToken)
+									input(type="hidden" name="_csrf" value= csrfToken)
+								div.form-group
+									label(for="email" v-text="'E-mail address'")
+									input(type="email" name="email" v-text="user.email")
+								hr
+								if (user.admin)
+									p(v-text="'You are admin.'")
+
+									div.form-group
+										label(for="about")
+										textarea.form-control#about(name="about" v-html="user.about")
+
+								else
+									p(v-text="'You are not admin. Please speak with a USS person.'")
+									
+								// TODO change-password capability
+								
+								button.btn.btn-primary.btn-block(type="submit" v-text="'Save profile'")
+						else
+							p(v-text="'Not logged in.'")
+							a(role="button" href="/login" v-text="'Login'")
+					a(role="button" href="/" v-text="'USS Home'")
+					a(role="button" href="/blog" v-text="'Street Stories'")
+					
+	if (user)
+		if (user.admin)
+			include vue/adminvue.pug
+		else
+			// for now
+			include vue/adminvue.pug
+	else
+		include vue/loggedoutvue.pug
+	

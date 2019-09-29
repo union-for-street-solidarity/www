@@ -67,12 +67,12 @@ ul.blog {
   .carousel-item {
     /* display: flex;
     flex: 1 0 auto; */
-    position: relative;
+    /* position: relative; */
     z-index: -1;
-    height: 100vh;
+    height: 50%;
     /* justify-content: center;
     align-items: center; */
-    transform: translateZ(-1px) scale(2);
+    transform: translateZ(-1px) translateY(-50%) scale(2);
     background-color: rgb(250,228, 216);
     transition: opacity 1s ease-in-out!important;
     display: block!important;
@@ -86,14 +86,17 @@ ul.blog {
   	/* transition-property: opacity!important;
   	transition-duration: 1s!important; */
   }
+  .carousel-item img {
+    width: 100%;
+    height: auto;
+  }
   .parallax-container {
   }
   
   .content-container {
     position: absolute;
     display: block;
-    background-color: white;
-    z-index: 1;
+    z-index: 2;
   }
 
   .parallax-container h1 {
@@ -110,7 +113,7 @@ ul.blog {
   .main-container {
     perspective: 1px;
     transform-style: preserve-3d;
-    height: 100vh;
+    height: calc(100vh - 232px);
     overflow-x: hidden;
     overflow-y: scroll;
   }
@@ -120,8 +123,9 @@ ul.blog {
 
 @media (min-width: 600px) {
   .blog {
-    margin: 50px 50px 0 50px;
+    /* margin: 50px 50px 0 50px;
     left: 20px;
-    right: 20px;
+    right: 20px; */
+    padding: 50px 50px 0 50px;
   }
 }

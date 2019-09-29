@@ -101,6 +101,26 @@ var uploadmedia = multer({ storage: storage });
 const htmlpath = path.join(__dirname, './client/public/index.html');
 app.get('/', (req, res) => res.sendFile(htmlpath));
 
+function autoIndexMedia(req, res, next) {
+	Blog.find({}).lean().exec(async (err, data) => {
+		if (err) {
+			return next(err)
+		}
+		await data.forEach(async(doc, i) => {
+			doc.media.forEach((item, j) => {
+				item.index = j
+			})
+			await Blog.findOneAndUpdate({_id: req.params.id}, {$set: {media: JSON.parse(JSON.stringify(doc.media))}}, {new: true}, (err, doc) => {
+				if (err) {
+					return next(err)
+				}
+				console.log(doc)
+				return next()
+			})
+		})
+	})
+}
+
 app
 .set('views', './server/views')
 .set('view engine', 'pug')
@@ -194,7 +214,7 @@ app.post('/register', upload.array(), parseBody, csrfProtection, function(req, r
 					req.session.userId = doc._id;
 					req.session.loggedin = doc.username;
 					
-					return res.redirect('/streetstories')
+					return res.redirect('/blog/api/streetstories')
 				})
 			});
 		});
@@ -215,8 +235,26 @@ app.post('/login', upload.array(), parseBody, csrfProtection, passport.authentic
 
 	req.session.userId = req.user._id;
 	req.session.loggedin = req.user.username;
-	res.redirect('/');
+	res.redirect('/loggedin/'+req.user._id);
 });
+
+app.get('/loggedin/:id', csrfProtection, async (req, res, next) => {
+	const user = await User.findOne({_id: req.params.id}).then((result) => result).catch((err) => next(err));
+	return res.render('profile', {
+		user: user
+	})
+})
+app.post('/loggedin/:id', upload.array(), parseBody, csrfProtection, (req, res, next) => {
+	User.findOneAndUpdate({_id:req.params.id}, {$set:{about:req.body.about}}, {new:true}).lean().exec((err, user)=>{
+		if (err) {
+			return next(err)
+		} else {
+			req.session.user = user;
+			return res.redirect('/loggedin/'+user._id)
+		}
+	})
+})
+
 
 app.get('/logout', function(req, res){
   req.logout();
@@ -232,45 +270,74 @@ app.get('/logout', function(req, res){
 	}
 })
 
-app.get('/streetstories', ensureBlogData, (req, res, next) => {
-  return res.render('blogs', {
-		data: req.featuredblogs
-    // ,
-		// vData: JSON.stringify(req.featuredblogs)
-  })
+app.get('/blog/api/profile/:id', (req, res, next) => {
+	var id = req.params.id;
+	console.log('profile id')
+	console.log(id)
+	const user = User.findOne({_id: id}).then((result) => result).catch((err) => next(err))
+	if (user.admin) {
+		return res.render('profile', {
+			user: user
+		})
+	}
 })
 
-app.get('/streetstory/:id', (req, res, next) => {
-  Blog.findById(req.params.id).lean().exec((err, doc) => {
-		if (err) {
-			return next(err)
-		}
-		if (doc && doc.author) {
-			// User.findById(doc.author).lean().exec((err, author) => {
-			// 	if (err) {
-			// 		console.log(err)
-			// 	} else {
-					return res.render('blog', {
-						user: (!req.user ? (!req.session || !req.session.user ? 'anon' : req.session.user) : req.user),
-						doc: doc,
-						// vDoc: JSON.stringify(doc),
-						author: (!doc.author ? {username: 'anon'} : doc.author)
-				  });
-			// 	}
-			// })
-		} else {
-			// console.log(doc)
-			return res.render('blog', {
-				user:  (!req.user ? (!req.session || !req.session.user ? 'anon' : req.session.user) : req.user),
-				// vDoc: JSON.stringify(doc),
-				doc: doc//JSON.parse(JSON.stringify(doc))//JSON.stringify(doc)
-			});
-		}
-	})
-})
+// app.get('/streetstory/:id', (req, res, next) => {
+//   Blog.findById(req.params.id).lean().exec((err, doc) => {
+// 		if (err) {
+// 			return next(err)
+// 		}
+// 		if (doc && doc.author) {
+// 			// User.findById(doc.author).lean().exec((err, author) => {
+// 			// 	if (err) {
+// 			// 		console.log(err)
+// 			// 	} else {
+// 					return res.render('blog', {
+// 						user: (!req.user ? (!req.session || !req.session.user ? 'anon' : req.session.user) : req.user),
+// 						doc: doc,
+// 						// vDoc: JSON.stringify(doc),
+// 						author: (!doc.author ? {username: 'anon'} : doc.author)
+// 				  });
+// 			// 	}
+// 			// })
+// 		} else {
+// 			// console.log(doc)
+// 			return res.render('blog', {
+// 				user:  (!req.user ? (!req.session || !req.session.user ? 'anon' : req.session.user) : req.user),
+// 				// vDoc: JSON.stringify(doc),
+// 				doc: doc//JSON.parse(JSON.stringify(doc))//JSON.stringify(doc)
+// 			});
+// 		}
+// 	})
+// })
 app.all('/blog/api/*'
 // , ensureAdmin
 )
+
+app.get('/blog/api/dashboard', ensureBlogData, autoIndexMedia, (req, res, next) => {
+	return res.render('blogs', {
+		data: req.featuredblogs,
+		// user: req.user.username
+		// ,
+		// vData: JSON.stringify(req.featuredblogs)
+	})
+})
+
+
+
+app.get('/blog/api/streetstories', (req, res, next) => {
+	return res.render('blogs', {
+		data: req.featuredblogs,
+		// user: req.user.username
+		// ,
+		// vData: JSON.stringify(req.featuredblogs)
+	})
+
+})
+
+app.get('/blog/api/streetstory/:id', (req, res, next) =>{
+	
+})
 
 app.post('/blog/api/newstory', upload.array(), parseBody
 , csrfProtection
@@ -282,19 +349,23 @@ app.post('/blog/api/newstory', upload.array(), parseBody
   return res.sendFile(htmlpath);
 })
 
-app.get('/blog/api/editstory/:type/:id', async (req, res, next) => {
-	const data = await Blog.find({}).then((data) => data).catch((err) => next(err));
+// app.post('/blog/api/')
+
+app.get('/blog/api/editstory/:type/:id', csrfProtection, async (req, res, next) => {
+	// console.log('kfjdsn;dfkns')
+	// const data = await Blog.find({}).then((data) => data).catch((err) => next(err));
 	// console.log(data)
   const doc = await Blog.findOne({_id: req.params.id}).then((doc) => doc).catch((err) => next(err));
 	// console.log(doc)
   // let author;
   // if (doc) author = await User.findById(doc.author).lean().then((author) => author).catch((err) => next(err));
+	console.log(req.csrfToken())
   return res.render('edit', {
-		data: data,
+		// data: data,
     doc: doc,
-    vDoc: JSON.stringify(doc),
-    // csrfToken: req.csrfToken(),
-    user: req.user,
+    // vDoc: JSON.stringify(doc),
+    csrfToken: req.csrfToken(),
+    // user: req.user,
     // author: author,
     edit: true
   });
@@ -309,7 +380,7 @@ app.post('/blog/api/editstory/:type/:id', upload.array(), parseBody, csrfProtect
     if (err) {
       return next(err)
     }
-    return res.redirect('/streetstory/'+doc._id);
+    return res.redirect('/blog/api/streetstory/'+doc._id);
   
   })
   // const post = new Blog({

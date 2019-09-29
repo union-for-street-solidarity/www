@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { graphql } from 'gatsby'
 
 import clothes from '../images/clothes.jpeg'
 import coffee from '../images/coffee.jpeg'

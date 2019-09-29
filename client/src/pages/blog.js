@@ -5,7 +5,7 @@ import Layout from '../components/layout'
 import StoryItem from '../components/story-item.js'
 import Header from '../components/Header.js'
 import Footer from '../components/Footer.js'
-import Item from '../components/Item.js'
+import MediaItem from '../components/media-item.js'
 
 class Blog extends React.Component {
   constructor(props) {
@@ -57,18 +57,29 @@ class Blog extends React.Component {
   }
   
   nextSlide() {
-    if (this.sliderIndex >= (this.allMongodbUssBlog.edges.length - 1)) {
-      this.carouselIndex = 0
+    var ci = this.state.carouselIndex
+    if (ci >= (this.allMongodbUssBlog.edges.length - 1)) {
+      this.setState({
+        carouselIndex: 0
+      })
     } else {
-      this.carouselIndex++
+      this.setState({
+        carouselIndex: ci++
+      })
     }
   }
   
   previousSlide() {
-    if (this.sliderIndex <= 0) {
-      this.carouselIndex = (this.allMongodbUssBlog.edges.length - 1)
+    var ci = this.state.carouselIndex
+    if (ci <= 0) {
+      this.setState({
+        carouselIndex: (this.allMongodbUssBlog.edges.length - 1)
+      })
     } else {
-      this.carouselIndex--
+      this.setState({
+        carouselIndex: ci--
+      })
+      
     }
   }
 
@@ -136,27 +147,22 @@ class Blog extends React.Component {
           <div id="wrapper">
             <Header onOpenArticle={this.handleOpenArticle} timeout={this.state.timeout} />
             {/*<div style={{display:'inline-block'}}>*/}
-            <ul className="alt blog">
+            <div className="alt blog main-container">
             {
               allMongodbUssBlog.edges.map(({ node }) => (
                 <>
+                
                 {
-                  node.media.map((item) => {
-                    return (
-                      <>
-                      <Item 
-                        key={`carousel${node.id}`}
-                        item={item} />
-                      </>
-                    )
-                  })
+                  //<div className="carousel-inner parallax-container" key={`carousel${node.id}media`}>
+                  node.media.map((item, index) => (<MediaItem index={index} node={node} item={item} key={`carousel${node.id}media${item.index}`} carouselIndex={this.state.carouselIndex} /> ))
+                  // </div>
                 }
                 <StoryItem item={node} key={node.id} />
                 </>
               ))
             }
             
-            </ul>
+            </div>
             {/*</div>*/}
             <Footer timeout={this.state.timeout} />
           </div>
@@ -186,6 +192,9 @@ export const pageQuery = graphql`
           description
           media {
             index
+            caption
+            image
+            thumb
           }
         }
       }

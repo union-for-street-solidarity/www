@@ -11,10 +11,10 @@ module.exports = {
     author: 'USS',
     description: 'TODO',
   },
-  // proxy: {
-  //   prefix: '/streetstories',
-  //   url: config.serverUrl
-  // },
+  proxy: {
+    prefix: '/uploadedImages',
+    url: config.serverUrl
+  },
   plugins: [
     'gatsby-plugin-react-helmet',
     {

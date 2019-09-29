@@ -3,6 +3,7 @@ var mongoose = require('mongoose'),
 		Blog = require('mongoose-geojson-schema');
 
 var Media = new Schema({
+  index: Number,
 	caption: String,
 	image: String,
 	image_abs: String,
@@ -20,7 +21,8 @@ var schema= new Schema({
 		lede: String,
 		description: String,
 		date: Date,
-		media: [Media],
+    media: [Media],
+		media2: { Media },
 		tags: [String],
     footnotes: [ ],
 	// },

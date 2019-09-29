@@ -8,17 +8,15 @@ block content
 		div.body
 			div#wrapper
 				include partials/modal.pug
-				form.container#form.row(v-if="doc && doc !== ''" method="POST" enctype="multipart/form-data" :action="(!edit ? ('/blog/api/newstory/') : ('/blog/api/editstory/'+doc.category+'/'+doc._id))")
-					if (csrfToken)
-						input(type="hidden" name="_csrf" value= csrfToken)
+
+				form.container#form(v-if="doc && doc !== ''" method="POST" enctype="multipart/form-data" :action="(!edit ? ('/blog/api/newstory/') : ('/blog/api/editstory/'+doc.category+'/'+doc._id))")
+					//- if (csrfToken)
+					input(type="hidden" name="_csrf" value= csrfToken)
 					input(type="hidden" value= (new Date()) name="date")
 					p(v-for="(key, i) in Object.keys(doc)" v-if="exclude.indexOf(key) === -1")
 						label(:for="key" v-text="key")
 						input(type="text" v-if="key !== 'lede' && key !== 'description' && key !== 'body'" :id="key" :name="key", :value="doc[key]")
 						textarea(v-else :id="key" :name="key" v-html="doc[key]" :style="{height: (key === 'description' ? '100vh' : 'auto')}")
-					//- div.row
-					//- 	label(for="description") Document body:
-					//- 	div#description(v-html="doc.body" style="border-bottom: 1px solid #e1e1e1;")
 					div.row(v-for="(foot, k) in doc.footnotes")
 						label(:for="'footnote'+k+''", v-text="'Footnote #'+ (k+1)")
 						input(type="text" :name="'footnote'+k+''" :id="'footnote'+k+''" :value="foot")
@@ -59,5 +57,6 @@ block content
 						div.row
 							h4 Danger: This cannot be undone:
 							a.btn.btn-warning.btn-block(role="button" @click="initDeleteEntry(doc._id)" v-text="'Delete this entry'")
-
+				if (!doc || doc === '')
+					a(role="button" href="/" v-text="'Go home'")
 	include vue/adminvue.pug
