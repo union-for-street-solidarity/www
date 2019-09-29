@@ -3,6 +3,7 @@ const config = require('../utils/config.js')
 // require("dotenv").config({
 //   path: path.resolve(process.cwd(), '../env')
 // });
+const url = config.serverUrl
 
 module.exports = {
   siteMetadata: {
@@ -11,8 +12,8 @@ module.exports = {
     description: 'TODO',
   },
   // proxy: {
-  //   prefix: '/blog/api',
-  //   url: 'http://localhost:8000'
+  //   prefix: '/streetstories',
+  //   url: config.serverUrl
   // },
   plugins: [
     'gatsby-plugin-react-helmet',
@@ -45,5 +46,7 @@ module.exports = {
       },
     },
     'gatsby-plugin-sass',
+    `gatsby-transformer-json`,
+    
   ],
 }

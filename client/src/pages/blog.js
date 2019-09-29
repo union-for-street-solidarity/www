@@ -1,10 +1,11 @@
 import React from 'react'
-import { graphql, Link, navigate } from 'gatsby'
+import { graphql, navigate } from 'gatsby'
 
 import Layout from '../components/layout'
 import StoryItem from '../components/story-item.js'
 import Header from '../components/Header.js'
 import Footer from '../components/Footer.js'
+import Item from '../components/Item.js'
 
 class Blog extends React.Component {
   constructor(props) {
@@ -14,7 +15,11 @@ class Blog extends React.Component {
       timeout: false,
       articleTimeout: false,
       article: '',
-      loading: 'is-loading'
+      loading: 'is-loading',
+      interval: false,
+      carouselInterval: null,
+      carouselIndex: (!props.data || !props.data.edges ? 0 : props.data.edges.length - 1),
+      allMongodbUssBlog: props.data
     }
     this.handleOpenArticle = this.handleOpenArticle.bind(this)
     this.setWrapperRef = this.setWrapperRef.bind(this);
@@ -25,6 +30,14 @@ class Blog extends React.Component {
         this.setState({loading: ''});
     }, 100);
     document.addEventListener('mousedown', this.handleClickOutside);
+    // const { allMongodbUssBlog } = this.props.data
+    if (!this.state.interval) {
+      var intervalState = this.state.interval;
+      this.carouselInterval = setInterval(() => this.nextSlide, 5000)
+      this.setState({
+        interval: !intervalState
+      })
+    }
     // var queryRx = /(?:\/\?a=)(.+)/g
     // if (queryRx.test(window.location.toString())) {
     //   var query = window.location.toString().match(queryRx)[0].replace('/?a=', '')
@@ -41,6 +54,22 @@ class Blog extends React.Component {
 
   setWrapperRef(node) {
     this.wrapperRef = node;
+  }
+  
+  nextSlide() {
+    if (this.sliderIndex >= (this.allMongodbUssBlog.edges.length - 1)) {
+      this.carouselIndex = 0
+    } else {
+      this.carouselIndex++
+    }
+  }
+  
+  previousSlide() {
+    if (this.sliderIndex <= 0) {
+      this.carouselIndex = (this.allMongodbUssBlog.edges.length - 1)
+    } else {
+      this.carouselIndex--
+    }
   }
 
   handleOpenArticle(article) {
@@ -110,7 +139,20 @@ class Blog extends React.Component {
             <ul className="alt blog">
             {
               allMongodbUssBlog.edges.map(({ node }) => (
+                <>
+                {
+                  node.media.map((item) => {
+                    return (
+                      <>
+                      <Item 
+                        key={`carousel${node.id}`}
+                        item={item} />
+                      </>
+                    )
+                  })
+                }
                 <StoryItem item={node} key={node.id} />
+                </>
               ))
             }
             
@@ -142,8 +184,44 @@ export const pageQuery = graphql`
           date
           author
           description
+          media {
+            index
+          }
         }
       }
     }
   }
 `
+/*
+media(index: { eq: $index } ) {
+  index {
+    caption
+    image
+    thumb
+  }
+}
+*/
+
+// export const pageQuery = graphql`
+//   query {
+//     user: allPostsJson(limit: 1) {
+//       edges {
+//         node {
+//           username
+//           ...Avatar_user
+//         }
+//       }
+//     }
+//     allPostsJson {
+//       edges {
+//         node {
+//           id
+//           text
+//           weeksAgo: time(difference: "weeks")
+//           ...Post_details
+//           ...PostDetail_details
+//         }
+//       }
+//     }
+//   }
+// `

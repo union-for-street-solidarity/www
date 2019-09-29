@@ -1,35 +1,7 @@
 import React from 'react'
-import { Link, graphql, navigate } from "gatsby"
+import { graphql, navigate } from "gatsby"
 import moment from 'moment'
-
-// <div>
-// 
-//   <p key={item.id+key}><strong>{key}</strong><span>: </span><span>{it}</span></p>
-// 	p.text-muted.my-0(v-text="moment(doc.date).format('MMMM Do YYYY') + ' at ' + moment(doc.date).format('hh:mm a')")
-// 
-// 	h5.py-3
-// 		small(v-text="doc.lede")
-// 
-// div.col-lg-6.py-4(v-if="doc.media && doc.media.length > 0" style="min-height: 100vh;")
-// 	div.parallax-container(v-for="(item, j) in doc.media" :class="(sliderIndex === j ? 'active' : '')"
-// 	:style="{opacity: (sliderIndex === j ? 1 : 0 ) }")
-// 		p(v-text="item.caption")
-// 
-// 
-// 	div.carousel-inner(style="position:absolute;left:0;right:0;")
-// 		div.carousel-item.carousel-item(v-for="(item, j) in doc.media" :class="(sliderIndex === j ? 'active' : '')"
-// 		:style="{opacity: (sliderIndex === j ? 1 : 0 ) }")
-// 			div.w-100(:style="{'background': 'url('+item.image+'?version='+Math.random()+')', 'background-size': 'cover'}" :alt="'Slide '+ j")
-// 		div.carousel-caption.d-md-block(v-for="(item, j) in doc.media" :class="(sliderIndex === j ? 'active' : '')"
-// 		:style="{opacity: (sliderIndex === j ? 1 : 0 ) }")
-// 
-// hr.py-2(style="max-width:75%;")
-// 
-// div#content(v-html="doc.description")
-// 
-// hr.py-2(style="max-width:75%;")
-// 
-// 
+import Item from './Item.js'
 class StoryItem extends React.Component {
   render() {
     const item = this.props.item
@@ -55,9 +27,21 @@ class StoryItem extends React.Component {
                     <h5 key={item.id+key}>{moment(it).format('MMMM Do, YYYY @ hh:mm a')}</h5>
                   )
                 } else {
-                  return (
-                    <div key={item.id+key} style={{display:'none'}}>{it}</div>
-                  )
+                  if (it.media) {
+                    return (
+                      <div key={item.id+key} style={{display:'none'}}>{
+                        it.media.map((result) => {
+                          return (
+                            <Item item={result} key={result.mongodb_id+key} />
+                          )
+                        })
+                      }</div>
+                    )
+                  } else {
+                    return (
+                      <div>No media</div>
+                    )
+                  }
                 }
                 
               } else {
@@ -117,6 +101,13 @@ export const storyFragment = graphql`
     date
     author
     description
-    
+    media {
+      index
+    }
   }
 `
+/* {
+  caption
+  image
+  thumb
+} */

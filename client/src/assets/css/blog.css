@@ -65,30 +65,57 @@ ul.blog {
   }
 
   .carousel-item {
-  	transition: opacity 1s ease-in-out!important;
-  	display: block!important;
+    /* display: flex;
+    flex: 1 0 auto; */
+    position: relative;
+    z-index: -1;
     height: 100vh;
+    /* justify-content: center;
+    align-items: center; */
+    transform: translateZ(-1px) scale(2);
+    background-color: rgb(250,228, 216);
+    transition: opacity 1s ease-in-out!important;
+    display: block!important;
+    /* height: 100vh; */
     overflow-x: hidden;
     overflow-y: hidden;
-    -webkit-perspective: 10px;
+    /* -webkit-perspective: 10px;
     -moz-perspective: 10px;
-    perspective: 2px;
+    perspective: 2px; */
     /* transform-style: preserve-3d; */
   	/* transition-property: opacity!important;
   	transition-duration: 1s!important; */
   }
   .parallax-container {
-    display: flex;
-    flex: 1 0 auto;
-    position: relative;
-    z-index: -1;
-    height: 100vh;
-    justify-content: center;
-    align-items: center;
-    transform: translateZ(-1px) scale(2);
-    background: url(https://www.toptal.com/designers/subtlepatterns/patterns/sakura.png);
-    background-color: rgb(250,228, 216);
   }
+  
+  .content-container {
+    position: absolute;
+    display: block;
+    background-color: white;
+    z-index: 1;
+  }
+
+  .parallax-container h1 {
+    letter-spacing: -15px;
+    font-family: Open Sans;
+    color: white;
+    text-align: center;
+    font-size: 200px;
+    font-weight: 800;
+    line-height: 200px;
+    position: absolute;
+  }
+
+  .main-container {
+    perspective: 1px;
+    transform-style: preserve-3d;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+
+  
 }
 
 @media (min-width: 600px) {

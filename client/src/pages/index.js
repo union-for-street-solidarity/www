@@ -145,21 +145,21 @@ class IndexPage extends React.Component {
 
 export default IndexPage
 
-export const pageQuery = graphql`
-  query {
-    allMongodbUssBlog {
-      edges {
-        node {
-          mongodb_id
-          id
-          title
-          lede
-          category
-          date
-          author
-          description
-        }
-      }
-    }
-  }
-`
+// export const pageQuery = graphql`
+//   query {
+//     allMongodbUssBlog {
+//       edges {
+//         node {
+//           mongodb_id
+//           id
+//           title
+//           lede
+//           category
+//           date
+//           author
+//           description
+//         }
+//       }
+//     }
+//   }
+// `
