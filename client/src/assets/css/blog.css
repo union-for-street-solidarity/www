@@ -17,8 +17,6 @@ input.block {
 	display: block!important;
   max-height: 100vh;
   overflow-y: hidden;
-	/* transition-property: opacity!important;
-	transition-duration: 1s!important; */
 }
 
 .modal {
@@ -35,12 +33,12 @@ input.block {
   width: auto;
 }
 .blog ul {
-    display: -moz-flex;
-    display: -ms-flex;
-    display: flex;
-    margin-bottom: 20px;
-    list-style: none;
-    padding-left: 0;
+  display: -moz-flex;
+  display: -ms-flex;
+  display: flex;
+  margin-bottom: 20px;
+  list-style: none;
+  padding-left: 0;
 }
 ul.blog {
   height:auto;
@@ -50,6 +48,12 @@ ul.blog {
   overflow:auto;
   display:flex;
 }
+.content-container {
+  position: relative;
+  display: block;
+  z-index: 2;
+}
+
 @supports ((perspective: 1px) and (not (-webkit-overflow-scrolling: touch))) {
   /* ... parallax styles ... */
   .w-100 {
@@ -65,38 +69,20 @@ ul.blog {
   }
 
   .carousel-item {
-    /* display: flex;
-    flex: 1 0 auto; */
-    /* position: relative; */
     z-index: -1;
     height: 50%;
-    /* justify-content: center;
-    align-items: center; */
     transform: translateZ(-1px) translateY(-50%) scale(2);
     background-color: rgb(250,228, 216);
     transition: opacity 1s ease-in-out!important;
     display: block!important;
-    /* height: 100vh; */
     overflow-x: hidden;
     overflow-y: hidden;
-    /* -webkit-perspective: 10px;
-    -moz-perspective: 10px;
-    perspective: 2px; */
-    /* transform-style: preserve-3d; */
-  	/* transition-property: opacity!important;
-  	transition-duration: 1s!important; */
+  	transition-property: opacity!important;
+  	transition-duration: 1s!important;
   }
   .carousel-item img {
     width: 100%;
     height: auto;
-  }
-  .parallax-container {
-  }
-  
-  .content-container {
-    position: absolute;
-    display: block;
-    z-index: 2;
   }
 
   .parallax-container h1 {

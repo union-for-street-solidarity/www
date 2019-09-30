@@ -1,13 +1,7 @@
 script(type="text/javascript").
 	Vue.prototype.moment = moment;
-	Vue.prototype.marked = marked;
 	Vue.prototype.$ = $;
-	Vue.prototype.htmldiff = htmldiff;
 	Vue.prototype.window = window;
-	//- Vue.prototype.d3 = d3;
-	//- Vue.prototype.xth = xth;
-	Vue.prototype.L = L;
-	//- Vue.prototype.CensusReporter = CensusReporter;
 	if (typeof tinymce === 'object') Vue.prototype.tinymce = tinymce;
 	new Vue({
 		el: '#vue',
@@ -16,7 +10,7 @@ script(type="text/javascript").
 				user: this.parseObj(!{JSON.stringify(user)}),
 				author: '',
 				data: this.parseObj(!{JSON.stringify(data)}),
-				doc: this.parseObj(!{JSON.stringify(doc)}),
+				doc: this.parseDoc(!{JSON.stringify(doc)}),
 				accordions: [],
 				file: null,
 				//items to hide in the viewer
@@ -27,7 +21,7 @@ script(type="text/javascript").
 				modal: false,
 				deleteWhich: '',
 				confirmed: false,
-				edit: false,
+				edit: this.parseBool(!{JSON.stringify(edit)}),
 				sliderIndex: 0,
 				sliderInterval: null
 			}
@@ -53,7 +47,7 @@ script(type="text/javascript").
 				}, 2000)
 			}
 			if (self.doc && self.doc !== '') {
-				self.edit = true
+				//- self.edit = true
 				var length = self.doc.media.length;
 				self.sliderInterval = setInterval(function(){
 					if (self.sliderIndex < (length - 1)){
@@ -64,12 +58,27 @@ script(type="text/javascript").
 				}, 5000)
 
 			} else {
-				self.edit = false
+				//- self.edit = false
 			}
 		},
 		methods: {
 			parseObj(obj) {
 				if (!obj) return '';
+				return obj;
+			},
+			parseDoc(obj) {
+				if (!obj) {
+					return {
+						title: 'Sample title',
+						lede: 'Sample lede',
+						category: 'blog',
+						author: 'tbushman',
+						description: '',
+						media: [],
+						tags: []
+						
+					};
+				}
 				return obj;
 			},
 			parseBool(item) {
@@ -129,12 +138,12 @@ script(type="text/javascript").
 						self.recordNo();
 					})
 					.catch((err)=>console.log(err))
-				} else if (self.deleteWhich.title) {
+				} else if (self.deleteWhich._id) {
 					$.post('/blog/api/deleteentry/'+self.deleteWhich._id)
 					.then((result)=>{
 						console.log(result);
 						// self.recordNo();
-						window.location.href = '/b'
+						window.location.href = '/blog/api/dashboard'
 					})
 					.catch((err)=>console.log(err))
 				}
@@ -157,26 +166,6 @@ script(type="text/javascript").
 				self.modal = true;
 				self.message = 'Are you sure you want to delete this image? This action is not reversible. ';
 				self.deleteWhich = i;
-			},
-			deletemedia(id, i) {
-				var self = this;
-				$.post('/blog/api/deletemedia/'+id+'/'+i+'')
-				.then((result) => {
-					console.log(result)
-				})
-				.catch((err) => {
-					console.log(err)
-				})
-			},
-			deleteentry(id) {
-				var self = this;
-				$.post('/blog/api/deleteentry/'+id+'')
-				.then((result) => {
-					console.log(result)
-				})
-				.catch((err) => {
-					console.log(err)
-				})
 			},
 			handleFile(id, i, e) {
 				var self = this;
@@ -218,6 +207,7 @@ script(type="text/javascript").
 					self.progressBar.width('0%');
 					self.progressBar = null;
 				}).fail(function (xhr, status) {
+					console.log(xhr, status)
 					alert(status);
 				})
 			}

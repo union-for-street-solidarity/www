@@ -6,7 +6,7 @@ class MediaItem extends React.Component {
 	render() {
 		const item = this.props.item
 		console.log(item)
-		if (this.props.carouselIndex === this.props.index) {
+		if (this.props.carouselIndex === this.props.index && item.image !== '/images/logo.jpg') {
 			return (
 				<div className="carousel-item parallax-container" style={{opacity: (this.props.carouselIndex === this.props.index && item.index === 0 ? 1 : 0 ) }}>
 					<img className="d-block w-100" src={item.image+'?version='+Math.random()} alt={'Slide '+ item.index}/>

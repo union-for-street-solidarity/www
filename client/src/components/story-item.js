@@ -7,7 +7,7 @@ class StoryItem extends React.Component {
     const item = this.props.item
     const keys = Object.keys(item)
     return (
-      <li className="blog content-container">
+      <div className="blog content-container">
 
         <div style={{display:'inline-block', width:'100%', overflow:'hidden'}}>
           {
@@ -67,7 +67,7 @@ class StoryItem extends React.Component {
         </div>
         <hr style={{clear:'both'}}></hr>
 
-      </li>
+      </div>
     )
   }
 } 

@@ -1,6 +1,7 @@
 li.row
-	div.col-lg-2
-	div.col-lg-10
+	div.container(class="25%")
+		img.img(v-for="(img, j) in doc.media" :src="img.thumb")
+	div.container(class="75%")
 		h1.py-4(v-text="doc.title")
 		p.text-muted.my-0(v-text="moment(doc.date).format('MMMM Do YYYY') + ' at ' + moment(doc.date).format('hh:mm a')")
 		
