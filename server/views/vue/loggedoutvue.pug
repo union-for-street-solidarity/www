@@ -1,0 +1,67 @@
+script(type="text/javascript").
+	Vue.prototype.$ = $;
+	Vue.prototype.window = window;
+	Vue.prototype.moment = moment;
+	new Vue({
+		el: '#vue',
+		data: function data(){
+			return {
+				checked: false,
+				user: '',
+				action: '/login',
+				data: this.parseObj(!{JSON.stringify(data)}),
+				doc: this.parseObj(!{JSON.stringify(doc)}),
+				sliderIndex: 0,
+				sliderInterval: null
+
+			}
+		},
+		watch: {
+		},
+		mounted: function(){
+			var self = this;
+			
+			if (self.data && self.data !== '') {
+				if (!self.doc || self.doc === '') {
+					self.doc = self.data[0];
+				}
+				var length = self.doc.media.length;
+				self.sliderInterval = setInterval(function(){
+					if (self.sliderIndex < (length - 1)){
+						self.sliderIndex++;
+					} else {
+						self.sliderIndex = 0;
+					}
+				}, 5000)
+
+			}
+
+		},
+		methods: {
+			parseObj(obj) {
+				if (!obj) return '';
+				return obj;
+			},
+			checkUser(e) {
+				var self = this;
+				console.log(e)
+				var user = e.target.value;
+				$.post('/auth/check/'+user)
+				.then(function(result) {
+					console.log(result)
+					if (!result || result === '') {
+						self.action = '/register'
+					} else {
+						self.action = '/login'
+					}
+					self.checked = true;
+				})
+				.catch(function(err){
+					if (err) {
+						self.action = '/register'
+						self.checked = true
+					}
+				})
+			}
+		}
+	})

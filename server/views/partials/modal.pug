@@ -1,0 +1,12 @@
+div(v-if="modal")
+	div.modal(tabindex="-1" role="dialog" id="confirmdelete" :style="{display: (!modal ? 'none' : 'block')}")
+		div.modal-dialog(role="document")
+			div.modal-content
+				div.modal-header
+					h5.modal-title(v-text="'Confirm delete'")
+				div.modal-body
+					p(v-text="message")
+				div.modal-footer.row
+					a(role="button" class="col-sm-4 btn btn-primary block" @click="recordYes" v-text="'Delete'")
+					div.col-sm-1
+					a(role="button" class="col-sm-4 btn btn-primary block" @click="recordNo" v-text="'Cancel'")

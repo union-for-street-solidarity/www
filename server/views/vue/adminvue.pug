@@ -1,0 +1,215 @@
+script(type="text/javascript").
+	Vue.prototype.moment = moment;
+	Vue.prototype.$ = $;
+	Vue.prototype.window = window;
+	if (typeof tinymce === 'object') Vue.prototype.tinymce = tinymce;
+	new Vue({
+		el: '#vue',
+		data: function data(){
+			return {
+				user: this.parseObj(!{JSON.stringify(user)}),
+				author: '',
+				data: this.parseObj(!{JSON.stringify(data)}),
+				doc: this.parseDoc(!{JSON.stringify(doc)}),
+				accordions: [],
+				file: null,
+				//items to hide in the viewer
+				exclude: ['_id', '__v', 'date', 'image', 'image_abs', 'thumb', 'thumb_abs', 'author', 'tags', 'footnotes', 'id', 'category', 'geometry', 'media', 'orientation'],
+				tinymce: null,
+				progressBar: null,
+				message: '',
+				modal: false,
+				deleteWhich: '',
+				confirmed: false,
+				edit: this.parseBool(!{JSON.stringify(edit)}),
+				sliderIndex: 0,
+				sliderInterval: null
+			}
+		},
+		watch: {
+			accordions: {
+				deep: true,
+				handler(accordions) {
+					var self = this;
+					self.accordions = accordions
+				}
+			}
+		},
+		mounted: function(){
+			var self = this;
+			var editable = $('#description')[0]//document.getElementById('description')[0];
+			console.log(editable)
+			if (self.tinymce === '' && editable && self.doc && self.doc !== '') {
+				self.loadTinyMCE()
+			} else {
+				setTimeout(function(){
+					self.loadTinyMCE()
+				}, 2000)
+			}
+			if (self.doc && self.doc !== '') {
+				//- self.edit = true
+				var length = self.doc.media.length;
+				self.sliderInterval = setInterval(function(){
+					if (self.sliderIndex < (length - 1)){
+						self.sliderIndex++;
+					} else {
+						self.sliderIndex = 0;
+					}
+				}, 5000)
+
+			} else {
+				//- self.edit = false
+			}
+		},
+		methods: {
+			parseObj(obj) {
+				if (!obj) return '';
+				return obj;
+			},
+			parseDoc(obj) {
+				if (!obj) {
+					return {
+						title: 'Sample title',
+						lede: 'Sample lede',
+						category: 'blog',
+						author: 'tbushman',
+						description: '',
+						media: [],
+						tags: []
+						
+					};
+				}
+				return obj;
+			},
+			parseBool(item) {
+				if (!item) return false;
+				return true;
+			},
+			initAccordions() {
+				var accordions = this.data.map((doc) => doc.id)
+				this.accordions = accordions
+			},
+			loadTinyMCE() {
+				var self = this;
+				var imglist = self.doc.media.map((item) => {
+					return {
+						title: item.image.split('/')[item.image.split('/').length - 1],
+						value: item.image
+					}
+				});
+				self.tinymce = tinymce.init({
+					selector: "#description",
+					menubar: false,
+					statusbar: false,
+					// theme: 'inlite',
+					// inline: true,
+					//- toolbar: "image",
+					//- menubar: "insert",
+					image_list: imglist,
+					image_description: false,
+					style_formats: [
+						{title: 'Image Left', selector: 'img', styles: {
+							'float' : 'left',
+							'margin': '0 10px 0 10px'
+						}},
+						{title: 'Image Right', selector: 'img', styles: {
+							'float' : 'right',
+							'margin': '0 10px 0 10px'
+						}}
+					],
+					image_dimensions: false,
+					//- [
+					//- 	{title: 'My image 1', value: 'https://www.tinymce.com/my1.gif'},
+					//- 	{title: 'My image 2', value: 'http://www.moxiecode.com/my2.gif'}
+					//- ]
+					plugins: 'lists, link, image',
+					valid_elements: '*[*]',
+					toolbar: 'bold italic underline strikethrough | bullist numlist | outdent indent blockquote | subscript superscript | link | image',
+					default_link_target: '_blank'
+				});
+			},
+			recordYes() {
+				var self = this;
+				if (!isNaN(parseInt(self.deleteWhich, 10))) {
+					$.post('/blog/api/deletemedia/'+self.doc._id+'/'+self.deleteWhich+'')
+					.then((result)=>{
+						console.log(result);
+						self.doc = result;
+						self.recordNo();
+					})
+					.catch((err)=>console.log(err))
+				} else if (self.deleteWhich._id) {
+					$.post('/blog/api/deleteentry/'+self.deleteWhich._id)
+					.then((result)=>{
+						console.log(result);
+						// self.recordNo();
+						window.location.href = '/blog/api/dashboard'
+					})
+					.catch((err)=>console.log(err))
+				}
+			},
+			recordNo() {
+				this.confirmed = false;
+				this.deleteWhich = '';
+				this.modal = false;
+				this.message = '';
+			},
+			initDeleteEntry(id) {
+				var self = this;
+				self.modal = true;
+				self.message = 'Are you sure you want to delete this blog entry? This action will delete all information and images for the blog entry, titled '+
+					self.doc.title +'.';
+				self.deleteWhich = self.doc;
+			},
+			initDeleteMedia(id, i) {
+				var self = this;
+				self.modal = true;
+				self.message = 'Are you sure you want to delete this image? This action is not reversible. ';
+				self.deleteWhich = i;
+			},
+			handleFile(id, i, e) {
+				var self = this;
+				self.file = e.target.files[0];
+				var formData = new FormData();
+				formData.append('img', self.file, self.file.name);
+				//https://www.codedodle.com/2016/10/nodejs-image-uploader-using-express-and.html
+				$.ajax({
+					url: '/blog/api/uploadimg/'+id+'',
+					method: 'POST',
+					data: formData,
+					processData: false,
+					contentType: false
+					,
+					xhr: function () {
+						var xhr = new XMLHttpRequest();
+					
+						// Add progress event listener to the upload.
+						xhr.upload.addEventListener('progress', function (event) {
+							self.progressBar = 
+								//document.getElementById('progress-bar')
+								$('.progress-bar');
+					
+							if (event.lengthComputable) {
+								var percent = (event.loaded / event.total) * 100;
+								self.progressBar.width(percent + '%');
+					
+								if (percent === 100) {
+									self.progressBar.removeClass('active');
+								}
+							}
+						});
+						return xhr;
+					}
+				}).done((result) => {
+					console.log(result)
+					self.doc = result;
+					self.progressBar.removeClass('active');
+					self.progressBar.width('0%');
+					self.progressBar = null;
+				}).fail(function (xhr, status) {
+					console.log(xhr, status)
+					alert(status);
+				})
+			}
+		}
+	})

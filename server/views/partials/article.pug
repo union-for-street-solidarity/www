@@ -1,0 +1,30 @@
+li.row
+	div.container(class="25%")
+		img.img(v-for="(img, j) in doc.media" :src="img.thumb")
+	div.container(class="75%")
+		h1.py-4(v-text="doc.title")
+		p.text-muted.my-0(v-text="moment(doc.date).format('MMMM Do YYYY') + ' at ' + moment(doc.date).format('hh:mm a')")
+		
+		h5.py-3
+			small(v-text="doc.lede")
+	//- div.carousel-inner(v-if="doc.media && doc.media.length > 0" style="position:relative;")
+	//- 	div.main-container
+	//- 		div.carousel-item(
+	//- 			v-for="(item, j) in doc.media" 
+	//- 			:class="(sliderIndex === j ? 'active' : '')", 
+	//- 			:style="{opacity: (sliderIndex === j ? 1 : 0 ), 'background': 'url('+item.image+'?version='+Math.random()+')', 'background-size': 'cover'}" 
+	//- 			:alt="'Slide '+ j")
+	//- 			h1(v-text="item.caption")
+	//- 
+
+			//- 	div.carousel-inner(style="position:relative;left:0;right:0;")
+			//- 		div.carousel-item(v-for="(item, j) in doc.media" :class="(sliderIndex === j ? 'active' : '')"
+			//- 		:style="{opacity: (sliderIndex === j ? 1 : 0 ) }")
+			//- 		div.carousel-caption(v-for="(item, j) in doc.media" :class="(sliderIndex === j ? 'active' : '')"
+			//- 		:style="{opacity: (sliderIndex === j ? 1 : 0 ) }")
+			//- 
+			//- hr.py-2(style="max-width:75%;")
+
+	//- div#story.content-container(v-html="doc.description")
+
+	hr.py-2(style="max-width:75%;")

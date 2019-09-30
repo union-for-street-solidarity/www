@@ -1,0 +1,33 @@
+extends layout
+block page
+	- var menu = "blogs"
+block content
+	
+	div#vue
+
+		div.body
+			div#wrapper
+				span.tb-font-l Enter username and password
+				form.row(enctype="multipart/form-data", method="POST", :action="action" )
+					input(type="hidden", name="_csrf", value= csrfToken)
+
+					div.row
+						label(for="username") Username
+						input(type="text", name="username", id="username", @blur="checkUser")
+						p &nbsp
+					
+					div.row(v-if="(action === '/register')")
+						label(for="username") E-mail
+						input(type="email", name="email", id="email")
+						p &nbsp
+					div.row(v-if="checked")
+						label(for="password") Password
+						input(type="password", name="password", id="password")
+						p &nbsp
+					div.row(v-if="checked")
+						button.block(type="submit", ariaDescription="Log in")
+							span(v-text="(action === '/login' ? 'Log in' : 'Register')") Log in
+					div.row(v-else)
+						a.block(role="button")
+							span Next
+	include vue/loggedoutvue.pug
