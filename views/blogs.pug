@@ -12,7 +12,9 @@ block content
 				div.container
 					ul.alt(v-for="(doc, i) in data")
 						a(:href="'/blog/api/editstory/blog/'+doc._id+''" v-text="'edit'")
-						include partials/article.pug
+						li.row(:id="doc.category" :class="(doc.category === article ? 'active' : '') + ' ' + (articleTimeout ? 'timeout' : '')")
+
+							include partials/article.pug
 					p
 						a(role="button" :href="'/blog/api/newstory'" v-text="'New blog'")
 	include vue/loggedoutvue.pug

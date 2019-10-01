@@ -1,0 +1,18 @@
+extends layout
+block page
+	- var menu = "blogs"
+block content
+	
+	div#vue
+		div(:class="'body '+ loading + ' ' +(isArticleVisible ? 'is-article-visible' : '')")
+			div#wrapper
+				include partials/header.pug
+				article(:id="doc.category" :class="(doc.category === article ? 'active' : '') + ' ' + (articleTimeout ? 'timeout' : '')")
+					include partials/article.pug
+					div.close(@click="handleCloseArticle")
+				footer#footer(:style="(timeout ? { display: 'none' } : { marginTop: 'auto'})")
+					p.copyright &copy Union for Street Solidarity
+					small
+						a(href="/login") admin
+				div#bg
+	include vue/loggedoutvue.pug

@@ -771,7 +771,7 @@ button {
   left: 0;
   width: 100%;
   height: 100vh;
-  z-index: 1; }
+  z-index: -1; }
   #bg:before, #bg:after {
     content: '';
     display: block;
@@ -793,7 +793,7 @@ button {
     background-size: auto, 256px 256px;
     background-position: center, center;
     background-repeat: no-repeat, repeat;
-    z-index: 2; }
+    z-index: 0; }
   #bg:after {
     -moz-transform: scale(1.125);
     -webkit-transform: scale(1.125);
@@ -807,7 +807,7 @@ button {
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
-    z-index: 1; }
+    z-index: -1; }
   .body.is-article-visible #bg:after {
     -moz-transform: scale(1.0825);
     -webkit-transform: scale(1.0825);

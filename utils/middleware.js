@@ -1,4 +1,4 @@
-const { Blog } = require('../server/models/index.js');
+const { Blog } = require('../models/index.js');
 function ensureAdmin(req, res, next) {
 	if (!req.isAuthenticated() || !req.user || !req.user.admin) {
 		return res.redirect('/login')

@@ -98,8 +98,8 @@ var storage = multer.diskStorage({
 
 var uploadmedia = multer({ storage: storage });
 
-const htmlpath = path.join(__dirname, './client/public/index.html');
-app.get('/', (req, res) => res.sendFile(htmlpath));
+// const htmlpath = path.join(__dirname, './client/public/index.html');
+// app.get('/', (req, res) => res.sendFile(htmlpath));
 
 // todo move these middleware to the middleware utils file
 function autoIndexMedia(req, res, next) {
@@ -167,6 +167,12 @@ app.use((request, response, next) => {
 	response.header('Access-Control-Allow-Methods', 'GET, POST');
 	response.header('Accept', '*/*');
 	next();
+});
+
+app.get('/', (req, res, next) => {
+	return res.render('main', {
+		
+	})
 });
 
 app.post('/auth/check/:username', async (req, res, next) => {
