@@ -1,8 +1,42 @@
-li.row
+.
+<article
+	id="distributions"
+	className={`${
+		this.props.article === 'distributions' ? 'active' : ''
+	} ${this.props.articleTimeout ? 'timeout' : ''}`}
+	style={{ display: 'none' }}
+>
+	<h2 className="major">Distributions</h2>
+	<span className="image main">
+		<img src={coffee} alt="" />
+	</span>
+	<p>
+		USS conducts distributions every other Saturday next door to the
+		Gateway Inn on North Temple and in the southwest corner of Pioneer
+		Park. We share coffee, food, vitamins, socks, clothing, and other
+		goods to aid in survival on the street. We also conduct surveys and
+		spend time talking with those who come to visit. Through material
+		aid and conversation, we aim to build solidarity, learn from our
+		community, and help people live more safely and happily.
+	</p>
+	<p>
+		If you are interested in volunteering, please email{' '}
+		<a href="mailto:unionforstreetsolidarity@gmail.com?subject=Interested in Volunteering!">
+			unionforstreetsolidarity@gmail.com
+		</a>
+		.
+	</p>
+	{close}
+</article>
+
+
+
+
+li.row(:id="doc.category" :class="(doc.category === article ? 'active' : '') + ' ' + (articleTimeout ? 'timeout' : '')")
+	h2.major(v-text="doc.title")
 	div.container(class="25%")
 		img.img(v-for="(img, j) in doc.media" :src="img.thumb")
 	div.container(class="75%")
-		h1.py-4(v-text="doc.title")
 		p.text-muted.my-0(v-text="moment(doc.date).format('MMMM Do YYYY') + ' at ' + moment(doc.date).format('hh:mm a')")
 		
 		h5.py-3

@@ -23,7 +23,12 @@ script(type="text/javascript").
 				confirmed: false,
 				edit: this.parseBool(!{JSON.stringify(edit)}),
 				sliderIndex: 0,
-				sliderInterval: null
+				sliderInterval: null,
+				isArticleVisible: false,
+				article: '',
+				timeout: false,
+				articleTimeout: false
+
 			}
 		},
 		watch: {
@@ -210,6 +215,51 @@ script(type="text/javascript").
 					console.log(xhr, status)
 					alert(status);
 				})
+			},
+			handleOpenArticle(article) {
+				var self = this;
+				var isArticleVisible = this.isArticleVisible
+				this.isArticleVisible = !isArticleVisible;
+				this.article = article;
+						
+				setTimeout(() => {
+					var timeout = self.timeout;
+					self.timeout = !timeout;
+				}, 325)
+
+				setTimeout(() => {
+					var articleTimeout = self.articleTimeout;
+					self.articleTimeout = !articleTimeout
+				}, 350)
+
 			}
+
+			handleCloseArticle() {
+				var self = this;
+				var articleTimeout = self.articleTimeout;
+				self.articleTimeout = !articleTimeout
+
+				setTimeout(() => {
+					var timeout = self.timeout;
+					self.timeout = !timeout;
+				}, 325)
+
+				setTimeout(() => {
+					var isArticleVisible = this.isArticleVisible
+					this.isArticleVisible = !isArticleVisible;
+					this.article = '';
+				}, 350)
+				
+				window.location.href = '/'
+			}
+
+			handleClickOutside(event) {
+				//- if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+					if (this.isArticleVisible) {
+						this.handleCloseArticle();
+					}
+				//- }
+			}
+
 		}
 	})

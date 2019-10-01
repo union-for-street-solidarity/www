@@ -1,0 +1,19 @@
+header#header(:style='{timeout ? { display: 'none' } : {}}')
+	img(:src='logo' alt="USS" :style=("{borderRadius: '50%',width: 150,height: 150,objectFit: 'contain'}")
+
+	div.content
+		div.inner
+			h1 Union for Street Solidarity
+				p	Solidarity not Charity
+	nav
+		ul
+			li
+				button(@click="onOpenArticle('intro')" v-text="'Intro'")
+			li
+				button(@click="onOpenArticle('donate')" v-text="'Donate'")
+			li
+				button(@click="onOpenArticle('distributions')" v-text="'Distributions'")
+			li
+				a(role="button" href="/blog" v-text="'Street Stories'")
+
+

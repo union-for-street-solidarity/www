@@ -24,9 +24,9 @@ const parseJSONBody = bodyParser.json();
 const parseBody = [parseJSONBody, parseForm];
 const cookieParser = require("cookie-parser");
 const sharp = require('sharp');
-const { User, Blog } = require('./server/models/index.js');
-const staticPath = path.join(__dirname, '.', 'client', 'public');
-const publicPath = path.join(__dirname, '.', 'server', 'public');
+const { User, Blog } = require('./models/index.js');
+// const staticPath = path.join(__dirname, '.', 'client', 'public');
+const publicPath = path.join(__dirname, '.', 'public');
 const uploadedImages = '../uploads/img/';
 const url = require('url')
 
@@ -141,10 +141,10 @@ function grantAdmins(req, res, next) {
 }
 
 app
-.set('views', './server/views')
+.set('views', './views')
 .set('view engine', 'pug')
-.use(favicon(path.join(__dirname, 'client/src/images', 'favicon.ico')))
-.use('/', express.static(staticPath))
+.use(favicon(path.join(__dirname, 'public/images', 'favicon.ico')))
+// .use('/', express.static(staticPath))
 .use('/uploadedImages',express.static(path.join(__dirname, uploadedImages)))
 .use(express.static(publicPath))
 .use(session(sess),

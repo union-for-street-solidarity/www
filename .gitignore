@@ -1,16 +1,17 @@
 .env
 # Project dependencies
 .cache
-/client/.cache
+# /client/.cache
+client
 node_modules
-/client/node_modules
+# /client/node_modules
 yarn-error.log
 package-lock.json
 yarn.lock
 
 # Build directory
-/client/public
+# /client/public
 .DS_Store
-!/client/public/static
+# !/client/public/static
 
-/server/public/stylesheets/*
+/server/public/stylesheets/styles/*
