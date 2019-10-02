@@ -1,5 +1,5 @@
 header#header(:style="(timeout ? { display: 'none' } : {})")
-	img(src='/images/logo.jpg' alt="USS" :style="{borderRadius: '50%',width: 150,height: 150,objectFit: 'contain'}")
+	img(src='/images/logo.jpg' alt="USS" :style="{borderRadius: '50%',width: '150px', height: '150px', objectFit: 'contain'}")
 
 	div.content
 		div.inner
@@ -8,11 +8,14 @@ header#header(:style="(timeout ? { display: 'none' } : {})")
 	nav
 		ul
 			li
-				button(@click="handleOpenArticle('intro')" v-text="'Intro'")
+				a(role="button" href="/intro" v-text="'Intro'")
+				//- button(@click="handleOpenArticle('intro')" v-text="'Intro'")
 			li
-				button(@click="handleOpenArticle('donate')" v-text="'Donate'")
+				a(role="button" href="/donate" v-text="'Donate'")
+				//- button(@click="handleOpenArticle('donate')" v-text="'Donate'")
 			li
-				button(@click="handleOpenArticle('distributions')" v-text="'Distributions'")
+				a(role="button" href="/distributions" v-text="'Distributions'")
+				//- button(@click="handleOpenArticle('distributions')" v-text="'Distributions'")
 			li
 				a(role="button" href="/blog" v-text="'Street Stories'")
 

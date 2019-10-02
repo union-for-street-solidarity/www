@@ -1,15 +1,26 @@
 extends layout
 block page
-	- var menu = "blogs"
+	- var menu = "home"
 block content
 	
 	div#vue
 		div(:class="'body '+ loading + ' ' +(isArticleVisible ? 'is-article-visible' : '')")
 			div#wrapper
 				include partials/header.pug
-				article(:id="doc.category" :class="(doc.category === article ? 'active' : '') + ' ' + (articleTimeout ? 'timeout' : '')")
-					include partials/article.pug
-					div.close(@click="handleCloseArticle")
+				div.container(v-if="doc.category === 'blog' && article === 'blog'")
+					div.blog(v-for="(doc, i) in data")
+						a(v-if="user && user !== '' && user.admin" :href="'/blog/api/editstory/blog/'+doc._id+''" v-text="'edit'")
+						div.row(:id="doc.category" :class="(doc.category === article ? 'active' : '') + ' ' + (articleTimeout ? 'timeout' : '')")
+
+							include partials/article.pug
+					p(v-if="user && user !== '' && user.admin" )
+						a(role="button" :href="'/blog/api/newstory'" v-text="'New blog'")
+				div#main(:style="{ display: (timeout ? 'flex' : 'none')}" v-for="(doc, i) in data" v-if="doc.category === article && doc.category !== 'blog'")
+					
+
+					article(:id="doc.category" :class="(articleTimeout ? 'active timeout' : 'active')")
+						include partials/article.pug
+						div.close(@click="handleCloseArticle")
 				footer#footer(:style="(timeout ? { display: 'none' } : { marginTop: 'auto'})")
 					p.copyright &copy Union for Street Solidarity
 					small

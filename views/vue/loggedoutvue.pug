@@ -29,7 +29,11 @@ script(type="text/javascript").
 				if (!self.doc || self.doc === '') {
 					self.doc = self.data[0];
 				}
+				self.article = self.doc.category
 				var length = self.doc.media.length;
+				if (window.location.href.split('/')[window.location.href.split('/').length - 1] === self.article) {
+					self.handleOpenArticle(self.article)
+				}
 				self.sliderInterval = setInterval(function(){
 					if (self.sliderIndex < (length - 1)){
 						self.sliderIndex++;

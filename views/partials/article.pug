@@ -1,5 +1,5 @@
 h2.major(v-text="doc.title")
-div.container(class="25%")
+span.image.main
 	img.img(v-for="(img, j) in doc.media" :src="img.thumb")
 div.container(class="75%")
 	small(v-if="doc.category === 'blog'")

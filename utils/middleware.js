@@ -35,22 +35,7 @@ function ensureBlogData(req, res, next) {
 		if (err) return next(err);
 		if (!distinct || distinct.length === 0) {
 			
-			var data = initData.map((doc) => {
-				var entry = {
-					title: 'About the '+doc.category+'',
-					category: doc.category,
-					description: doc.description,
-					media: doc.media,
-					tags: ['committee'],
-					date: new Date()
-				}
-				var blog = new Blog(entry);
-				blog.save((err) => console.log(err));
-				return entry;
-			});
-			// data = await Blog.find({}).lean().then((data)=>data).catch((err)=>next(err));
-			if (data && data.length > 0) req.featuredblogs = data;
-			return next();
+			return res.redirect('/blog/api/seed')
 
 		} else {
 			aggregateData(distinct, (err, data)=>{
@@ -64,4 +49,71 @@ function ensureBlogData(req, res, next) {
 	
 
 }
-module.exports = { ensureAdmin, ensureAuthenticated, ensureBlogDocument, ensureBlogData }
+// todo move these middleware to the middleware utils file
+function autoIndexMedia(req, res, next) {
+	Blog.find({}).lean().exec(async (err, data) => {
+		if (err) {
+			return next(err)
+		}
+		await data.forEach(async(doc, i) => {
+			doc.media.forEach((item, j) => {
+				item.index = j
+			})
+			await Blog.findOneAndUpdate({_id: req.params.id}, {$set: {media: JSON.parse(JSON.stringify(doc.media))}}, {new: true}, (err, doc) => {
+				if (err) {
+					return next(err)
+				}
+				return next()
+			})
+		})
+	})
+}
+
+function grantAdmins(req, res, next) {
+	User.find({}).lean().exec(async (err, users) => {
+		if (err) {
+			return next(err)
+		}
+		await users.forEach((user) => {
+			if (config.admin.split(',').indexOf(user.username) !== -1 && !user.admin) {
+				User.findOneAndUpdate({_id: user._id}, {$set: {admin: true}}, {upsert: false}, (err, user) => {
+					if (err) {
+						console.log(err)
+					}
+					
+				})
+			} 
+		})
+		return next()
+	})
+}
+
+const seedDb = async (req, res, next) => {
+	const distinct = await Blog.distinct("category").then((dist) => dist).catch((err) => console.log(err));
+	if (distinct && distinct.length > 1) {
+		return next()
+	} else {
+		const abs = path.join(publicPath, 'content.json');
+		const exists = await fs.existsSync(abs);
+		if (exists) {
+			const content = await fs.readFileSync(abs).toString();
+			console.log(content)
+			await JSON.parse(content).forEach(async (item) => {
+				const entry = new Blog(item);
+				entry.date = new Date()
+				await entry.save((err) => {
+					if (err) {
+						return next(err)
+					} else {
+						console.log('ok')
+					}
+				})
+				return next()
+			})
+		} else {
+			console.log(abs)
+		}
+	}
+}
+
+module.exports = { ensureAdmin, ensureAuthenticated, ensureBlogDocument, ensureBlogData, autoIndexMedia, grantAdmins, seedDb }

@@ -39,7 +39,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "node-sass utils/scss/main.scss public/stylesheets/styles/style.css",
-    "develop": "node-sass utils/scss/main.scss public/stylesheets/styles/style.css && npm run start",
+    "develop": "node-sass --watch utils/scss/main.scss public/stylesheets/styles/style.css & npm run start",
     "start": "node app.js"
   },
   "repository": {

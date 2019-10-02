@@ -13,7 +13,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 // const OAuth2Strategy = require('passport-oauth2').Strategy;
 const MongoDBStore = require('connect-mongodb-session')(session);
-const { ensureAdmin, ensureAuthenticated, ensureBlogData, ensureBlogDocument } = require('./utils/middleware.js');
+const { ensureAdmin, ensureAuthenticated, ensureBlogData, ensureBlogDocument, autoIndexMedia, grantAdmins, seedDb } = require('./utils/middleware.js');
 const mongoose = require('mongoose');
 const promise = require('bluebird');
 const csrf = require('csurf'); 
@@ -52,6 +52,7 @@ passport.deserializeUser(function(id, cb) {
 	});
 });
 passport.use(new LocalStrategy(User.authenticate()));
+// TODO: MatterMost Auth!
 // passport.use(new OAuth2Strategy({
 //		 authorizationURL: 'https://www.example.com/oauth2/authorize',
 //		 tokenURL: 'https://www.example.com/oauth2/token',
@@ -98,53 +99,10 @@ var storage = multer.diskStorage({
 
 var uploadmedia = multer({ storage: storage });
 
-// const htmlpath = path.join(__dirname, './client/public/index.html');
-// app.get('/', (req, res) => res.sendFile(htmlpath));
-
-// todo move these middleware to the middleware utils file
-function autoIndexMedia(req, res, next) {
-	Blog.find({}).lean().exec(async (err, data) => {
-		if (err) {
-			return next(err)
-		}
-		await data.forEach(async(doc, i) => {
-			doc.media.forEach((item, j) => {
-				item.index = j
-			})
-			await Blog.findOneAndUpdate({_id: req.params.id}, {$set: {media: JSON.parse(JSON.stringify(doc.media))}}, {new: true}, (err, doc) => {
-				if (err) {
-					return next(err)
-				}
-				return next()
-			})
-		})
-	})
-}
-
-function grantAdmins(req, res, next) {
-	User.find({}).lean().exec(async (err, users) => {
-		if (err) {
-			return next(err)
-		}
-		await users.forEach((user) => {
-			if (config.admin.split(',').indexOf(user.username) !== -1 && !user.admin) {
-				User.findOneAndUpdate({_id: user._id}, {$set: {admin: true}}, {upsert: false}, (err, user) => {
-					if (err) {
-						console.log(err)
-					}
-					
-				})
-			} 
-		})
-		return next()
-	})
-}
-
 app
 .set('views', './views')
 .set('view engine', 'pug')
 .use(favicon(path.join(__dirname, 'public/images', 'favicon.ico')))
-// .use('/', express.static(staticPath))
 .use('/uploadedImages',express.static(path.join(__dirname, uploadedImages)))
 .use(express.static(publicPath))
 .use(session(sess),
@@ -169,11 +127,46 @@ app.use((request, response, next) => {
 	next();
 });
 
-app.get('/', (req, res, next) => {
+app.get('/', ensureBlogData, (req, res, next) => {
 	return res.render('main', {
-		
+		data: req.featuredblogs
 	})
 });
+
+app.param('category', (req, res, next, value) => {
+	console.log('param')
+	console.log(value)
+	if (['login', 'register', 'auth', 'loggedin', 'logout'].indexOf(value) !== -1) {
+		return next('route')
+	}
+	Blog.findOne({category: value}).lean().exec((err, doc) => {
+		if (err) {
+			return next('route')
+		} else {
+			if (!doc) {
+				return next('route')
+			} else {
+				return next()
+			}
+		}
+	})
+})
+app.get('/:category', (req, res, next) => {
+	Blog.find({category: req.params.category}).lean().exec((err, data) => {
+		if (err) {
+			return next(err)
+		}
+		if (data.length === 0) {
+			return res.redirect('/blog/api/seed')
+		} else {
+			return res.render('main', {
+				data: data,
+				doc: data[data.length - 1],
+				user: req.user
+			})
+		}
+	})
+})
 
 app.post('/auth/check/:username', async (req, res, next) => {
 	var username = req.params.username;
@@ -288,6 +281,13 @@ app.all('/blog/api/*'
 , ensureAdmin
 )
 
+app.get('/blog/api/seed', seedDb, (req, res, next) => {
+	return res.redirect('/')
+})
+
+
+
+
 app.get('/blog/api/grantadmins', grantAdmins, (req, res, next) => {
 	return res.redirect('/')
 })
@@ -401,6 +401,7 @@ app.post('/blog/api/newstory', upload.array(), parseBody
 		}
 	})
 })
+
 .post('/blog/api/deleteentry/:id', async function(req, res, next) {
 	var outputPath = url.parse(req.url).pathname;
 	var id = req.params.id;
@@ -449,7 +450,6 @@ app
 .use(function (req, res, next) {
 	if (req.url) console.log(require('url').parse(req.url).pathname)
 	var err = new Error('Not Found');
-	err.status = 404;
 	return next(err)
 })
 .use(function (err, req, res, next) {

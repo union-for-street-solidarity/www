@@ -8,9 +8,10 @@ html
 		base(href="")
 		link(rel="stylesheet", href="/stylesheets/styles/style.css?version=1")
 		link(rel="stylesheet", href="/stylesheets/css/blog.css?version=2")
+		//[if lt IE 9]
+			<link rel="stylesheet" href="/stylesheets/css/ie9.css?version=1">
+			<link rel="stylesheet" href="/stylesheets/css/noscript.css?version=1">
 		link(rel="stylesheet", href="/stylesheets/css/font-awesome.min.css?version=1")
-		link(rel="stylesheet", href="/stylesheets/css/ie9.css?version=1")
-		link(rel="stylesheet", href="/stylesheets/css/noscript.css?version=1")
 		link(rel="icon" type="image/png" sizes="48x48" href="/icons/icon-48x48.png")
 		link(rel="icon" type="image/png" sizes="72x72" href="/icons/icon-72x72.png")
 		link(rel="icon" type="image/png" sizes="96x96" href="/icons/icon-96x96.png")
@@ -28,6 +29,7 @@ html
 		script(type="text/javascript", src="/scripts/jquery-ui.min.js")
 		script(type="text/javascript", src="/scripts/moment-with-locales.min.js")
 		script(type="text/javascript", src="/scripts/marked.min.js")
+		script(src='https://donorbox.org/install-popup-button.js' type='text/javascript' defer)
 		script.
 			var module = {};
 		script(src="https://cdn.tiny.cloud/1/yb2pwtctf7qznwdoo61w3kyj127j61gch5uhhzneop9mfkg7/tinymce/5/tinymce.min.js")
