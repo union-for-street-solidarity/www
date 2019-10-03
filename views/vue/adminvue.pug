@@ -7,6 +7,7 @@ script(type="text/javascript").
 		el: '#vue',
 		data: function data(){
 			return {
+				loading: false,
 				user: this.parseObj(!{JSON.stringify(user)}),
 				author: '',
 				data: this.parseObj(!{JSON.stringify(data)}),
@@ -28,7 +29,6 @@ script(type="text/javascript").
 				article: '',
 				timeout: false,
 				articleTimeout: false
-
 			}
 		},
 		watch: {
@@ -51,9 +51,23 @@ script(type="text/javascript").
 					self.loadTinyMCE()
 				}, 2000)
 			}
-			if (self.doc && self.doc !== '') {
-				//- self.edit = true
+			if (self.data && self.data !== '') {
+				if (!self.doc || self.doc === '') {
+					self.doc = self.data[0];
+				}
+				self.article = self.doc.category
 				var length = self.doc.media.length;
+				if (window.location.href.split('/')[window.location.href.split('/').length - 1] === self.article) {
+					if (self.article === 'donate') {
+						var db = document.createElement('script');
+						db.type = 'text/javascript';
+						db.defer = true;
+						db.src = 'https://donorbox.org/install-popup-button.js';
+						var s = document.getElementsByTagName('script')[0];
+						s.parentNode.insertBefore(db, s);
+					}
+					self.handleOpenArticle(self.article)
+				}
 				self.sliderInterval = setInterval(function(){
 					if (self.sliderIndex < (length - 1)){
 						self.sliderIndex++;
@@ -62,9 +76,8 @@ script(type="text/javascript").
 					}
 				}, 5000)
 
-			} else {
-				//- self.edit = false
 			}
+
 		},
 		methods: {
 			parseObj(obj) {

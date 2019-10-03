@@ -2,8 +2,8 @@ h2.major(v-text="doc.title")
 span.image.main
 	img.img(v-for="(img, j) in doc.media" :src="img.thumb")
 div.container(class="75%")
-	small(v-if="doc.category === 'blog'")
-		p.text-muted.my-0(v-text="moment(doc.date).format('MMMM Do YYYY') + ' at ' + moment(doc.date).format('hh:mm a')")
+	//- small(v-if="doc.category === 'blog'")
+	p.text-muted.my-0(v-if="doc.category === 'blog'" v-text="moment(doc.date).format('MMMM Do YYYY') + ' at ' + moment(doc.date).format('hh:mm a')")
 	h5
 		small(v-text="doc.lede")
 	p(v-html="doc.description")

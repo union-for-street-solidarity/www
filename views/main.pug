@@ -19,6 +19,7 @@ block content
 					
 
 					article(:id="doc.category" :class="(articleTimeout ? 'active timeout' : 'active')")
+						a(:href="'/blog/api/editstory/'+doc.category+'/'+doc._id+''" v-text="'edit'")
 						include partials/article.pug
 						div.close(@click="handleCloseArticle")
 				footer#footer(:style="(timeout ? { display: 'none' } : { marginTop: 'auto'})")

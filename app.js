@@ -102,7 +102,7 @@ var uploadmedia = multer({ storage: storage });
 app
 .set('views', './views')
 .set('view engine', 'pug')
-.use(favicon(path.join(__dirname, 'public/images', 'favicon.ico')))
+.use(favicon(path.join(publicPath, 'icons', 'favicon.ico')))
 .use('/uploadedImages',express.static(path.join(__dirname, uploadedImages)))
 .use(express.static(publicPath))
 .use(session(sess),
@@ -134,8 +134,8 @@ app.get('/', ensureBlogData, (req, res, next) => {
 });
 
 app.param('category', (req, res, next, value) => {
-	console.log('param')
-	console.log(value)
+	// console.log('param')
+	// console.log(value)
 	if (['login', 'register', 'auth', 'loggedin', 'logout'].indexOf(value) !== -1) {
 		return next('route')
 	}
@@ -159,6 +159,7 @@ app.get('/:category', (req, res, next) => {
 		if (data.length === 0) {
 			return res.redirect('/blog/api/seed')
 		} else {
+			// console.log(req.user, req.session.user)
 			return res.render('main', {
 				data: data,
 				doc: data[data.length - 1],
@@ -209,6 +210,7 @@ app.post('/register', upload.array(), parseBody, csrfProtection, function(req, r
 					if (error) {
 						return next(error)
 					}
+					req.session.user = doc;
 					req.session.userId = doc._id;
 					req.session.loggedin = doc.username;
 					
@@ -230,7 +232,7 @@ app.get('/login', csrfProtection, (req, res, next) => {
 app.post('/login', upload.array(), parseBody, csrfProtection, passport.authenticate('local', {
 	failureRedirect: '/login'
 }), function(req, res, next) {
-
+	req.session.user = req.user;
 	req.session.userId = req.user._id;
 	req.session.loggedin = req.user.username;
 	res.redirect('/loggedin/'+req.user._id);
@@ -300,12 +302,12 @@ app.get('/blog/api/grantadmins', grantAdmins, (req, res, next) => {
 		})
 	}
 })
-.get('/blog/api/dashboard', ensureBlogData, autoIndexMedia, (req, res, next) => {
-	return res.render('blogs', {
-		data: req.featuredblogs,
-		user: req.user
-	})
-})
+// .get('/blog/api/dashboard', ensureBlogData, autoIndexMedia, (req, res, next) => {
+// 	return res.render('main', {
+// 		data: req.featuredblogs,
+// 		user: req.user
+// 	})
+// })
 .get('/blog/api/newstory', (req, res, next) => {
 	var blog = new Blog({
 		category: 'blog',
@@ -370,7 +372,7 @@ app.post('/blog/api/newstory', upload.array(), parseBody
 		if (err) {
 			return next(err)
 		}
-		return res.redirect('/blog/api/dashboard');
+		return res.redirect('/blog');
 	
 	})
 })

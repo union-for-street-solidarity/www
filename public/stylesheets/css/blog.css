@@ -2,7 +2,7 @@
   background:#2d81c5;color:#fff;text-decoration:none;font-family:Verdana,sans-serif;display:inline-block;font-size:16px;padding:15px 38px 15px 38px;border-radius: 2px;box-shadow: 0 1px 0 0 #1f5a89;text-shadow: 0 1px rgba(0, 0, 0, 0.3);
 }
 .blog {
-  background-color: #333;
+  background-color: rgba(27, 31, 34, 0.85);
   margin: 50px 0 0 0;
   display: inline-block;
   left: 0;
@@ -27,7 +27,7 @@ input.block {
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: #333;
+  background-color: rgba(27, 31, 34, 0.85);
   margin: 10%;
   padding: 2.5rem;
 }
@@ -54,6 +54,10 @@ ul.blog {
   position: relative;
   display: block;
   z-index: 2;
+}
+
+.text-muted {
+  color: #777;
 }
 
 @supports ((perspective: 1px) and (not (-webkit-overflow-scrolling: touch))) {

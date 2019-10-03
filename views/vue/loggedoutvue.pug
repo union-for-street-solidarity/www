@@ -7,7 +7,7 @@ script(type="text/javascript").
 		data: function data(){
 			return {
 				checked: false,
-				user: '',
+				user: this.parseObj(!{JSON.stringify(user)}),
 				action: '/login',
 				data: this.parseObj(!{JSON.stringify(data)}),
 				doc: this.parseObj(!{JSON.stringify(doc)}),
@@ -32,6 +32,14 @@ script(type="text/javascript").
 				self.article = self.doc.category
 				var length = self.doc.media.length;
 				if (window.location.href.split('/')[window.location.href.split('/').length - 1] === self.article) {
+					if (self.article === 'donate') {
+						var db = document.createElement('script');
+						db.type = 'text/javascript';
+						db.defer = true;
+						db.src = 'https://donorbox.org/install-popup-button.js';
+						var s = document.getElementsByTagName('script')[0];
+						s.parentNode.insertBefore(db, s);
+					}
 					self.handleOpenArticle(self.article)
 				}
 				self.sliderInterval = setInterval(function(){

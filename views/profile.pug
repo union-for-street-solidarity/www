@@ -10,9 +10,9 @@ block content
 				div.container#page-top
 					section
 						if (user)
-							if (user.admin)
-								p
-									a(role="button" href="/blog/api/dashboard" v-text="'Blog dashboard'")
+							//- if (user.admin)
+							//- 	p
+							//- 		a(role="button" href="/blog/api/dashboard" v-text="'Blog dashboard'")
 
 							p(v-text="'Logged in as '+ user.username +'.'")
 							a(role="button" href="/logout" v-text="'Logout'")
