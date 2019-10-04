@@ -239,7 +239,10 @@ app.post('/login', upload.array(), parseBody, csrfProtection, passport.authentic
 });
 
 app.get('/loggedin', async(req, res, next) => {
-	const user = await User.findOne({_id: req.user._id}).then((result) => result).catch((err) => next(err));
+	let user;
+	if (req.user) {
+		user = await User.findOne({_id: req.user._id}).then((result) => result).catch((err) => next(err));
+	}
 	if (user) {
 		return res.redirect('/loggedin/'+req.user._id)
 	} else {
@@ -249,9 +252,11 @@ app.get('/loggedin', async(req, res, next) => {
 
 app.get('/loggedin/:id', csrfProtection, async (req, res, next) => {
 	const user = await User.findOne({_id: req.params.id}).then((result) => result).catch((err) => next(err));
+	const data = await Blog.find({author: req.params.id}).then((result) => result).catch((err) => next(err));
 	return res.render('profile', {
 		user: user,
-		csrfToken: req.csrfToken()
+		csrfToken: req.csrfToken(),
+		data: data
 	})
 })
 app.post('/loggedin/:id', upload.array(), parseBody, csrfProtection, (req, res, next) => {
@@ -459,7 +464,7 @@ app
 	console.log(err)
 	console.log("!!!ERROR!!!")
 	// res.status(err.status || 500);
-	res.render('error', {
+	return res.render('error', {
 		message: err.message,
 		error: {}
 	});

@@ -50,6 +50,9 @@ block content
 	if (user)
 		if (user.admin)
 			include vue/adminvue.pug
+			p(v-for="(doc, i) in data" v-if="(user.admin && doc.author && doc.author === user._id)")
+				include partials/article.pug
+
 		else
 			// for now
 			include vue/adminvue.pug
