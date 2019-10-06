@@ -228,7 +228,7 @@ app.post('/register', upload.array(), parseBody, csrfProtection, function(req, r
 					req.session.userId = doc._id;
 					req.session.loggedin = doc.username;
 					
-					return res.redirect('/blog/api/streetstories')
+					return res.redirect('/loggedin')
 				})
 			});
 		});
