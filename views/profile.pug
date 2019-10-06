@@ -28,7 +28,7 @@ block content
 									small.text-muted(v-text="'You are admin.'")
 								p
 									div.form-group
-										label(for="about")
+										label(for="about" v-text="'Write something about yourself: '")
 										textarea.form-control#about(name="about" v-html="user.about")
 
 							else
