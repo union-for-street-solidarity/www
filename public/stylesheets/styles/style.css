@@ -843,20 +843,20 @@ button {
   position: relative;
   min-height: 100vh;
   width: 100%;
-  padding: 4rem 2rem 0 2rem;
+  padding: 4rem 2rem;
   z-index: 3; }
   #wrapper:before {
     content: '';
     display: block; }
   @media screen and (max-width: 1680px) {
     #wrapper {
-      padding: 3rem 2rem 0 2rem; } }
+      padding: 3rem 2rem; } }
   @media screen and (max-width: 736px) {
     #wrapper {
-      padding: 2rem 1rem 0 1rem; } }
+      padding: 2rem 1rem; } }
   @media screen and (max-width: 480px) {
     #wrapper {
-      padding: 1rem 1rem 0 1rem; } }
+      padding: 1rem; } }
   #wrapper.page {
     -moz-justify-content: -moz-flex-start;
     -webkit-justify-content: -webkit-flex-start;
@@ -886,8 +886,7 @@ button {
   background-image: -ms-radial-gradient(rgba(0, 0, 0, 0.25) 25%, rgba(0, 0, 0, 0) 55%);
   background-image: radial-gradient(rgba(0, 0, 0, 0.25) 25%, rgba(0, 0, 0, 0) 55%);
   max-width: 100%;
-  text-align: center;
-  margin-bottom: 25px; }
+  text-align: center; }
   #header > * {
     -moz-transition: opacity 0.325s ease-in-out;
     -webkit-transition: opacity 0.325s ease-in-out;
@@ -953,8 +952,9 @@ button {
     border-radius: 4px; }
     #header nav ul li {
       padding-left: 0;
-      border-left: solid 1px #ffffff; }
-      #header nav ul li a {
+      border-left: solid 1px #ffffff;
+      border-radius: 0; }
+      #header nav ul li a, #header nav ul li button {
         display: block;
         min-width: 7.5rem;
         height: 2.75rem;
@@ -966,9 +966,9 @@ button {
         border: 0;
         border-radius: 0;
         box-shadow: none; }
-        #header nav ul li a:hover {
+        #header nav ul li a:hover, #header nav ul li button:hover {
           background-color: rgba(255, 255, 255, 0.075); }
-        #header nav ul li a:active {
+        #header nav ul li a:active, #header nav ul li button:active {
           background-color: rgba(255, 255, 255, 0.175); }
       #header nav ul li:first-child {
         border-left: 0; }
@@ -1162,7 +1162,7 @@ button {
   transition: transform 0.325s ease-in-out, filter 0.325s ease-in-out, opacity 0.325s ease-in-out;
   width: 100%;
   max-width: 100%;
-  margin: 2rem 0 2rem 0;
+  margin-top: 2rem;
   text-align: center;
   display: inline-block;
   bottom: 0;

@@ -128,9 +128,23 @@ app.use((request, response, next) => {
 });
 
 app.get('/', ensureBlogData, (req, res, next) => {
-	return res.render('main', {
-		data: req.featuredblogs
-	})
+	if (req.query && req.query.c) {
+		Blog.find({category: req.params.category}).lean().exec((err, data) => {
+			if (err) {
+				return next(err)
+			}
+			return res.render('main', {
+				data: data,
+				user: req.user
+			})
+		})
+	} else {
+		return res.render('main', {
+			data: req.featuredblogs,
+			user: req.user
+		})
+	}
+	
 });
 
 app.param('category', (req, res, next, value) => {
@@ -285,10 +299,17 @@ app.get('/logout', function(req, res){
 })
 
 app.get('/blog/:id', ensureBlogDocument, (req, res, next) => {
-	console.log(req.doc)
-	return res.render('main', {
-		data: [req.doc],
-		user: req.user
+	// console.log(req.doc);
+	User.findOne({_id: req.doc.author}).lean().exec((err, author) => {
+		if (err) {
+			return next(err)
+		}
+		return res.render('main', {
+			data: [req.doc],
+			user: req.user,
+			author: author
+		})
+
 	})
 })
 
@@ -379,7 +400,7 @@ app.get('/blog/api/grantadmins', grantAdmins, (req, res, next) => {
 
 .post('/blog/api/editstory/:type/:id', upload.array(), parseBody, csrfProtection, (req, res, next) => {
 	var media = req.body.media || [];
-	console.log(req.body)
+	// console.log(req.body)
 	const set = {$set: req.body}
 	Blog.findOneAndUpdate({_id: req.params.id}, set, {new:true}, (err, doc) => {
 		if (err) {
@@ -426,7 +447,7 @@ app.get('/blog/api/grantadmins', grantAdmins, (req, res, next) => {
 		key = 'media.'+index+''
 		query.$set[key] = media
 	}
-	console.log(query)
+	// console.log(query)
 	Blog.findOneAndUpdate({_id: req.params.id}, query, {safe: true, upsert: false, new: true}, (err, doc) => {
 		if (err) {
 			return next(err)

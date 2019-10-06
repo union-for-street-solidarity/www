@@ -7,12 +7,14 @@ block content
 		div(:class="'body '+ (!loading ? '' : 'is-loading') + ' ' +(isArticleVisible ? 'is-article-visible' : '')")
 			div#wrapper
 				include partials/header.pug
-				div.blog(v-if="article === 'blog'" v-for="(doc, i) in data")
+				div.blog(v-if="article === 'blog' || article === 'draft'" v-for="(doc, i) in data")
 					
-					a(v-if="user && user !== '' && user.admin" :href="'/blog/api/editstory/blog/'+doc._id+''" v-text="'edit'")
+					a(v-if="user && user !== '' && user.admin" :href="'/blog/api/editstory/'+doc.category+'/'+doc._id+''" v-text="'edit '+doc.category")
 					div.row(:id="doc.category" :class="(doc.category === article ? 'active' : '') + ' ' + (articleTimeout ? 'timeout' : '')")
-
-						include partials/article.pug
+						div(v-if="data.length === 1")
+							include partials/article.pug
+						div(v-else)
+							include partials/snippet.pug
 				div.blog(v-if="article === 'blog' && user && user !== '' && user.admin")
 					p
 						a(role="button" :href="'/blog/api/newstory'" v-text="'New blog'")
@@ -20,13 +22,15 @@ block content
 					
 
 					article(:id="doc.category" :class="(articleTimeout ? 'active timeout' : 'active')")
-						a(:href="'/blog/api/editstory/'+doc.category+'/'+doc._id+''" v-text="'edit'")
+						a(v-if="user && user !== '' && user.admin" :href="'/blog/api/editstory/'+doc.category+'/'+doc._id+''" v-text="'edit'")
 						include partials/article.pug
 						div.close(@click="handleCloseArticle")
-				footer#footer(:style="(timeout ? { display: 'none' } : { marginTop: 'auto'})")
+				
+				footer#footer(:style="{display: (timeout ? 'none' : 'block'), marginTop: (timeout ? 'auto' : '2rem')}")
 					p.copyright &copy Union for Street Solidarity
-					small
-						a(:href="(!user || !user.admin ? '/login' : '/loggedin')" v-text="(!user || !user.admin ? 'admin' : 'dashboard')")
+					
+					a(:href="(!user || !user.admin ? '/login' : '/loggedin')" v-text="(!user || !user.admin ? 'admin' : 'dashboard')")
+
 			div#bg
 
 	include vue/loggedoutvue.pug

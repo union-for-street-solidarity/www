@@ -50,7 +50,7 @@ block content
 									tbody
 										tr(v-for="(doc, i) in data" v-if="(doc && user.admin && doc.author && doc.author === user._id)")
 											td(colspan="1")
-												a(v-if="user && user !== '' && user.admin" :href="'/blog/api/editstory/blog/'+doc._id+''" v-text="'edit'")
+												a(v-if="user && user !== '' && user.admin" :href="'/blog/api/editstory/'+doc.category+'/'+doc._id+''" v-text="'edit '+doc.category")
 
 											include partials/snippet.pug
 
@@ -62,7 +62,7 @@ block content
 				p
 					a(role="button" href="/" v-text="'USS Home'")
 				p
-					a(role="button" href="/blog" v-text="'Street Stories'")
+					a(role="button" href="/blog" v-text="'Blog'")
 					
 	if (user)
 		if (user.admin)

@@ -9,7 +9,7 @@ script(type="text/javascript").
 			return {
 				loading: false,
 				user: this.parseObj(!{JSON.stringify(user)}),
-				author: '',
+				author: this.parseObj(!{JSON.stringify(author)}),
 				data: this.parseObj(!{JSON.stringify(data)}),
 				doc: this.parseObj(!{JSON.stringify(doc)}),
 				//- doc: this.getDoc(),//this.parseDoc(!{JSON.stringify(doc)}),
@@ -30,7 +30,8 @@ script(type="text/javascript").
 				article: '',
 				timeout: false,
 				articleTimeout: false,
-				loading: true;
+				loading: true,
+				timeoutId: ''
 			}
 		},
 		watch: {
@@ -57,24 +58,17 @@ script(type="text/javascript").
 				}, 2000)
 			}
 			if (self.data && self.data !== '') {
-				if (!self.doc || self.doc === '') {
-					self.doc = self.data[0];
+				self.article = (!self.doc || self.doc === '' ? '' : self.doc.category)
+				if (self.article === '' && self.data.map((doc)=>doc.category).filter((item)=>(item === 'blog' || item === 'draft')).length === self.data.length) {
+					//- self.doc = self.data[0]
+					self.article = self.data[0].category
+				} else {
+					self.article = window.location.hash.replace('#', '')
 				}
-				self.article = (!self.doc ? '' : self.doc.category)
-				var length = (!self.doc ? 0 : self.doc.media.length);
-				if (window.location.href.split('/')[window.location.href.split('/').length - 1] === self.article) {
-					if (self.article === 'donate') {
-						var db = document.createElement('script');
-						db.type = 'text/javascript';
-						db.defer = true;
-						db.src = 'https://donorbox.org/install-popup-button.js';
-						var s = document.getElementsByTagName('script')[0];
-						s.parentNode.insertBefore(db, s);
-						self.handleOpenArticle(self.article)
-					} else if (self.article !== 'blog') {
-						self.handleOpenArticle(self.article)
-					}
+				if (self.article && self.article !== '' && self.article !== 'blog' && self.article !== 'draft') {
+					self.initOpenArticle(self.article)
 				}
+				var length = self.data.map((doc) => doc.media.length).sort()[0];//(!self.doc ? 0 : self.doc.media.length);
 				self.sliderInterval = setInterval(function(){
 					if (self.sliderIndex < (length - 1)){
 						self.sliderIndex++;
@@ -85,6 +79,11 @@ script(type="text/javascript").
 
 			}
 
+		},
+		beforeDestroy() {
+			var self = this;
+			clearInterval(self.sliderInterval)
+			clearTimeout(self.timeoutId)
 		},
 		methods: {
 			parseObj(obj) {
@@ -237,6 +236,16 @@ script(type="text/javascript").
 			},
 			handleOpenArticle(article) {
 				var self = this;
+				var rx = new RegExp(article);
+				if (!rx.test(window.location.href)) {
+					if (window.location.href !== '/') {
+						var hr = '/?c='+article
+						if (window.location.href === '/blog') {
+							return window.location.href = hr
+						}
+						//- return window.location.href = '/'+article
+					}
+				}
 				var isArticleVisible = this.isArticleVisible
 				this.isArticleVisible = !isArticleVisible;
 				this.article = article;
