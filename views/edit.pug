@@ -30,7 +30,7 @@ block content
 						select#category(name="category")
 							option(value="draft" :selected="doc.category === 'draft'" v-text="'draft'")
 							option(value="blog" :selected="doc.category === 'blog'" v-text="'blog'")
-							option(value="info" :selected="doc.category === 'info'" v-text="'info'")
+							option(value="info" :selected="doc.category === 'intro'" v-text="'intro'")
 							option(value="donate" :selected="doc.category === 'donate'" v-text="'donate'")
 							option(value="distributions" :selected="doc.category === 'distributions'" v-text="distributions")
 					p(v-for="(key, i) in Object.keys(doc)" v-if="exclude.indexOf(key) === -1")
