@@ -11,7 +11,8 @@ script(type="text/javascript").
 				user: this.parseObj(!{JSON.stringify(user)}),
 				author: '',
 				data: this.parseObj(!{JSON.stringify(data)}),
-				doc: this.parseDoc(!{JSON.stringify(doc)}),
+				doc: this.parseObj(!{JSON.stringify(doc)}),
+				//- doc: this.getDoc(),//this.parseDoc(!{JSON.stringify(doc)}),
 				accordions: [],
 				file: null,
 				//items to hide in the viewer
@@ -28,7 +29,8 @@ script(type="text/javascript").
 				isArticleVisible: false,
 				article: '',
 				timeout: false,
-				articleTimeout: false
+				articleTimeout: false,
+				loading: true;
 			}
 		},
 		watch: {
@@ -44,6 +46,9 @@ script(type="text/javascript").
 			var self = this;
 			var editable = $('#description')[0]//document.getElementById('description')[0];
 			console.log(editable)
+			self.timeoutId = setTimeout(() => {
+				self.loading = false
+			}, 100);
 			if (self.tinymce === '' && editable && self.doc && self.doc !== '') {
 				self.loadTinyMCE()
 			} else {
@@ -55,8 +60,8 @@ script(type="text/javascript").
 				if (!self.doc || self.doc === '') {
 					self.doc = self.data[0];
 				}
-				self.article = self.doc.category
-				var length = self.doc.media.length;
+				self.article = (!self.doc ? '' : self.doc.category)
+				var length = (!self.doc ? 0 : self.doc.media.length);
 				if (window.location.href.split('/')[window.location.href.split('/').length - 1] === self.article) {
 					if (self.article === 'donate') {
 						var db = document.createElement('script');
@@ -65,8 +70,10 @@ script(type="text/javascript").
 						db.src = 'https://donorbox.org/install-popup-button.js';
 						var s = document.getElementsByTagName('script')[0];
 						s.parentNode.insertBefore(db, s);
+						self.handleOpenArticle(self.article)
+					} else if (self.article !== 'blog') {
+						self.handleOpenArticle(self.article)
 					}
-					self.handleOpenArticle(self.article)
 				}
 				self.sliderInterval = setInterval(function(){
 					if (self.sliderIndex < (length - 1)){
@@ -90,7 +97,6 @@ script(type="text/javascript").
 						title: 'Sample title',
 						lede: 'Sample lede',
 						category: 'blog',
-						author: 'tbushman',
 						description: '',
 						media: [],
 						tags: []
@@ -109,12 +115,12 @@ script(type="text/javascript").
 			},
 			loadTinyMCE() {
 				var self = this;
-				var imglist = self.doc.media.map((item) => {
+				var imglist = (!self.doc ? [] : self.doc.media.map((item) => {
 					return {
 						title: item.image.split('/')[item.image.split('/').length - 1],
 						value: item.image
 					}
-				});
+				}));
 				self.tinymce = tinymce.init({
 					selector: "#description",
 					menubar: false,
@@ -192,7 +198,7 @@ script(type="text/javascript").
 				formData.append('img', self.file, self.file.name);
 				//https://www.codedodle.com/2016/10/nodejs-image-uploader-using-express-and.html
 				$.ajax({
-					url: '/blog/api/uploadimg/'+id+'',
+					url: '/blog/api/uploadimg/'+id+'/'+i,
 					method: 'POST',
 					data: formData,
 					processData: false,
@@ -220,7 +226,7 @@ script(type="text/javascript").
 					}
 				}).done((result) => {
 					console.log(result)
-					self.doc = result;
+					self.data = [result];
 					self.progressBar.removeClass('active');
 					self.progressBar.width('0%');
 					self.progressBar = null;
@@ -263,7 +269,7 @@ script(type="text/javascript").
 					this.article = '';
 				}, 350)
 				
-				window.location.href = '/'
+				//- window.location.href = '/'
 			},
 
 			handleClickOutside(event) {

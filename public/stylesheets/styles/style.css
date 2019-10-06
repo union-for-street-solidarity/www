@@ -954,8 +954,6 @@ button {
     #header nav ul li {
       padding-left: 0;
       border-left: solid 1px #ffffff; }
-      #header nav ul li:first-child {
-        border-left: 0; }
       #header nav ul li a {
         display: block;
         min-width: 7.5rem;
@@ -965,11 +963,19 @@ button {
         text-transform: uppercase;
         letter-spacing: 0.2rem;
         font-size: 0.8rem;
-        border-bottom: 0; }
+        border: 0;
+        border-radius: 0;
+        box-shadow: none; }
         #header nav ul li a:hover {
           background-color: rgba(255, 255, 255, 0.075); }
         #header nav ul li a:active {
           background-color: rgba(255, 255, 255, 0.175); }
+      #header nav ul li:first-child {
+        border-left: 0; }
+        #header nav ul li:first-child a {
+          border-radius: 4px 0 0 4px; }
+      #header nav ul li:last-child a {
+        border-radius: 0 4px 4px 0; }
   #header nav.use-middle:after {
     content: '';
     display: block;

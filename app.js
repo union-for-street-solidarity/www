@@ -162,7 +162,7 @@ app.get('/:category', (req, res, next) => {
 			// console.log(req.user, req.session.user)
 			return res.render('main', {
 				data: data,
-				doc: data[data.length - 1],
+				// doc: data[data.length - 1],
 				user: req.user
 			})
 		}
@@ -252,7 +252,7 @@ app.get('/loggedin', async(req, res, next) => {
 
 app.get('/loggedin/:id', csrfProtection, async (req, res, next) => {
 	const user = await User.findOne({_id: req.params.id}).then((result) => result).catch((err) => next(err));
-	const data = await Blog.find({author: req.params.id}).then((result) => result).catch((err) => next(err));
+	const data = await Blog.find({category: 'draft', author: req.params.id}).then((result) => result).catch((err) => next(err));
 	return res.render('profile', {
 		user: user,
 		csrfToken: req.csrfToken(),
@@ -282,6 +282,14 @@ app.get('/logout', function(req, res){
 	} else {
 		res.redirect('/')
 	}
+})
+
+app.get('/blog/:id', ensureBlogDocument, (req, res, next) => {
+	console.log(req.doc)
+	return res.render('main', {
+		data: [req.doc],
+		user: req.user
+	})
 })
 
 app.all('/blog/api/*'
@@ -315,9 +323,9 @@ app.get('/blog/api/grantadmins', grantAdmins, (req, res, next) => {
 // })
 .get('/blog/api/newstory', (req, res, next) => {
 	var blog = new Blog({
-		category: 'blog',
+		category: 'draft',
 		title: '',
-		author: '',
+		author: req.user._id,
 		lede: '',
 		description: '',
 		media: [
@@ -333,14 +341,14 @@ app.get('/blog/api/grantadmins', grantAdmins, (req, res, next) => {
 		if (err) {
 			next(err)
 		}
-		return res.redirect('/blog/api/editstory/blog/'+blog._id)
+		return res.redirect('/blog/api/editstory/draft/'+blog._id)
 	})
 })
 .get('/blog/api/editstory/:type/:id', csrfProtection, async (req, res, next) => {
 	if (req.params.id && req.params.id !== 'null') {
 		const doc = await Blog.findOne({_id: req.params.id}).then((doc) => doc).catch((err) => next(err));
 		return res.render('edit', {
-			doc: doc,
+			data: [doc],
 			csrfToken: req.csrfToken(),
 			user: req.user,
 			edit: true
@@ -355,19 +363,19 @@ app.get('/blog/api/grantadmins', grantAdmins, (req, res, next) => {
 	}
 })
 
-app.post('/blog/api/newstory', upload.array(), parseBody
-, csrfProtection
-, async (req, res, next) => {
-	const body = req.body;
-	console.log(body);
-	const content = new Blog(body);
-	content.save((err)=>{
-		if (err) {
-			return next(err)
-		}
-		return res.sendFile(htmlpath);
-	});
-})
+// app.post('/blog/api/newstory', upload.array(), parseBody
+// , csrfProtection
+// , async (req, res, next) => {
+// 	const body = req.body;
+// 	console.log(body);
+// 	const content = new Blog(body);
+// 	content.save((err)=>{
+// 		if (err) {
+// 			return next(err)
+// 		}
+// 		return res.sendFile(htmlpath);
+// 	});
+// })
 
 .post('/blog/api/editstory/:type/:id', upload.array(), parseBody, csrfProtection, (req, res, next) => {
 	var media = req.body.media || [];
@@ -377,13 +385,18 @@ app.post('/blog/api/newstory', upload.array(), parseBody
 		if (err) {
 			return next(err)
 		}
-		return res.redirect('/blog');
+		if (doc.category === 'draft') {
+			return res.redirect('/loggedin')
+		} else {
+			return res.redirect('/blog');
+		}
 	
 	})
 })
-.post('/blog/api/uploadimg/:id', uploadmedia.single('img'), parseBody, (req, res, next) => {
+.post('/blog/api/uploadimg/:id/:index', uploadmedia.single('img'), parseBody, (req, res, next) => {
 	const imagePath = req.file.path;
 	const thumbPath = req.file.path.replace(/\.(png)$/, '.thumb.png');
+	const index = parseInt(req.params.index);
 	sharp(req.file.path).resize({ height: 200 }).toFile(thumbPath)
 	.then(function(newFileInfo) {
 		console.log("resize success")
@@ -400,7 +413,21 @@ app.post('/blog/api/newstory', upload.array(), parseBody
 		thumb_abs: thumbPath,
 		caption: 'Edit me'
 	}
-	Blog.findOneAndUpdate({_id: req.params.id}, {$push: {media: media}}, {safe: true, upsert: false, new: true}, (err, doc) => {
+	var query = (
+		isNaN(index) ? 
+		{$push: {}} :
+		{$set: {}}
+	)
+	let key;
+	if (isNaN(index)) {
+		key = 'media'
+		query.$push.media = media
+	} else {
+		key = 'media.'+index+''
+		query.$set[key] = media
+	}
+	console.log(query)
+	Blog.findOneAndUpdate({_id: req.params.id}, query, {safe: true, upsert: false, new: true}, (err, doc) => {
 		if (err) {
 			return next(err)
 		} else {

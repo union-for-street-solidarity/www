@@ -4,16 +4,17 @@ block page
 block content
 	
 	div#vue
-		div(:class="'body '+ loading + ' ' +(isArticleVisible ? 'is-article-visible' : '')")
+		div(:class="'body '+ (!loading ? '' : 'is-loading') + ' ' +(isArticleVisible ? 'is-article-visible' : '')")
 			div#wrapper
 				include partials/header.pug
-				div.container(v-if="doc.category === 'blog' && article === 'blog'")
-					div.blog(v-for="(doc, i) in data")
-						a(v-if="user && user !== '' && user.admin" :href="'/blog/api/editstory/blog/'+doc._id+''" v-text="'edit'")
-						div.row(:id="doc.category" :class="(doc.category === article ? 'active' : '') + ' ' + (articleTimeout ? 'timeout' : '')")
+				div.blog(v-if="article === 'blog'" v-for="(doc, i) in data")
+					
+					a(v-if="user && user !== '' && user.admin" :href="'/blog/api/editstory/blog/'+doc._id+''" v-text="'edit'")
+					div.row(:id="doc.category" :class="(doc.category === article ? 'active' : '') + ' ' + (articleTimeout ? 'timeout' : '')")
 
-							include partials/article.pug
-					p(v-if="user && user !== '' && user.admin" )
+						include partials/article.pug
+				div.blog(v-if="article === 'blog' && user && user !== '' && user.admin")
+					p
 						a(role="button" :href="'/blog/api/newstory'" v-text="'New blog'")
 				div#main(:style="{ display: (timeout ? 'flex' : 'none')}" v-for="(doc, i) in data" v-if="doc.category === article && doc.category !== 'blog'")
 					
@@ -25,6 +26,7 @@ block content
 				footer#footer(:style="(timeout ? { display: 'none' } : { marginTop: 'auto'})")
 					p.copyright &copy Union for Street Solidarity
 					small
-						a(href="/login") admin
-				div#bg
+						a(:href="(!user || !user.admin ? '/login' : '/loggedin')" v-text="(!user || !user.admin ? 'admin' : 'dashboard')")
+			div#bg
+
 	include vue/loggedoutvue.pug

@@ -23,8 +23,8 @@ function aggregateData(distinct, cb) {
 		cb(err, data)
 	})
 }
-const ensureBlogDocument = async (req, res, next, val) => {
-	const doc = await Blog.findById(val).lean().then((doc) => doc).catch((err) => next(err));
+const ensureBlogDocument = async (req, res, next) => {
+	const doc = await Blog.findById(req.params.id).lean().then((doc) => doc).catch((err) => next(err));
 	if (!doc) {
 		return next();
 	} else {

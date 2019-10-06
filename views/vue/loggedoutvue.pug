@@ -17,20 +17,23 @@ script(type="text/javascript").
 				article: '',
 				timeout: false,
 				articleTimeout: false,
-				loading: false
+				loading: true,
+				timeoutId: ''
 			}
 		},
 		watch: {
 		},
 		mounted: function(){
 			var self = this;
-			
+			self.timeoutId = setTimeout(() => {
+				self.loading = false
+			}, 100);
 			if (self.data && self.data !== '') {
 				if (!self.doc || self.doc === '') {
 					self.doc = self.data[0];
 				}
-				self.article = self.doc.category
-				var length = self.doc.media.length;
+				self.article = (!self.doc ? '' : self.doc.category)
+				var length = self.data.map((doc) => doc.media.length).sort()[0];//(!self.doc ? 0 : self.doc.media.length);
 				if (window.location.href.split('/')[window.location.href.split('/').length - 1] === self.article) {
 					if (self.article === 'donate') {
 						var db = document.createElement('script');
@@ -39,8 +42,10 @@ script(type="text/javascript").
 						db.src = 'https://donorbox.org/install-popup-button.js';
 						var s = document.getElementsByTagName('script')[0];
 						s.parentNode.insertBefore(db, s);
+						self.handleOpenArticle(self.article)
+					} else if (self.article !== 'blog') {
+						self.handleOpenArticle(self.article)
 					}
-					self.handleOpenArticle(self.article)
 				}
 				self.sliderInterval = setInterval(function(){
 					if (self.sliderIndex < (length - 1)){
@@ -113,7 +118,7 @@ script(type="text/javascript").
 					this.article = '';
 				}, 350)
 				
-				window.location.href = '/'
+				//- window.location.href = '/'
 			},
 
 			handleClickOutside(event) {

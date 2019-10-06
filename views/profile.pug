@@ -7,51 +7,66 @@ block content
 
 		div.body
 			div#wrapper
-				div.container#page-top
-					section
-						if (user)
-							//- if (user.admin)
-							//- 	p
-							//- 		a(role="button" href="/blog/api/dashboard" v-text="'Blog dashboard'")
+				div.blog
+					if (user)
+						//- if (user.admin)
+						//- 	p
+						//- 		a(role="button" href="/blog/api/dashboard" v-text="'Blog dashboard'")
 
-							p(v-text="'Logged in as '+ user.username +'.'")
-							a(role="button" href="/logout" v-text="'Logout'")
-							hr
-							form(method="POST" action= ("/loggedin/"+user._id) enctype="multipart/form-data")
-								if (csrfToken)
-									input(type="hidden" name="_csrf" value= csrfToken)
-								div.form-group
-									label(for="email" v-text="'E-mail address'")
-									input#email(type="email" name="email" :value="user.email")
-								hr
-								if (user.admin)
-									p(v-text="'You are admin.'")
+						p(v-text="'Logged in as '+ user.username +'.'")
+						a(role="button" href="/logout" v-text="'Logout'")
+						hr
+						form(method="POST" action= ("/loggedin/"+user._id) enctype="multipart/form-data")
+							if (csrfToken)
+								input(type="hidden" name="_csrf" value= csrfToken)
+							div.form-group
+								label(for="email" v-text="'E-mail address'")
+								input#email(type="email" name="email" :value="user.email")
 
+							if (user.admin)
+								p
+									small.text-muted(v-text="'You are admin.'")
+								p
 									div.form-group
 										label(for="about")
 										textarea.form-control#about(name="about" v-html="user.about")
 
-								else
-									p(v-text="'You are not admin. Please speak with a USS person.'")
-									
-								// TODO change-password capability
+							else
+								p(v-text="'You are not admin. Please speak with a USS person.'")
 								
-								button.btn.btn-primary.btn-block(type="submit" v-text="'Save profile'")
-						else
-							p(v-text="'Not logged in.'")
-							a(role="button" href="/login" v-text="'Login'")  
-					
-					hr
-					p
-						a(role="button" href="/" v-text="'USS Home'")
-					p
-						a(role="button" href="/blog" v-text="'Street Stories'")
+							// TODO change-password capability
+							
+							button.btn.btn-primary.btn-block(type="submit" v-text="'Save profile'")
+						if (user.admin)
+							p(v-text="'Your drafts: '")
+							small.text-muted(v-if="(data.length === 0)" v-text="'Drafts will appear here.'")
+							div.container(style="width: 100%; display: inline-block;")
+								table
+									thead
+										tr
+											td(colspan="1")
+											td(colspan="1")
+											td(colspan="3")
+									tbody
+										tr(v-for="(doc, i) in data" v-if="(doc && user.admin && doc.author && doc.author === user._id)")
+											td(colspan="1")
+												a(v-if="user && user !== '' && user.admin" :href="'/blog/api/editstory/blog/'+doc._id+''" v-text="'edit'")
+
+											include partials/snippet.pug
+
+					else
+						p(v-text="'Not logged in.'")
+						a(role="button" href="/login" v-text="'Login'")  
+				
+				hr
+				p
+					a(role="button" href="/" v-text="'USS Home'")
+				p
+					a(role="button" href="/blog" v-text="'Street Stories'")
 					
 	if (user)
 		if (user.admin)
 			include vue/adminvue.pug
-			p(v-for="(doc, i) in data" v-if="(user.admin && doc.author && doc.author === user._id)")
-				include partials/article.pug
 
 		else
 			// for now

@@ -1,123 +1,177 @@
+img[v-cloak] {
+  opacity: 0;
+}
 .dbox-donation-button {
-  background:#2d81c5;color:#fff;text-decoration:none;font-family:Verdana,sans-serif;display:inline-block;font-size:16px;padding:15px 38px 15px 38px;border-radius: 2px;box-shadow: 0 1px 0 0 #1f5a89;text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+	background:#2d81c5;color:#fff;text-decoration:none;font-family:Verdana,sans-serif;display:inline-block;font-size:16px;padding:15px 38px 15px 38px;border-radius: 2px;box-shadow: 0 1px 0 0 #1f5a89;text-shadow: 0 1px rgba(0, 0, 0, 0.3);
 }
 .blog {
-  background-color: rgba(27, 31, 34, 0.85);
-  margin: 50px 0 0 0;
-  display: inline-block;
-  left: 0;
-  right: 0;
-  width: 100%
+	background-color: rgba(27, 31, 34, 0.85);
+	margin: 50px 0 0 0;
+	display: inline-block;
+	left: 0;
+	right: 0;
+	width: 100%;
+	padding: 50px 10px 0 10px;
 }
 input.block {
-  width: 100%!important;
+	width: 100%!important;
 }
 
 
 .carousel-item {
 	transition: opacity 1s ease-in-out!important;
 	display: block!important;
-  max-height: 100vh;
-  overflow-y: hidden;
+	height: 50vh;
+	overflow-y: hidden;
+	position: absolute;
+	width: 100%;
+	opacity: 0;
+	border-radius: 4px;
+}
+.carousel-item.active {
+	opacity: 1;
+}
+.carousel-item img {
+	width: 100%;
+	height: 50vh;
+	object-fit: cover;
+	position: absolute;
+}
+.carousel-inner {
+	width: 100%;
+	height: 50vh;
+	overflow-y: hidden;
+	display: block;
+	position: relative;
 }
 
 .modal {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(27, 31, 34, 0.85);
-  margin: 10%;
-  padding: 2.5rem;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: rgba(27, 31, 34, 0.85);
+	margin: 10%;
+	padding: 2.5rem;
 }
-.story > p > img {
-  width: auto;
+p > img {
+	width: auto;
+	max-width: 75vw;
+	height: auto;
 }
-.blog ul {
-  display: -moz-flex;
-  display: -ms-flex;
-  display: flex;
-  margin-bottom: 20px;
-  list-style: none;
-  padding-left: 0;
+/* .blog ul {
+	display: -moz-flex;
+	display: -ms-flex;
+	display: flex;
+	margin-bottom: 20px;
+	list-style: none;
+	padding-left: 0;
 }
 ul.blog {
-  height:auto;
-  min-height:100vh;
-  width:100%;
-  margin-bottom:2rem; 
-  overflow:auto;
-  display:flex;
-}
+	height:auto;
+	min-height:100vh;
+	width:100%;
+	margin-bottom:2rem; 
+	overflow:auto;
+	display:flex;
+} */
 .content-container {
-  position: relative;
-  display: block;
-  z-index: 2;
+	position: relative;
+	display: block;
+	z-index: 2;
 }
 
 .text-muted {
-  color: #777;
+	color: #999;
+}
+
+.carousel-caption {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	margin: 0 auto;
+	/* transform: translateY(-50%); */
+	text-align: center;
+	padding: 20px;
+	background-color: rgba(27, 31, 34, 0.85);
+	border-radius: 4px;
 }
 
 @supports ((perspective: 1px) and (not (-webkit-overflow-scrolling: touch))) {
-  /* ... parallax styles ... */
-  .w-100 {
-    width: 100%;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    -webkit-transform: translateZ(-1px) scale(2);
-    -moz-transform: translateZ(-1px) scale(2);
-    transform: translateZ(-1px) scale(2);
-  }
+	/* ... parallax styles ... */
+	/* .w-100 {
+		width: 100%;
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		-webkit-transform: translateZ(-1px) scale(2);
+		-moz-transform: translateZ(-1px) scale(2);
+		transform: translateZ(-1px) scale(2);
+	}
 
-  .carousel-item {
-    z-index: -1;
-    height: 50%;
-    transform: translateZ(-1px) translateY(-50%) scale(2);
-    background-color: rgb(250,228, 216);
-    transition: opacity 1s ease-in-out!important;
-    display: block!important;
-    overflow-x: hidden;
-    overflow-y: hidden;
-  	transition-property: opacity!important;
-  	transition-duration: 1s!important;
-  }
-  .carousel-item img {
-    width: 100%;
-    height: auto;
-  }
+	.carousel-item {
+		/* z-index: -1; */
+		/* height: 50%;
+		transform: translateZ(-1px) translateY(-50%) scale(2);
+		background-color: rgb(250,228, 216); */
+		/* transition: opacity 1s ease-in-out!important;
+		display: block!important;
+		overflow-x: hidden;
+		overflow-y: hidden;
+		transition-property: opacity!important;
+		transition-duration: 1s!important;
+	}
+	.carousel-item img {
+		width: 100%;
+		height: auto;
+	} */
 
-  .parallax-container h1 {
-    letter-spacing: -15px;
-    font-family: Open Sans;
-    color: white;
-    text-align: center;
-    font-size: 200px;
-    font-weight: 800;
-    line-height: 200px;
-    position: absolute;
-  }
+	/* .parallax-container h1 {
+		letter-spacing: -15px;
+		font-family: Open Sans;
+		color: white;
+		text-align: center;
+		font-size: 200px;
+		font-weight: 800;
+		line-height: 200px;
+		position: absolute;
+	}
 
-  .main-container {
-    perspective: 1px;
-    transform-style: preserve-3d;
-    height: calc(100vh - 232px);
-    overflow-x: hidden;
-    overflow-y: scroll;
-  }
+	.main-container {
+		perspective: 1px;
+		transform-style: preserve-3d;
+		height: calc(100vh - 232px);
+		overflow-x: hidden;
+		overflow-y: scroll;
+	} */
 
-  
+	
 }
 
 @media (min-width: 600px) {
-  .blog {
-    /* margin: 50px 50px 0 50px;
-    left: 20px;
-    right: 20px; */
-    padding: 50px 50px 0 50px;
-  }
+	.blog {
+		/* margin: 50px 50px 0 50px;
+		left: 20px;
+		right: 20px; */
+		padding: 50px 50px 0 50px;
+	}
+	.carousel-caption {
+		width: 80%;
+		left: 10%;
+		border-radius: 4px 4px 0 0;
+
+	}
+
+}
+
+@media (min-width: 1200px) {
+	.carousel-caption {
+		width: 50%;
+		left: 25%;
+		border-radius: 4px 4px 0 0;
+
+	}
 }

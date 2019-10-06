@@ -1,10 +1,10 @@
-header#header(:style="(timeout ? { display: 'none' } : {})")
-	img(src='/images/logo.jpg' alt="USS" :style="{borderRadius: '50%',width: '150px', height: '150px', objectFit: 'contain'}")
+header#header(:style="{display: (timeout ? 'none' : 'flex')}")
+	img(v-cloak src='/images/logo.jpg' alt="USS" :style="{borderRadius: '50%',width: '150px', height: '150px', objectFit: 'contain'}")
 
 	div.content
 		div.inner
 			h1 Union for Street Solidarity
-				p Solidarity not Charity
+			p Solidarity not Charity
 	nav
 		ul
 			li
@@ -17,6 +17,6 @@ header#header(:style="(timeout ? { display: 'none' } : {})")
 				a(role="button" href="/distributions" v-text="'Distributions'")
 				//- button(@click="handleOpenArticle('distributions')" v-text="'Distributions'")
 			li
-				a(role="button" href="/blog" v-text="'Street Stories'")
+				a(role="button" href="/blog" v-text="'blog'")
 
 

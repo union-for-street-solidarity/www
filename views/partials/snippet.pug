@@ -1,0 +1,7 @@
+td(colspan="1")
+	img.img(v-for="(img, j) in doc.media" :src="img.thumb+'?version='+Math.random()" style="width: 56px; height: auto;")
+td(colspan="3")
+	h2.major(v-text="doc.title")
+	p.text-muted.my-0(v-text="moment(doc.date).format('MMMM Do YYYY') + ' at ' + moment(doc.date).format('hh:mm a')")
+	h5
+		small(v-text="doc.lede")
