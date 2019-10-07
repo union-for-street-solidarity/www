@@ -29,7 +29,7 @@ block content
 				footer#footer(:style="{display: (timeout ? 'none' : 'block'), marginTop: (timeout ? 'auto' : '2rem')}")
 					p.copyright &copy Union for Street Solidarity
 					
-					a(:href="(!user || !user.admin ? '/login' : '/loggedin')" v-text="(!user || !user.admin ? 'admin' : 'dashboard')")
+					a(href="/loggedin" v-text="(!user ? 'admin' : 'dashboard')")
 
 			div#bg
 
