@@ -1,7 +1,8 @@
-const { Blog } = require('../models/index.js');
+const { Blog, User } = require('../models/index.js');
 const path = require('path');
 const fs = require('fs')
 const publicPath = path.join(__dirname, '..', 'public');
+
 function ensureAdmin(req, res, next) {
 	if (!req.isAuthenticated() || !req.user || !req.user.admin) {
 		return res.redirect('/login')
