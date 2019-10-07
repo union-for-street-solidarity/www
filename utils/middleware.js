@@ -2,6 +2,7 @@ const { Blog, User } = require('../models/index.js');
 const path = require('path');
 const fs = require('fs')
 const publicPath = path.join(__dirname, '..', 'public');
+const config = require('./config.js');
 
 function ensureAdmin(req, res, next) {
 	if (!req.isAuthenticated() || !req.user || !req.user.admin) {
