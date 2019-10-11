@@ -212,7 +212,8 @@ app.post('/register', upload.array(), parseBody, csrfProtection, function(req, r
 			{ username : req.body.username, 
 				email: req.body.email, 
 				admin: admin,
-				date: new Date()
+				date: new Date(),
+				about: ''
 			}
 		), req.body.password, function(err, user) {
 			if (err) {
