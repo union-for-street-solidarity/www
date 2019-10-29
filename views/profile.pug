@@ -1,0 +1,76 @@
+extends layout
+block page
+	- var menu = "profile"
+block content
+	
+	div#vue
+
+		div.body
+			div#wrapper
+				div.blog
+					if (user)
+						//- if (user.admin)
+						//- 	p
+						//- 		a(role="button" href="/blog/api/dashboard" v-text="'Blog dashboard'")
+
+						p(v-text="'Logged in as '+ user.username +'.'")
+						a(role="button" href="/logout" v-text="'Logout'")
+						hr
+						form(method="POST" action= ("/loggedin/"+user._id) enctype="multipart/form-data")
+							if (csrfToken)
+								input(type="hidden" name="_csrf" value= csrfToken)
+							div.form-group
+								label(for="email" v-text="'E-mail address'")
+								input#email(type="email" name="email" :value="user.email")
+
+							if (user.admin)
+								p
+									small.text-muted(v-text="'You are admin.'")
+								p
+									div.form-group
+										label(for="about" v-text="'Write something about yourself: '")
+										textarea.form-control#about(name="about" v-html="user.about")
+
+							else
+								p(v-text="'You are not admin. Please speak with a USS person.'")
+								
+							// TODO change-password capability
+							
+							button.btn.btn-primary.btn-block(type="submit" v-text="'Save profile'")
+						if (user.admin)
+							p(v-text="'Your drafts: '")
+							small.text-muted(v-if="(data.length === 0)" v-text="'Drafts will appear here.'")
+							div.container(style="width: 100%; display: inline-block;")
+								table
+									thead
+										tr
+											td(colspan="1")
+											td(colspan="1")
+											td(colspan="3")
+									tbody
+										tr(v-for="(doc, i) in data" v-if="(doc && user.admin && doc.author && doc.author === user._id)")
+											td(colspan="1")
+												a(v-if="user && user !== '' && user.admin" :href="'/blog/api/editstory/'+doc.category+'/'+doc._id+''" v-text="'edit '+doc.category")
+
+											include partials/snippet.pug
+
+					else
+						p(v-text="'Not logged in.'")
+						a(role="button" href="/login" v-text="'Login'")  
+				
+				hr
+				p
+					a(role="button" href="/" v-text="'USS Home'")
+				p
+					a(role="button" href="/blog" v-text="'Blog'")
+					
+	if (user)
+		if (user.admin)
+			include vue/adminvue.pug
+
+		else
+			// for now
+			include vue/adminvue.pug
+	else
+		include vue/loggedoutvue.pug
+	

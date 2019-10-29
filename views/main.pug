@@ -1,0 +1,36 @@
+extends layout
+block page
+	- var menu = "home"
+block content
+	
+	div#vue
+		div(:class="'body '+ (!loading ? '' : 'is-loading') + ' ' +(isArticleVisible ? 'is-article-visible' : '')")
+			div#wrapper
+				include partials/header.pug
+				div.blog(v-if="article === 'blog' || article === 'draft'" v-for="(doc, i) in data")
+					
+					a(v-if="user && user !== '' && user.admin" :href="'/blog/api/editstory/'+doc.category+'/'+doc._id+''" v-text="'edit '+doc.category")
+					div.row(:id="doc.category" :class="(doc.category === article ? 'active' : '') + ' ' + (articleTimeout ? 'timeout' : '')")
+						div(v-if="data.length === 1")
+							include partials/article.pug
+						div(v-else)
+							include partials/snippet.pug
+				div.blog(v-if="article === 'blog' && user && user !== '' && user.admin")
+					p
+						a(role="button" :href="'/blog/api/newstory'" v-text="'New blog'")
+				div#main(:style="{ display: (timeout ? 'flex' : 'none')}" v-for="(doc, i) in data" v-if="doc.category === article && doc.category !== 'blog'")
+					
+
+					article(:id="doc.category" :class="(articleTimeout ? 'active timeout' : 'active')")
+						a(v-if="user && user !== '' && user.admin" :href="'/blog/api/editstory/'+doc.category+'/'+doc._id+''" v-text="'edit'")
+						include partials/article.pug
+						div.close(@click="handleCloseArticle")
+				
+				footer#footer(:style="{display: (timeout ? 'none' : 'block'), marginTop: (timeout ? 'auto' : '2rem')}")
+					p.copyright &copy Union for Street Solidarity
+					
+					a(href="/loggedin" v-text="(!user ? 'admin' : 'dashboard')")
+
+			div#bg
+
+	include vue/loggedoutvue.pug

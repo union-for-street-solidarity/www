@@ -1,0 +1,14 @@
+extends layout
+block page
+	- var menu = "blogs"
+block content
+	
+	div#vue
+
+		div.body
+			div#wrapper
+				div.container
+					div.blog
+						div.row
+							include partials/article.pug
+	include vue/loggedoutvue.pug

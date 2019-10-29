@@ -1,0 +1,73 @@
+[
+	{
+		"category": "intro",
+		"title": "Intro",
+		"lede": "",
+		"media": [
+			{
+				"index": 0,
+				"image": "/images/menu_quesadilla.jpeg",
+				"thumb": "/images/menu_quesadilla.jpeg",
+				"caption": ""
+			}
+		],
+		"description": "<p>Union for Street Solidarity is a group of socialists working to improve the immediate and long-term material conditions of the working poor and homeless in Salt Lake City. We believe that homelessness is a structural condition of capitalist society, not the result of the moral failing of any individual, and a problem which cannot be solved under capitalism. USS practices mutual aid through the distribution of free survival essentials while engaging in political action through collective struggle.</p><p>USS believes that people experiencing poverty and homelessness are the ones who should tell us what their needs are and how best to improve their circumstances. We conduct research through conversation and surveys, and use the information we gather to direct future political action and material aid.</p>"
+	},
+	{
+		"category": "donate",
+		"title": "Donate",
+		"lede": "",
+		"media": [
+			{
+				"index": 0,
+				"image": "/images/clothes.jpeg",
+				"thumb": "/images/clothes.jpeg",
+				"caption": ""
+			}
+		],
+		"description": "<p>Union for Street Solidarity receives no grant money or charitable funding -- we pay for distributions out of our own pockets and rely on donations to help us keep providing aid. All contributions we receive go directly to purchases of supplies and equipment.</p><p>If you’re able, please consider a recurring donation. Our DonorBox makes it easy, just set it up once and donations will automatically be sent each month.</p><a target='_blank' class='dbox-donation-button' href='https://donorbox.org/uss-distribution-funding?default_interval=m'>Donate</a>"
+	},
+	{
+		"category": "distributions",
+		"title": "Distributions",
+		"lede": "",
+		"media": [
+			{
+				"index": 0,
+				"image": "/images/coffee.jpeg",
+				"thumb": "/images/coffee.jpeg",
+				"caption": ""
+			}
+		],
+		"description": "<p>USS conducts distributions every other Saturday next door to the Gateway Inn on North Temple and in the southwest corner of Pioneer Park. We share coffee, food, vitamins, socks, clothing, and other goods to aid in survival on the street. We also conduct surveys and spend time talking with those who come to visit. Through material aid and conversation, we aim to build solidarity, learn from our community, and help people live more safely and happily.</p><p>If you are interested in volunteering, please email <a href='mailto:unionforstreetsolidarity@gmail.com?subject=Interested in Volunteering!'>unionforstreetsolidarity@gmail.com</a>.</p><p><iframe src='https://calendar.google.com/calendar/embed?src=unionforstreetsolidarity%40gmail.com&amp;ctz=America%2FDenver' scrolling='no' title='distribution-calendar' style='width:100%;min-height:500px' frameborder='0'></iframe></p>",
+		"geometry": {
+			"type": "GeometryCollection",
+			"geometries": [
+				{
+					"type": "Point",
+					"coordinates": [-111.915264, 40.771046]
+				},
+				{
+					"type": "Point",
+					"coordinates": [-111.902310,40.761065]
+				}
+			]
+		}
+	},
+	{
+		"category": "blog",
+		"title": "Sample Blog",
+		"lede": "",
+		"media": [
+			{
+				"index": 0,
+				"image": "/images/logo.jpg",
+				"thumb": "/images/logo.jpg",
+				"caption": ""
+
+			}
+		],
+		"description": "Sample description"
+
+	}
+]

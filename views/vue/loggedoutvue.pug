@@ -1,0 +1,170 @@
+script(type="text/javascript").
+	Vue.prototype.$ = $;
+	Vue.prototype.window = window;
+	Vue.prototype.moment = moment;
+	new Vue({
+		el: '#vue',
+		data: function data(){
+			return {
+				checked: false,
+				author: this.parseObj(!{JSON.stringify(author)}),
+				user: this.parseObj(!{JSON.stringify(user)}),
+				action: '/login',
+				data: this.parseObj(!{JSON.stringify(data)}),
+				doc: this.parseObj(!{JSON.stringify(doc)}),
+				sliderIndex: 0,
+				sliderInterval: null,
+				isArticleVisible: false,
+				article: '',
+				timeout: false,
+				articleTimeout: false,
+				loading: true,
+				timeoutId: ''
+			}
+		},
+		watch: {
+		},
+		mounted: function(){
+			var self = this;
+			self.timeoutId = setTimeout(() => {
+				self.loading = false
+			}, 100);
+			if (self.data && self.data !== '') {
+				self.article = (!self.doc || self.doc === '' ? '' : self.doc.category)
+				if (self.article === '' && self.data.map((doc)=>doc.category).filter((item)=>(item === 'blog' || item === 'draft')).length === self.data.length) {
+					//- self.doc = self.data[0]
+					self.article = self.data[0].category
+				} else {
+					self.article = window.location.hash.replace('#', '')
+				}
+				if (self.article && self.article !== '' && self.article !== 'blog' && self.article !== 'draft') {
+					self.initOpenArticle(self.article)
+				}
+				var length = self.data.map((doc) => doc.media.length).sort()[0];//(!self.doc ? 0 : self.doc.media.length);
+				self.sliderInterval = setInterval(function(){
+					if (self.sliderIndex < (length - 1)){
+						self.sliderIndex++;
+					} else {
+						self.sliderIndex = 0;
+					}
+				}, 5000)
+
+			}
+
+		},
+		beforeDestroy() {
+			var self = this;
+			clearInterval(self.sliderInterval)
+			clearTimeout(self.timeoutId)
+		},
+		methods: {
+			parseObj(obj) {
+				if (!obj) return '';
+				return obj;
+			},
+			initOpenArticle(article) {
+				var self = this;
+				var rh = new RegExp(article)
+				console.log(article, window.location.hash)
+				if (window.location.hash && rh.test(window.location.hash)) {
+					if (article === 'donate') {
+						var db = document.createElement('script');
+						db.type = 'text/javascript';
+						db.defer = true;
+						db.src = 'https://donorbox.org/install-popup-button.js';
+						var s = document.getElementsByTagName('script')[0];
+						s.parentNode.insertBefore(db, s);
+						self.handleOpenArticle(article)
+					} else if (article !== 'blog') {
+						self.handleOpenArticle(article)
+					}
+				} else if (article !== 'blog') {
+					window.location.hash = '#'+article
+					self.handleOpenArticle(article)
+				}
+
+			},
+			checkUser(e) {
+				var self = this;
+				console.log(e)
+				var user = e.target.value;
+				$.post('/auth/check/'+user)
+				.then(function(result) {
+					console.log(result)
+					if (!result || result === '') {
+						self.action = '/register'
+					} else {
+						self.action = '/login'
+					}
+					self.checked = true;
+				})
+				.catch(function(err){
+					if (err) {
+						self.action = '/register'
+						self.checked = true
+					}
+				})
+			},
+			handleOpenArticle(article) {
+				var self = this;
+				var rx = new RegExp(article);
+				if (!rx.test(window.location.href)) {
+					console.log(rx, rx.test(window.location.href))
+					if (window.location.href !== '/') {
+						var hr = '/#'+article
+						console.log(hr, window.location.href)
+						if (window.location.href.split('/')[window.location.href.split('/').length - 1] === 'blog') {
+							console.log('was blog')
+							return window.location.href = hr
+						} else {
+							window.location.hash = '#'+ article
+							console.log('no blog refer')
+						}
+						//- return window.location.href = '/'+article
+					}
+				}
+				var isArticleVisible = this.isArticleVisible
+				this.isArticleVisible = !isArticleVisible;
+				this.article = article;
+						
+				setTimeout(() => {
+					var timeout = self.timeout;
+					self.timeout = !timeout;
+				}, 325)
+
+				setTimeout(() => {
+					var articleTimeout = self.articleTimeout;
+					self.articleTimeout = !articleTimeout
+				}, 350)
+
+			},
+
+			handleCloseArticle() {
+				var self = this;
+				var articleTimeout = self.articleTimeout;
+				self.articleTimeout = !articleTimeout
+
+				setTimeout(() => {
+					var timeout = self.timeout;
+					self.timeout = !timeout;
+				}, 325)
+
+				setTimeout(() => {
+					var isArticleVisible = this.isArticleVisible
+					this.isArticleVisible = !isArticleVisible;
+					this.article = '';
+				}, 350)
+				
+				//- window.location.href = '/'
+			},
+
+			handleClickOutside(event) {
+				//- if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+					if (this.isArticleVisible) {
+						this.handleCloseArticle();
+					}
+				//- }
+			}
+
+		}
+	})

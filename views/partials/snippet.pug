@@ -1,0 +1,14 @@
+//- td(colspan="1")
+//- 	img.img(v-for="(img, j) in doc.media" :src="img.thumb+'?version='+Math.random()" style="width: 56px; height: auto;")
+td(colspan="3")
+	
+	p.text-muted.my-0(v-text="moment(doc.date).format('MMMM Do YYYY') + ' at ' + moment(doc.date).format('hh:mm a')")
+	a(:href="'/blog/'+doc._id")
+		h2.major(v-text="doc.title")
+	
+	div.carousel-inner(v-if="doc.media.length > 0 && doc.media[0].image !== '/images/logo.jpg'")
+		div.carousel-item(:class="(sliderIndex === j ? 'active' : '')" v-for="(item, j) in doc.media" v-if="item.image !== '/images/logo.jpg'")
+			img.img(:src="item.image+'?version='+Math.random()" :alt="item.caption")
+			div.carousel-caption(v-text="item.caption")
+
+	h3.text-muted(v-text="doc.lede")
