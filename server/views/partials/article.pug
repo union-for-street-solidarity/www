@@ -5,8 +5,7 @@ li.row
 		h1.py-4(v-text="doc.title")
 		p.text-muted.my-0(v-text="moment(doc.date).format('MMMM Do YYYY') + ' at ' + moment(doc.date).format('hh:mm a')")
 		
-		h5.py-3
-			small(v-text="doc.lede")
+		h2(v-text="doc.lede")
 	//- div.carousel-inner(v-if="doc.media && doc.media.length > 0" style="position:relative;")
 	//- 	div.main-container
 	//- 		div.carousel-item(

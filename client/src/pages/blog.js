@@ -154,7 +154,7 @@ class Blog extends React.Component {
                 
                 {
                   //<div className="carousel-inner parallax-container" key={`carousel${node.id}media`}>
-                  node.media.map((item, index) => (<MediaItem index={index} node={node} item={item} key={`carousel${node.id}media${item.index}`} carouselIndex={this.state.carouselIndex} /> ))
+                  node.media.map((item, index) => (item.category === 'draft' ? '' : <MediaItem index={index} node={node} item={item} key={`carousel${node.id}media${item.index}`} carouselIndex={this.state.carouselIndex} /> ))
                   // </div>
                 }
                 <StoryItem item={node} key={node.id} />

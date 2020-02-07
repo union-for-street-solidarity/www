@@ -47,12 +47,12 @@ exports.createPages = async ({ graphql, actions }) => {
   // Create pages.
   // We want to create a detailed page for each
   // document in our mongoDB collection
-  let categories = []
+  let categories = ['blog', 'docs'];
   for (const { node } of data.allMongodbUssBlog.edges) {
     const pageTemplate = path.resolve(`./src/pages/${node.category}.js`)
     
-    if (categories.indexOf(node.category) === -1) {
-      categories.push(node.category)      
+    if (categories.indexOf(node.category) !== -1) {
+      // categories.push(node.category)      
       // Gatsby uses Redux to manage its internal state.
       // Plugins and sites can use functions like "createPage"
       // to interact with Gatsby.

@@ -36,7 +36,9 @@ const store = new MongoDBStore(
 	{
 		mongooseConnection: mongoose.connection,
 		uri: config.fullMongoUrl,
-		collection: 'session'
+		collection: 'session',
+		autoRemove: 'interval',
+		autoRemoveInterval: 3600
 	}
 );
 store.on('error', function(error){
@@ -99,7 +101,6 @@ var storage = multer.diskStorage({
 var uploadmedia = multer({ storage: storage });
 
 const htmlpath = path.join(__dirname, './client/public/index.html');
-app.get('/', (req, res) => res.sendFile(htmlpath));
 
 // todo move these middleware to the middleware utils file
 function autoIndexMedia(req, res, next) {
@@ -169,6 +170,25 @@ app.use((request, response, next) => {
 	next();
 });
 
+app.get('/', async (req, res, next) => {
+	console.log(req.session)
+	if (req.isAuthenticated()) {
+		const cats = await Blog.distinct('category');
+		const user = User.findOne({_id: req.user._id}).then((result) => result).catch((err) => next(err))
+		if (user.admin) {
+			return res.render('home', {
+				cats: cats,
+				user: user
+			})
+		}
+		
+	} 
+	 else {
+		return res.sendFile(htmlpath)
+		
+	}
+});
+
 app.post('/auth/check/:username', async (req, res, next) => {
 	var username = req.params.username;
 	const user = await User.findOne({username: username}).then((user) => user).catch((err) => next(err));
@@ -234,6 +254,7 @@ app.post('/login', upload.array(), parseBody, csrfProtection, passport.authentic
 
 	req.session.userId = req.user._id;
 	req.session.loggedin = req.user.username;
+	req.session.user = req.user;
 	res.redirect('/loggedin/'+req.user._id);
 });
 

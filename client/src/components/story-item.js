@@ -20,7 +20,7 @@ class StoryItem extends React.Component {
                   )
                 } else if (key === 'lede') {
                   return (
-                    <h2 key={item.id+key}><small>{it}</small></h2>
+                    <h2 key={item.id+key}>{it}</h2>
                   )
                 } else if (key === 'date') {
                   return (
@@ -53,16 +53,20 @@ class StoryItem extends React.Component {
               more details
             </button>
           </li>
-          <li>
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                navigate(`/blog/api/editstory/${item.category}/${item.mongodb_id}`)
-              }}
-            >
-              edit
-            </button>
-          </li>
+          {
+            /*
+            <li>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate(`/blog/api/editstory/${item.category}/${item.mongodb_id}`)
+                }}
+              >
+                edit
+              </button>
+            </li>
+            */
+          }
         </ul>
         </div>
         <hr style={{clear:'both'}}></hr>

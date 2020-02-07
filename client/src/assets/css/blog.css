@@ -29,9 +29,6 @@ input.block {
   margin: 10%;
   padding: 2.5rem;
 }
-.story > p > img {
-  width: auto;
-}
 .blog ul {
   display: -moz-flex;
   display: -ms-flex;
@@ -47,6 +44,25 @@ ul.blog {
   margin-bottom:2rem; 
   overflow:auto;
   display:flex;
+}
+.story > p > img {
+  width: auto;
+}
+.story > p > img {
+  width: auto;
+}
+.story ul {
+	list-style: disc;
+	display: block;
+	padding-left: 15px;
+}
+.story ol {
+	list-style: decimal;
+	display: block;
+	padding-left: 15px;
+}
+.story ul li, .story ol li {
+  padding-bottom: 5px;
 }
 .content-container {
   position: relative;
