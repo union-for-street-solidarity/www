@@ -50,7 +50,7 @@ block content
 									tbody
 										tr(v-for="(doc, i) in data" v-if="(doc && user.admin && doc.author && doc.author === user._id)")
 											td(colspan="1")
-												a(v-if="user && user !== '' && user.admin" :href="'/blog/api/editstory/'+doc.category+'/'+doc._id+''" v-text="'edit '+doc.category+ (!doc.doc ? ' post' : ' document')")
+												a(v-if="user && user !== '' && user.admin" :href="'/blog/api/editstory/'+doc.category+'/'+doc._id+''" v-text="'edit '+doc.category+ ' post'")
 
 											include partials/snippet.pug
 
