@@ -46,6 +46,7 @@ function ensureBlogData(req, res, next) {
 			aggregateData(distinct, (err, data)=>{
 				if (err) return next(err);
 				if (data && data.length > 0) req.featuredblogs = data;
+				req.distinct = distinct;
 				return next();
 			})
 		}

@@ -142,19 +142,23 @@ app.use((request, response, next) => {
 	next();
 });
 
-app.get('/', ensureBlogData, (req, res, next) => {
+app.get('*', ensureBlogData)
+
+app.get('/', (req, res, next) => {
 	if (req.query && req.query.c) {
 		Blog.find({category: req.params.category}).lean().exec((err, data) => {
 			if (err) {
 				return next(err)
 			}
 			return res.render('main', {
+				distinct: req.distinct,
 				data: data,
 				user: req.user
 			})
 		})
 	} else {
 		return res.render('main', {
+			distinct: req.distinct,
 			data: req.featuredblogs,
 			user: req.user
 		})
@@ -190,6 +194,7 @@ app.get('/:category', (req, res, next) => {
 		} else {
 			// console.log(req.user, req.session.user)
 			return res.render('main', {
+				distinct: req.distinct,
 				data: data,
 				// doc: data[data.length - 1],
 				user: req.user
@@ -321,6 +326,7 @@ app.get('/blog/:id', ensureBlogDocument, (req, res, next) => {
 			return next(err)
 		}
 		return res.render('main', {
+			distinct: req.distinct,
 			data: [req.doc],
 			user: req.user,
 			author: author
@@ -385,6 +391,7 @@ app.get('/blog/api/grantadmins', grantAdmins, (req, res, next) => {
 	if (req.params.id && req.params.id !== 'null') {
 		const doc = await Blog.findOne({_id: req.params.id}).then((doc) => doc).catch((err) => next(err));
 		return res.render('edit', {
+			distinct: req.distinct,
 			data: [doc],
 			csrfToken: req.csrfToken(),
 			user: req.user,
@@ -393,6 +400,7 @@ app.get('/blog/api/grantadmins', grantAdmins, (req, res, next) => {
 		
 	} else {
 		return res.render('edit', {
+			distinct: req.distinct,
 			csrfToken: req.csrfToken(),
 			user: req.user,
 			edit: false
@@ -445,11 +453,21 @@ app.get('/blog/api/grantadmins', grantAdmins, (req, res, next) => {
 	key = 'doc'
 	query.$set[key] = dc;
 	console.log(req.body)
+	
+	var query2 = {$set: {}};
+	let key2 = 'title';
+	query2[key2] = req.file.filename;
 	Blog.findOneAndUpdate({_id: req.params.id}, query, {safe: true, upsert: false, new: true}, (err, doc) => {
 		if (err) {
 			return next(err)
 		} else {
-			return res.status(200).send(doc)
+			Blog.findOneAndUpdate({_id: req.params.id}, query2, {safe: true, upsert: false, new: true}, (err, doc) => {
+				if (err) {
+					return next(err)
+				} else {
+					return res.status(200).send(doc)
+				}
+			})
 		}
 	})
 })

@@ -1028,31 +1028,31 @@ button {
     #header .content .inner {
       padding: 2.5rem 1rem; }
     #header .content p {
-      line-height: 1.875; } }
+      line-height: 1.875; }
+    #header nav ul {
+      -moz-flex-direction: column;
+      -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+      flex-direction: column;
+      min-width: 10rem;
+      max-width: 100%; }
+      #header nav ul li {
+        border-left: 0;
+        border-top: solid 1px #ffffff; }
+        #header nav ul li:first-child {
+          border-top: 0; }
+        #header nav ul li a {
+          height: 3rem;
+          line-height: 3rem;
+          min-width: 0;
+          width: 100%; }
+    #header nav.use-middle:after {
+      display: none; } }
   @media screen and (max-width: 480px) {
     #header {
       padding: 1.5rem 0; }
       #header .content .inner {
-        padding: 2.5rem 0; }
-      #header nav ul {
-        -moz-flex-direction: column;
-        -webkit-flex-direction: column;
-        -ms-flex-direction: column;
-        flex-direction: column;
-        min-width: 10rem;
-        max-width: 100%; }
-        #header nav ul li {
-          border-left: 0;
-          border-top: solid 1px #ffffff; }
-          #header nav ul li:first-child {
-            border-top: 0; }
-          #header nav ul li a {
-            height: 3rem;
-            line-height: 3rem;
-            min-width: 0;
-            width: 100%; }
-      #header nav.use-middle:after {
-        display: none; } }
+        padding: 2.5rem 0; } }
 
 /* Main */
 #main {

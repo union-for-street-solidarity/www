@@ -227,17 +227,6 @@
 					line-height: 1.875;
 				}
 			}
-		}
-
-		@include breakpoint(xsmall) {
-			padding: 1.5rem 0;
-
-			.content {
-				.inner {
-					padding: 2.5rem 0;
-				}
-			}
-
 			nav {
 				ul {
 					@include vendor('flex-direction', 'column');
@@ -267,5 +256,17 @@
 					}
 				}
 			}
+		}
+
+		@include breakpoint(xsmall) {
+			padding: 1.5rem 0;
+
+			.content {
+				.inner {
+					padding: 2.5rem 0;
+				}
+			}
+
+
 		}
 	}
