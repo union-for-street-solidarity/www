@@ -55,7 +55,7 @@ script(type="text/javascript").
 			self.timeoutId = setTimeout(() => {
 				self.loading = false
 			}, 100);
-			if (self.tinymce === '' && editable && self.doc && self.doc !== '') {
+			if (self.tinymce === '' && editable && self.data && self.data.length === 1) {
 				self.loadTinyMCE()
 			} else {
 				setTimeout(function(){
@@ -131,7 +131,7 @@ script(type="text/javascript").
 			},
 			loadTinyMCE() {
 				var self = this;
-				var imglist = (!self.doc ? [] : self.doc.media.map((item) => {
+				var imglist = (!self.data[0] ? [] : self.data[0].media.map((item) => {
 					return {
 						title: item.image.split('/')[item.image.split('/').length - 1],
 						value: item.image
@@ -170,11 +170,13 @@ script(type="text/javascript").
 			},
 			recordYes() {
 				var self = this;
-				if (!isNaN(parseInt(self.deleteWhich, 10))) {
-					$.post('/blog/api/deletemedia/'+self.doc._id+'/'+self.deleteWhich+'')
+				if (!isNaN(+self.deleteWhich)) {
+					$.post('/blog/api/deletemedia/'+self.data[0]._id+'/'+self.deleteWhich+'')
 					.then((result)=>{
 						console.log(result);
-						self.doc = result;
+						if (result[0] !== '<') {
+							self.data = [result];
+						}
 						self.recordNo();
 					})
 					.catch((err)=>console.log(err))
@@ -198,8 +200,8 @@ script(type="text/javascript").
 				var self = this;
 				self.modal = true;
 				self.message = 'Are you sure you want to delete this blog entry? This action will delete all information and images for the blog entry, titled '+
-					self.doc.title +'.';
-				self.deleteWhich = self.doc;
+					self.data[0].title +'.';
+				self.deleteWhich = self.data[0];
 			},
 			initDeleteMedia(id, i) {
 				var self = this;
