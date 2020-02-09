@@ -484,9 +484,15 @@ app.get('/blog/api/grantadmins', grantAdmins, (req, res, next) => {
 		console.log("resize error occured");
 		console.log(err)
 	});
+	sharp(req.file.path).resize({ 
+		width: 1200,
+		withoutEnlargement: true
+	}).toFile(imagePath)
+	.then(newFileInfo => console.log(newFileInfo))
+	.catch(err => console.log(err))
 	const media = {
 		image: '/uploadedImages/'+req.params.id+'/'+req.file.filename,
-		image_abs: req.file.path,
+		image_abs: imagePath,
 		thumb: '/uploadedImages/'+req.params.id+'/'+req.file.filename.replace(/\.(png)$/, '.thumb.png'),
 		thumb_abs: thumbPath,
 		caption: 'Edit image caption'
