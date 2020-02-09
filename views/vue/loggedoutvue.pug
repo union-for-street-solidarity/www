@@ -29,9 +29,9 @@ script(type="text/javascript").
 			self.timeoutId = setTimeout(() => {
 				self.loading = false
 			}, 100);
-			if (self.data && self.data !== '') {
+			if (self.data && self.data !== '' && self.data.length > 0) {
 				self.article = (!self.doc || self.doc === '' ? '' : self.doc.category)
-				if (self.article === '' && self.data.map((doc)=>doc.category).filter((item)=>(item === 'blog' || item === 'draft')).length === self.data.length) {
+				if (self.article === '' && self.data.map((doc)=>doc.category).filter((item)=>(item === 'blog' || item === 'draft' || item === 'document')).length === self.data.length) {
 					//- self.doc = self.data[0]
 					self.article = self.data[0].category
 				} else {

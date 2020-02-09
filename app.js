@@ -28,6 +28,7 @@ const { User, Blog } = require('./models/index.js');
 // const staticPath = path.join(__dirname, '.', 'client', 'public');
 const publicPath = path.join(__dirname, '.', 'public');
 const uploadedImages = '../uploads/img/';
+const uploadedIframes = '../uploads/iframe/'
 const url = require('url')
 
 mongoose.Promise = promise;
@@ -77,7 +78,8 @@ const sess = {
 }
 var storage = multer.diskStorage({
 	destination: async (req, file, cb) => {
-		var p = (path.join(__dirname, uploadedImages) + req.params.id);
+		var uploadDir = (req.params.type === 'img' ? uploadedImages : uploadedIframes);
+		var p = (path.join(__dirname, uploadDir) + req.params.id);
 		var exists = await fs.existsSync(p);//.catch((err) => console.log(err));
 		if (!exists) {
 			mkdirp(p, (err) => {
@@ -107,6 +109,7 @@ app
 .set('views', './views')
 .set('view engine', 'pug')
 .use(favicon(path.join(publicPath, 'icons', 'favicon.ico')))
+.use('/uploadedIframes',express.static(path.join(__dirname, uploadedIframes)))
 .use('/uploadedImages',express.static(path.join(__dirname, uploadedImages)))
 .use(express.static(publicPath))
 .use(session(sess),
@@ -121,13 +124,21 @@ app
 })
 
 app.use((request, response, next) => {
-	response.header('Access-Control-Allow-Origin', '*');
-	response.header(
-		'Access-Control-Allow-Headers',
-		'Origin, X-Requested-With, Content-Type, Accept'
-	);
-	response.header('Access-Control-Allow-Methods', 'GET, POST');
-	response.header('Accept', '*/*');
+	app.disable('x-powered-by');
+	app.disable('Strict-Transport-Security');
+	response.set({
+			'Access-Control-Allow-Origin' : '*',
+			'Access-Control-Allow-Methods' : 'GET, POST, HEAD, OPTIONS',
+			'Access-Control-Allow-Headers' : 'Cache-Control, Origin, Content-Type, Accept, Set-Cookie',
+			'Access-Control-Allow-Credentials' : true,
+		});
+	// response.header('Access-Control-Allow-Origin', '*');
+	// response.header(
+	// 	'Access-Control-Allow-Headers',
+	// 	'Origin, X-Requested-With, Content-Type, Accept'
+	// );
+	// response.header('Access-Control-Allow-Methods', 'GET, POST');
+	// response.header('Accept', '*/*');
 	next();
 });
 
@@ -162,7 +173,7 @@ app.param('category', (req, res, next, value) => {
 			return next('route')
 		} else {
 			if (!doc) {
-				return next('route')
+				return next()
 			} else {
 				return next()
 			}
@@ -420,15 +431,18 @@ app.get('/blog/api/grantadmins', grantAdmins, (req, res, next) => {
 	})
 })
 .post('/blog/api/uploaddoc/:type/:id/:index', uploadmedia.single('doc'), parseBody, (req, res, next) =>{
+	var outputPath = url.parse(req.url).pathname;
+	console.log(outputPath)
 	const iframePath = req.file.path;
-	const doc = {
-		iframe: iframePath,
+	const dc = {
+		iframe: '/uploadedIframes/'+req.params.id+'/'+req.file.filename,
+		iframe_abs: iframePath,
 		caption: 'Edit me'
 	}
 	var query = {$set: {}};
 	let key;
 	key = 'doc'
-	query.$set[key] = doc
+	query.$set[key] = dc
 	Blog.findOneAndUpdate({_id: req.params.id}, query, {safe: true, upsert: false, new: true}, (err, doc) => {
 		if (err) {
 			return next(err)
@@ -544,7 +558,7 @@ app
 
 if (mongoose.connection.readyState === 0) {
 	// connect to mongo db
-	const mongoUri = config.fullMongoUrl;
+	const mongoUri = (process.env.NODE_ENV === 'development' ? config.devDb : config.fullMongoUrl );
 	const promise = mongoose.connect(
 		mongoUri, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }
 	);

@@ -10,6 +10,7 @@ var Media = new Schema({
 	thumb: String,
 	thumb_abs: String,
 	iframe: String,
+  iframe_abs: String,
 	orientation: String
 });
 

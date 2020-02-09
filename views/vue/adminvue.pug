@@ -16,7 +16,7 @@ script(type="text/javascript").
 				accordions: [],
 				file: null,
 				//items to hide in the viewer
-				exclude: ['_id', '__v', 'date', 'image', 'image_abs', 'thumb', 'thumb_abs', 'author', 'tags', 'footnotes', 'id', 'category', 'geometry', 'media', 'orientation'],
+				exclude: ['_id', '__v', 'date', 'iframe', 'iframe_abs', 'image', 'image_abs', 'thumb', 'thumb_abs', 'author', 'tags', 'footnotes', 'id', 'category', 'geometry', 'media', 'orientation', 'doc'],
 				tinymce: null,
 				progressBar: null,
 				message: '',
@@ -31,7 +31,8 @@ script(type="text/javascript").
 				timeout: false,
 				articleTimeout: false,
 				loading: true,
-				timeoutId: ''
+				timeoutId: '',
+				xhr: null
 			}
 		},
 		watch: {
@@ -57,9 +58,9 @@ script(type="text/javascript").
 					self.loadTinyMCE()
 				}, 2000)
 			}
-			if (self.data && self.data !== '') {
+			if (self.data && self.data !== '' && self.data.length > 0) {
 				self.article = (!self.doc || self.doc === '' ? '' : self.doc.category)
-				if (self.article === '' && self.data.map((doc)=>doc.category).filter((item)=>(item === 'blog' || item === 'draft')).length === self.data.length) {
+				if (self.article === '' && self.data.map((doc)=>doc.category).filter((item)=>(item === 'blog' || item === 'draft' || item === 'document')).length === self.data.length) {
 					//- self.doc = self.data[0]
 					self.article = self.data[0].category
 				} else {
@@ -83,7 +84,10 @@ script(type="text/javascript").
 		beforeDestroy() {
 			var self = this;
 			clearInterval(self.sliderInterval)
-			clearTimeout(self.timeoutId)
+			clearTimeout(self.timeoutId);
+			if (self.xhr) {
+				self.xhr.upload.removeEventListener('progress');
+			}
 		},
 		methods: {
 			parseObj(obj) {
@@ -204,10 +208,10 @@ script(type="text/javascript").
 					contentType: false
 					,
 					xhr: function () {
-						var xhr = new XMLHttpRequest();
+						self.xhr = new XMLHttpRequest();
 					
 						// Add progress event listener to the upload.
-						xhr.upload.addEventListener('progress', function (event) {
+						self.xhr.upload.addEventListener('progress', function (event) {
 							self.progressBar = 
 								//document.getElementById('progress-bar')
 								$('.progress-bar');
@@ -221,7 +225,8 @@ script(type="text/javascript").
 								}
 							}
 						});
-						return xhr;
+						return self.xhr;
+						//- return xhr;
 					}
 				}).done((result) => {
 					console.log(result)
