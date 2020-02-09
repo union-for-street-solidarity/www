@@ -71,16 +71,16 @@ body {
 
 /* Type */
 html {
-  font-size: 16pt; }
+  font-size: 24pt; }
   @media screen and (max-width: 1680px) {
     html {
-      font-size: 12pt; } }
+      font-size: 16pt; } }
   @media screen and (max-width: 736px) {
     html {
-      font-size: 11pt; } }
+      font-size: 13pt; } }
   @media screen and (max-width: 360px) {
     html {
-      font-size: 10pt; } }
+      font-size: 12pt; } }
 
 body, input, select, textarea, button {
   color: #ffffff;

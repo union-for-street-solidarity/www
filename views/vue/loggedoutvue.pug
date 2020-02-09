@@ -122,8 +122,8 @@ script(type="text/javascript").
 					//- console.log(rx, rx.test(window.location.href))
 					if (window.location.href !== '/') {
 						var hr = '/#'+article
-						//- console.log(hr, window.location.href)
-						var hrf = window.location.href.split('/')[window.location.href.split('/').length - 1];
+						console.log(hr, window.location.pathname, window.location.pathname.split('/')[1])
+						var hrf = window.location.pathname.split('/')[1];
 						if (hrf === 'blog' || hrf === 'documents') {
 							console.log('was blog')
 							return window.location.href = hr

@@ -54,9 +54,8 @@ block content
 							input(v-else type="hidden" :name="'doc['+o+']'" :value="doc.doc[o]")
 						input(:id="'inputiframe'" :name="'doc[iframe]'", :value="doc.doc.iframe", type="hidden")
 
-					hr
-					div.row
-						label.text-uppercase(for="newimg" v-text="'Add document'")
+					div.row(v-else-if="!doc.doc")
+						label.text-uppercase(for="newdoc" v-text="'Add document'")
 						input.form-control#newdoc(placeholder="Accepts PDF and MS Word files" accept=".pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" @change="handleFile('doc', doc._id, null, $event)" type="file" style="min-height: 52px;")
 						div.row
 							p &nbsp

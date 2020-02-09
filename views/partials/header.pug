@@ -8,9 +8,12 @@ header#header(:style="{display: (timeout ? 'none' : 'flex')}")
 			p Solidarity not Charity
 	nav
 		ul
-			li(v-for="(cat, k) in distinct")
-				button(v-if="cat === 'intro'" @click="handleOpenArticle('intro')" v-text="'Intro'")
-				button(v-else-if="cat === 'donate'" @click="handleOpenArticle('donate')" v-text="'Donate'")
-				button(v-else-if="cat === 'distributions'" @click="handleOpenArticle('distributions')" v-text="'Distributions'")
-				a(v-else-if="cat !== 'draft'" role="button" :href="'/'+cat" v-text="cat")
+			li(v-for="(cat, k) in distinct" v-if="cat === 'intro'")
+				button(@click="handleOpenArticle('intro')" v-text="'Intro'")
+			li(v-for="(cat, k) in distinct" v-if="cat === 'donate'")
+				button(@click="handleOpenArticle('donate')" v-text="'Donate'")
+			li(v-for="(cat, k) in distinct" v-if="cat === 'distributions'")
+				button(@click="handleOpenArticle('distributions')" v-text="'Distributions'")
+			li(v-for="(cat, k) in distinct" v-if="cat !== 'draft' && cat !== 'intro' && cat !== 'donate' && cat !== 'distributions'")
+				a(role="button" :href="'/'+cat" v-text="cat")
 

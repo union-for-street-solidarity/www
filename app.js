@@ -440,7 +440,7 @@ app.get('/blog/api/grantadmins', grantAdmins, (req, res, next) => {
 })
 .post('/blog/api/uploaddoc/:type/:id/:index', uploadmedia.single('doc'), parseBody, (req, res, next) =>{
 	var outputPath = url.parse(req.url).pathname;
-	console.log(outputPath)
+	// console.log(outputPath)
 	const iframePath = req.file.path;
 	const dc = {
 		title: req.file.filename,
@@ -452,7 +452,7 @@ app.get('/blog/api/grantadmins', grantAdmins, (req, res, next) => {
 	let key;
 	key = 'doc'
 	query.$set[key] = dc;
-	console.log(req.body)
+	// console.log(req.body)
 	
 	var query2 = {$set: {}};
 	let key2 = 'title';
@@ -489,7 +489,7 @@ app.get('/blog/api/grantadmins', grantAdmins, (req, res, next) => {
 		image_abs: req.file.path,
 		thumb: '/uploadedImages/'+req.params.id+'/'+req.file.filename.replace(/\.(png)$/, '.thumb.png'),
 		thumb_abs: thumbPath,
-		caption: 'Edit me'
+		caption: 'Edit image caption'
 	}
 	var query = (
 		isNaN(index) ? 
