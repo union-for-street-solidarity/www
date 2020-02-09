@@ -2,7 +2,10 @@ a(:href="'/blog/'+doc._id" style="display:block;")
 	h2.major(v-text="doc.title" style="width: 100%;")
 
 div.container(v-if="doc.doc" class="75%")
-	embed(:src="doc.doc.iframe")
+	embed(:src="doc.doc.iframe" :style="{height: wHeight * 0.55 + 'px', width: wWidth * 0.75 + 'px'}")
+	p
+		span.text-muted(v-text="'Document not loading?  '")
+		a(:href="'"+appUrl+"' + doc.doc.iframe" v-text="'Click here'" target="_blank")
 div.carousel-inner(v-if="doc.media.length > 0 && doc.media[0].image !== '/images/logo.jpg'")
 	div.carousel-item(:class="(sliderIndex === j ? 'active' : '')" v-for="(item, j) in doc.media" v-if="item.image !== '/images/logo.jpg'")
 		img.img(:src="item.image+'?version='+Math.random()" :alt="item.caption")

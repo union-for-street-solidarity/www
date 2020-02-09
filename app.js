@@ -67,7 +67,7 @@ passport.use(new LocalStrategy(User.authenticate()));
 //		 });
 //	 }
 // ));
-
+app.locals.appUrl = (config.env === 'production' ? 'https://streetsolidarity.com' : 'http://localhost:'+config.port+'')
 const sess = {
 	secret: config.secret,
 	name: 'nodecookie',
@@ -435,6 +435,7 @@ app.get('/blog/api/grantadmins', grantAdmins, (req, res, next) => {
 	console.log(outputPath)
 	const iframePath = req.file.path;
 	const dc = {
+		title: req.file.filename,
 		iframe: '/uploadedIframes/'+req.params.id+'/'+req.file.filename,
 		iframe_abs: iframePath,
 		caption: 'Edit me'
@@ -442,7 +443,8 @@ app.get('/blog/api/grantadmins', grantAdmins, (req, res, next) => {
 	var query = {$set: {}};
 	let key;
 	key = 'doc'
-	query.$set[key] = dc
+	query.$set[key] = dc;
+	console.log(req.body)
 	Blog.findOneAndUpdate({_id: req.params.id}, query, {safe: true, upsert: false, new: true}, (err, doc) => {
 		if (err) {
 			return next(err)

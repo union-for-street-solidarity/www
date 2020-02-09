@@ -22,9 +22,9 @@
 		}
 	}
 
-	body, input, select, textarea {
+	body, input, select, textarea, button {
 		color: _palette(fg);
-		font-family: _font(family);
+		font-family: _font(family)!important;
 		font-weight: _font(weight);
 		font-size: 1rem;
 		line-height: 1.65;

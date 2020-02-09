@@ -30,7 +30,7 @@ block content
 						select#category(name="category" @change="changeCategory")
 							option(value="draft" :selected="doc.category === 'draft'" v-text="'draft'")
 							option(value="blog" :selected="doc.category === 'blog'" v-text="'blog'")
-							option(value="document" :selected="doc.category === 'document'" v-text="'document'")
+							option(value="documents" :selected="doc.category === 'documents'" v-text="'documents'")
 							option(v-if="doc.category === 'intro'" value="intro" :selected="doc.category === 'intro'" v-text="'intro'")
 							option(v-if="doc.category === 'donate'" value="donate" :selected="doc.category === 'donate'" v-text="'donate'")
 							option(v-if="doc.category === 'distributions'" value="distributions" :selected="doc.category === 'distributions'" v-text="'distributions'")

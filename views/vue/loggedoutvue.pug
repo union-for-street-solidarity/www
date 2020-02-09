@@ -19,7 +19,9 @@ script(type="text/javascript").
 				timeout: false,
 				articleTimeout: false,
 				loading: true,
-				timeoutId: ''
+				timeoutId: '',
+				wWidth: window.innerWidth,
+				wHeight: window.innerHeight
 			}
 		},
 		watch: {
@@ -31,13 +33,13 @@ script(type="text/javascript").
 			}, 100);
 			if (self.data && self.data !== '' && self.data.length > 0) {
 				self.article = (!self.doc || self.doc === '' ? '' : self.doc.category)
-				if (self.article === '' && self.data.map((doc)=>doc.category).filter((item)=>(item === 'blog' || item === 'draft' || item === 'document')).length === self.data.length) {
+				if (self.article === '' && self.data.map((doc)=>doc.category).filter((item)=>(item === 'blog' || item === 'draft' || item === 'documents')).length === self.data.length) {
 					//- self.doc = self.data[0]
 					self.article = self.data[0].category
 				} else {
 					self.article = window.location.hash.replace('#', '')
 				}
-				if (self.article && self.article !== '' && self.article !== 'blog' && self.article !== 'draft') {
+				if (self.article && self.article !== '' && self.article !== 'blog' && self.article !== 'draft' && self.article !== 'documents') {
 					self.initOpenArticle(self.article)
 				}
 				var length = self.data.map((doc) => doc.media.length).sort()[0];//(!self.doc ? 0 : self.doc.media.length);
@@ -50,17 +52,24 @@ script(type="text/javascript").
 				}, 5000)
 
 			}
-
+			window.addEventListener('resize', self.resizeFrame);
 		},
 		beforeDestroy() {
 			var self = this;
 			clearInterval(self.sliderInterval)
-			clearTimeout(self.timeoutId)
+			clearTimeout(self.timeoutId);
+			window.removeEventListener('resize', self.resizeFrame)
+
 		},
 		methods: {
 			parseObj(obj) {
 				if (!obj) return '';
 				return obj;
+			},
+			resizeFrame() {
+				var self = this;
+				self.wWidth = window.innerWidth;
+				self.wHeight = window.innerHeight;
 			},
 			initOpenArticle(article) {
 				var self = this;
@@ -113,7 +122,8 @@ script(type="text/javascript").
 					if (window.location.href !== '/') {
 						var hr = '/#'+article
 						//- console.log(hr, window.location.href)
-						if (window.location.href.split('/')[window.location.href.split('/').length - 1] === 'blog') {
+						var hrf = window.location.href.split('/')[window.location.href.split('/').length - 1];
+						if (hrf === 'blog' || hrf === 'documents') {
 							console.log('was blog')
 							return window.location.href = hr
 						} else {

@@ -110,6 +110,8 @@
 						min-width: 7.5rem;
 						height: 2.75rem;
 						line-height: 2.75rem;
+						font-family: _font(family);
+						font-weight: 600;
 						padding: 0 1.25rem 0 (1.25rem + _font(letter-spacing));
 						text-transform: uppercase;
 						letter-spacing: _font(letter-spacing);

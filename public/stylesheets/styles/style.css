@@ -82,9 +82,9 @@ html {
     html {
       font-size: 10pt; } }
 
-body, input, select, textarea {
+body, input, select, textarea, button {
   color: #ffffff;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Source Sans Pro", sans-serif !important;
   font-weight: 300;
   font-size: 1rem;
   line-height: 1.65; }
@@ -683,6 +683,7 @@ a[role="button"],
   color: #ffffff !important;
   cursor: pointer;
   display: inline-block;
+  font-family: "Source Sans Pro", sans-serif;
   font-size: 0.8rem;
   font-weight: 300;
   height: 2.75rem;
@@ -957,6 +958,8 @@ button {
         min-width: 7.5rem;
         height: 2.75rem;
         line-height: 2.75rem;
+        font-family: "Source Sans Pro", sans-serif;
+        font-weight: 600;
         padding: 0 1.25rem 0 1.45rem;
         text-transform: uppercase;
         letter-spacing: 0.2rem;
