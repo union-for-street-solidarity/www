@@ -242,8 +242,11 @@ script(type="text/javascript").
 						//- return xhr;
 					}
 				}).done((result) => {
-					console.log(result)
-					self.data = [result];
+					console.log(result);
+					if (result[0] !== '<') {
+						self.data = [result];
+						
+					}
 					self.progressBar.removeClass('active');
 					self.progressBar.width('0%');
 					self.progressBar = null;

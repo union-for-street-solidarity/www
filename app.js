@@ -79,16 +79,27 @@ const sess = {
 var storage = multer.diskStorage({
 	destination: async (req, file, cb) => {
 		var uploadDir = (req.params.type === 'img' ? uploadedImages : uploadedIframes);
-		var p = (path.join(__dirname, uploadDir) + req.params.id);
-		var exists = await fs.existsSync(p);//.catch((err) => console.log(err));
+		var initDir = (path.join(__dirname, uploadDir));
+		var p = (initDir + '/'+ req.params.id);
+		var exists = await fs.existsSync(initDir);//.catch((err) => console.log(err));
 		if (!exists) {
-			mkdirp(p, (err) => {
-				if (err) {
-					cb(err)
-				} else {
-					cb(null, p)
-				}
-			})
+			await fs.mkdirSync(initDir, {recursive:true});
+			await fs.mkdirSync(p, {recursive:true});
+			cb(null, p)
+			// fs.mkdir(initDir, {recursive:true}, err => {
+			// 	if (err) {
+			// 		cb(err)
+			// 	} else {
+			// 		fs.mkdir(p, {recursive:true}, (err) => {
+			// 			if (err) {
+			// 				cb(err)
+			// 			} else {
+			// 				cb(null, p)
+			// 			}
+			// 		})
+			// 	}
+			// })
+			
 		} else {
 			cb(null, p)
 		}
