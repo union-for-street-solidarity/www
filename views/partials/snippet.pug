@@ -8,7 +8,7 @@ td(colspan="3")
 	div.container(v-if="doc.doc" class="75%")
 		embed(:src="doc.doc.iframe")
 	
-	p
+	p(v-if="doc.doc")
 		span.text-muted(v-text="'Document not loading?  '")
 		a(:href="'"+appUrl+"' + doc.doc.iframe" v-text="'Click here'" target="_blank")
 
