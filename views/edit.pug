@@ -27,12 +27,13 @@ block content
 					input(type="hidden" :value="user._id" name="author")
 					label(for="category" v-text="'category'")
 					p
-						select#category(name="category")
+						select#category(name="category" @change="changeCategory")
 							option(value="draft" :selected="doc.category === 'draft'" v-text="'draft'")
 							option(value="blog" :selected="doc.category === 'blog'" v-text="'blog'")
+							option(value="document" :selected="doc.category === 'document'" v-text="'document'")
 							option(value="intro" :selected="doc.category === 'intro'" v-text="'intro'")
 							option(value="donate" :selected="doc.category === 'donate'" v-text="'donate'")
-							option(value="distributions" :selected="doc.category === 'distributions'" v-text="distributions")
+							option(value="distributions" :selected="doc.category === 'distributions'" v-text="'distributions'")
 					p(v-for="(key, i) in Object.keys(doc)" v-if="exclude.indexOf(key) === -1")
 						label(:for="key" v-text="key")
 						input(type="text" v-if="key !== 'lede' && key !== 'description' && key !== 'body'" :id="key" :name="key", :value="doc[key]")
@@ -42,10 +43,19 @@ block content
 						input(type="text" :name="'footnote'+k+''" :id="'footnote'+k+''" :value="foot")
 					div.row
 						p &nbsp
-						
+					div.row(v-if="doc.doc")
+						label.text-uppercase(for="switchdoc" v-text="'replace document'")
+						input.form-control#switchdoc(@change="handleFile('doc', doc._id, 0, $event)" type="file" style="min-height: 52px;")
+						embed(:src="doc.doc+'?version='+Math.random()" style="width: 100%")
+						div.form-group(v-for="(o, m) in Object.keys(doc.doc)" v-if="exclude.indexOf(o) === -1")
+							label.text-uppercase(:for="'doc_'+o+''" v-text="o + ''")
+							textarea.form-control(v-if="(o !== 'index')" :id="'doc_'+o+''" type="text" :name="'doc['+o+']'" v-html="doc.doc[o]")
+							input(v-else type="hidden" :name="'doc['+o+']'" :value="doc.doc[o]")
+						input(:id="'inputiframe'" :name="'doc[iframe]'", :value="doc.doc.iframe", type="hidden")
+
 					div.row(v-for="(img, l) in doc.media")
 						label.text-uppercase(:for="('switchimg' + l)" v-text="'switch image ' + (l + 1)")
-						input.form-control(:id="('switchimg' + l)" @change="handleFile(doc._id, l, $event)" type="file" style="min-height: 52px;")
+						input.form-control(:id="('switchimg' + l)" @change="handleFile('img', doc._id, l, $event)" type="file" style="min-height: 52px;")
 						img(:src="img.image+'?version='+Math.random()" style="width: 100%")
 						div.form-group(v-for="(o, m) in Object.keys(doc.media[0])" v-if="exclude.indexOf(o) === -1")
 							label.text-uppercase(:for="''+(o + l)+''" v-text="o + ' ' + (l+1) ")
@@ -61,20 +71,28 @@ block content
 					div.row(v-if="(!doc || doc === '' || !doc.media || doc.media.length === 0)")
 						input(type="hidden" :value="'/images/logo.jpg'" :name="'media[0][image]'")
 						input(type="hidden" :value="'/images/logo.jpg'" :name="'media[0][thumb]'")
-
-					div.row
-						label.text-uppercase(for="newimg" v-text="'Add image'")
-						input.form-control#newimg(@change="handleFile(doc._id, null, $event)" type="file" style="min-height: 52px;")
+					
+					div.row(v-if="data[0].category === 'document'")
+						label.text-uppercase(for="newimg" v-text="'Add document'")
+						input.form-control#newimg(@change="handleFile('doc', doc._id, null, $event)" type="file" style="min-height: 52px;")
 						div.row
 							p &nbsp
 						div.row.progress
 							div.progress-bar.progress-bar-striped.active#progress-bar(role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%")
 								span.sr-only
+					div.row(v-if="data[0].category !== 'document'")
+						label.text-uppercase(for="newimg" v-text="'Add image'")
+						input.form-control#newimg(@change="handleFile('img', doc._id, null, $event)" type="file" style="min-height: 52px;")
 						div.row
-							input#submitButton.btn.btn-primary.special.btn-block.block(type="submit" :disabled="progressBar !== null")
 							p &nbsp
-						div.row
-							p
-								h4 Danger: This cannot be undone:
-								a.btn.btn-warning.btn-block(role="button" @click="initDeleteEntry(doc._id)" v-text="'Delete this entry'")
+						div.row.progress
+							div.progress-bar.progress-bar-striped.active#progress-bar(role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%")
+								span.sr-only
+					div.row
+						input#submitButton.btn.btn-primary.special.btn-block.block(type="submit" :disabled="progressBar !== null")
+						p &nbsp
+					div.row
+						p
+							h4 Danger: This cannot be undone:
+							a.btn.btn-warning.btn-block(role="button" @click="initDeleteEntry(doc._id)" v-text="'Delete this entry'")
 	include vue/adminvue.pug

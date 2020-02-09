@@ -92,8 +92,12 @@ var storage = multer.diskStorage({
 		}
 	},
 	filename: (req, file, cb) => {
-		var newPath = file.originalname.replace(/\.(tiff|jpg|jpeg)$/, '.png');
-		cb(null, newPath) //Appending extension
+		if (req.params.type === 'img') {
+			var newPath = file.originalname.replace(/\.(tiff|jpg|jpeg)$/, '.png');
+			cb(null, newPath) //Appending extension
+		} else if (req.params.type === 'doc') {
+			cb(null, file.originalname)
+		}
 	}
 })
 
@@ -415,7 +419,25 @@ app.get('/blog/api/grantadmins', grantAdmins, (req, res, next) => {
 	
 	})
 })
-.post('/blog/api/uploadimg/:id/:index', uploadmedia.single('img'), parseBody, (req, res, next) => {
+.post('/blog/api/uploaddoc/:type/:id/:index', uploadmedia.single('doc'), parseBody, (req, res, next) =>{
+	const iframePath = req.file.path;
+	const doc = {
+		iframe: iframePath,
+		caption: 'Edit me'
+	}
+	var query = {$set: {}};
+	let key;
+	key = 'doc'
+	query.$set[key] = doc
+	Blog.findOneAndUpdate({_id: req.params.id}, query, {safe: true, upsert: false, new: true}, (err, doc) => {
+		if (err) {
+			return next(err)
+		} else {
+			return res.status(200).send(doc)
+		}
+	})
+})
+.post('/blog/api/uploadimg/:type/:id/:index', uploadmedia.single('img'), parseBody, (req, res, next) => {
 	const imagePath = req.file.path;
 	const thumbPath = req.file.path.replace(/\.(png)$/, '.thumb.png');
 	const index = parseInt(req.params.index);

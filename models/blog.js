@@ -22,7 +22,7 @@ var schema= new Schema({
 		description: String,
 		date: Date,
     media: [Media],
-		media2: { Media },
+		doc: Media,
 		tags: [String],
     footnotes: [ ],
 	// },

@@ -7,6 +7,9 @@ block content
 		div(:class="'body '+ (!loading ? '' : 'is-loading') + ' ' +(isArticleVisible ? 'is-article-visible' : '')")
 			div#wrapper
 				include partials/header.pug
+				div.blog(v-if="article === 'blog' && user && user !== '' && user.admin")
+					p
+						a(role="button" :href="'/blog/api/newstory'" v-text="'New post'")
 				div.blog(v-if="article === 'blog' || article === 'draft'" v-for="(doc, i) in data")
 					
 					a(v-if="user && user !== '' && user.admin" :href="'/blog/api/editstory/'+doc.category+'/'+doc._id+''" v-text="'edit '+doc.category")
@@ -17,7 +20,7 @@ block content
 							include partials/snippet.pug
 				div.blog(v-if="article === 'blog' && user && user !== '' && user.admin")
 					p
-						a(role="button" :href="'/blog/api/newstory'" v-text="'New blog'")
+						a(role="button" :href="'/blog/api/newstory'" v-text="'New post'")
 				div#main(:style="{ display: (timeout ? 'flex' : 'none')}" v-for="(doc, i) in data" v-if="doc.category === article && doc.category !== 'blog'")
 					
 

@@ -65,7 +65,7 @@ script(type="text/javascript").
 			initOpenArticle(article) {
 				var self = this;
 				var rh = new RegExp(article)
-				console.log(article, window.location.hash)
+				//- console.log(article, window.location.hash)
 				if (window.location.hash && rh.test(window.location.hash)) {
 					if (article === 'donate') {
 						var db = document.createElement('script');
@@ -86,11 +86,11 @@ script(type="text/javascript").
 			},
 			checkUser(e) {
 				var self = this;
-				console.log(e)
+				//- console.log(e)
 				var user = e.target.value;
 				$.post('/auth/check/'+user)
 				.then(function(result) {
-					console.log(result)
+					//- console.log(result)
 					if (!result || result === '') {
 						self.action = '/register'
 					} else {
@@ -109,10 +109,10 @@ script(type="text/javascript").
 				var self = this;
 				var rx = new RegExp(article);
 				if (!rx.test(window.location.href)) {
-					console.log(rx, rx.test(window.location.href))
+					//- console.log(rx, rx.test(window.location.href))
 					if (window.location.href !== '/') {
 						var hr = '/#'+article
-						console.log(hr, window.location.href)
+						//- console.log(hr, window.location.href)
 						if (window.location.href.split('/')[window.location.href.split('/').length - 1] === 'blog') {
 							console.log('was blog')
 							return window.location.href = hr

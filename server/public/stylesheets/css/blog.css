@@ -1,0 +1,133 @@
+/*this is a test*/
+.blog {
+  background-color: #333;
+  margin: 50px 0 0 0;
+  display: inline-block;
+  left: 0;
+  right: 0;
+  width: 100%
+}
+input.block {
+  width: 100%!important;
+}
+
+
+.carousel-item {
+	transition: opacity 1s ease-in-out!important;
+	display: block!important;
+  max-height: 100vh;
+  overflow-y: hidden;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #333;
+  margin: 10%;
+  padding: 2.5rem;
+}
+.blog ul {
+  display: -moz-flex;
+  display: -ms-flex;
+  display: flex;
+  margin-bottom: 20px;
+  list-style: none;
+  padding-left: 0;
+}
+ul.blog {
+  height:auto;
+  min-height:100vh;
+  width:100%;
+  margin-bottom:2rem; 
+  overflow:auto;
+  display:flex;
+}
+.story > p > img {
+  width: auto;
+}
+.story > p > img {
+  width: auto;
+}
+.story ul {
+	list-style: disc;
+	display: block;
+	padding-left: 15px;
+}
+.story ol {
+	list-style: decimal;
+	display: block;
+	padding-left: 15px;
+}
+.story ul li, .story ol li {
+  padding-bottom: 5px;
+}
+.content-container {
+  position: relative;
+  display: block;
+  z-index: 2;
+}
+
+@supports ((perspective: 1px) and (not (-webkit-overflow-scrolling: touch))) {
+  /* ... parallax styles ... */
+  .w-100 {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    -webkit-transform: translateZ(-1px) scale(2);
+    -moz-transform: translateZ(-1px) scale(2);
+    transform: translateZ(-1px) scale(2);
+  }
+
+  .carousel-item {
+    z-index: -1;
+    height: 50%;
+    transform: translateZ(-1px) translateY(-50%) scale(2);
+    background-color: rgb(250,228, 216);
+    transition: opacity 1s ease-in-out!important;
+    display: block!important;
+    overflow-x: hidden;
+    overflow-y: hidden;
+  	transition-property: opacity!important;
+  	transition-duration: 1s!important;
+  }
+  .carousel-item img {
+    width: 100%;
+    height: auto;
+  }
+
+  .parallax-container h1 {
+    letter-spacing: -15px;
+    font-family: Open Sans;
+    color: white;
+    text-align: center;
+    font-size: 200px;
+    font-weight: 800;
+    line-height: 200px;
+    position: absolute;
+  }
+
+  .main-container {
+    perspective: 1px;
+    transform-style: preserve-3d;
+    height: calc(100vh - 232px);
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+
+  
+}
+
+@media (min-width: 600px) {
+  .blog {
+    /* margin: 50px 50px 0 50px;
+    left: 20px;
+    right: 20px; */
+    padding: 50px 50px 0 50px;
+  }
+}
