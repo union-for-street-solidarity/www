@@ -1,3 +1,12 @@
+div(v-if="progressBar && progressBar > 0")
+	div.modal(tabindex="-1" role="dialog" id="progressbar" :style="{display: (!progressBar || progressBar === 0 ? 'none' : 'block')}")
+		div.modal-dialog(role="document")
+			div.modal-content
+				div.modal-header
+					h5.modal-title(v-text="'Uploading'")
+				div.modal-body
+					p(v-text="progressBar + '%'")
+					div.progressBar(:style="{width: progressBar + '%'}" style="height: 25px; background-color: red;")
 div(v-if="modal")
 	div.modal(tabindex="-1" role="dialog" id="confirmdelete" :style="{display: (!modal ? 'none' : 'block')}")
 		div.modal-dialog(role="document")

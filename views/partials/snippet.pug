@@ -3,8 +3,8 @@
 td(colspan="3")
 	
 	p.text-muted.my-0(v-text="moment(doc.date).format('MMMM Do YYYY') + ' at ' + moment(doc.date).format('hh:mm a')")
-	a(:href="'/blog/'+doc._id")
-		h2.major(v-text="doc.title")
+	a(:href="'/blog/'+doc._id" style="display:block;")
+		h2.major(v-text="doc.title" style="overflow: hidden")
 	div.container(v-if="doc.doc" class="75%")
 		embed(:src="doc.doc.iframe")
 	

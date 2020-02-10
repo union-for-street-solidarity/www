@@ -26,7 +26,7 @@ const cookieParser = require("cookie-parser");
 const sharp = require('sharp');
 const { User, Blog } = require('./models/index.js');
 // const staticPath = path.join(__dirname, '.', 'client', 'public');
-const publicPath = path.join(__dirname, '.', 'public');
+const publicPath = path.join(__dirname, 'public');
 const uploadedImages = '../uploads/img/';
 const uploadedIframes = '../uploads/iframe/'
 const url = require('url')
@@ -120,9 +120,9 @@ app
 .set('views', './views')
 .set('view engine', 'pug')
 .use(favicon(path.join(publicPath, 'icons', 'favicon.ico')))
+.use(express.static(publicPath))
 .use('/uploadedIframes',express.static(path.join(__dirname, uploadedIframes)))
 .use('/uploadedImages',express.static(path.join(__dirname, uploadedImages)))
-.use(express.static(publicPath))
 .use(session(sess),
 	passport.initialize(),
 	passport.session(),

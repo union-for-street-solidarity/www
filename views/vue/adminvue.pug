@@ -227,16 +227,16 @@ script(type="text/javascript").
 					
 						// Add progress event listener to the upload.
 						self.xhr.upload.addEventListener('progress', function (event) {
-							self.progressBar = 
+							self.progressBar = 0
 								//document.getElementById('progress-bar')
-								$('.progress-bar');
+								//- $('.progress-bar');
 					
 							if (event.lengthComputable) {
 								var percent = (event.loaded / event.total) * 100;
-								self.progressBar.width(percent + '%');
+								self.progressBar = percent;
 					
 								if (percent === 100) {
-									self.progressBar.removeClass('active');
+									self.progressBar = null;
 								}
 							}
 						});

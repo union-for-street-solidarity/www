@@ -1,8 +1,8 @@
 a(v-if="!doc.doc" :href="'/blog/'+doc._id" style="display:block;")
-	h2.major(v-text="doc.title" style="width: 100%;")
+	h2.major(v-text="doc.title" style="width: 100%; overflow: hidden;")
 
 a(v-else-if="doc.doc && doc.doc.iframe" :href="'"+appUrl+"' + doc.doc.iframe" style="display:block;" target="_blank")
-	h2.major(v-text="doc.title" style="width: 100%;")
+	h2.major(v-text="doc.title" style="width: 100%; overflow: hidden;")
 
 div.container(v-if="doc.doc" class="75%")
 	embed(:src="doc.doc.iframe" :style="{height: wHeight * 0.55 + 'px', width: wWidth * 0.75 + 'px'}")
