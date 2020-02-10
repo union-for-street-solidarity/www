@@ -5,7 +5,17 @@ a(v-else-if="doc.doc && doc.doc.iframe" :href="'"+appUrl+"' + doc.doc.iframe" st
 	h2.major(v-text="doc.title" style="width: 100%; overflow: hidden;")
 
 div.container(v-if="doc.doc" class="75%")
-	embed(:src="doc.doc.iframe" :style="{height: wHeight * 0.55 + 'px', width: wWidth * 0.75 + 'px'}")
+	embed(:src="doc.doc.iframe" :style=`{
+		height: wHeight * 0.75 + 'px', 
+		width: (
+			wWidth > 736 ? (
+				wWidth > 980 ? (
+					wWidth > 1280 ? wWidth - 500 : wWidth - 300 
+				) : 
+					wWidth - 200
+			) : 
+			wWidth - 50
+		) + 'px'}`)
 	p
 		span.text-muted(v-text="'Document not loading?  '")
 		a(:href="'"+appUrl+"' + doc.doc.iframe" v-text="'Click here'" target="_blank")

@@ -10,7 +10,8 @@ img[v-cloak] {
 	display: inline-block;
 	left: 0;
 	right: 0;
-	width: 100%;
+	/* width: 100%; */
+  max-width: 100vw;
 	padding: 50px 10px 0 10px;
 }
 input.block {
@@ -152,11 +153,10 @@ ul.blog {
 	
 }
 
-@media (min-width: 600px) {
+@media (min-width: 737px) {
 	.blog {
-		/* margin: 50px 50px 0 50px;
-		left: 20px;
-		right: 20px; */
+    width: auto;
+		margin: 50px 50px 0 50px;
 		padding: 50px 50px 0 50px;
 	}
 	.carousel-caption {
@@ -168,7 +168,16 @@ ul.blog {
 
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 981px) {
+	.blog {
+    margin: 0 100px 0 100px;
+	}
+}
+
+@media (min-width: 1281px) {
+  .blog {
+    margin: 0 200px 0 200px;
+	}
 	.carousel-caption {
 		width: 50%;
 		left: 25%;
