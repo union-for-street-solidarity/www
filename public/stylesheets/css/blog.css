@@ -170,13 +170,13 @@ ul.blog {
 
 @media (min-width: 981px) {
 	.blog {
-    margin: 0 100px 0 100px;
+    margin: 50px 100px 0 100px;
 	}
 }
 
 @media (min-width: 1281px) {
   .blog {
-    margin: 0 200px 0 200px;
+    margin: 50px 200px 0 200px;
 	}
 	.carousel-caption {
 		width: 50%;
