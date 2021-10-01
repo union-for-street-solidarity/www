@@ -13,6 +13,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "joi": "^14.3.1",
+    "mailgun-js": "^0.22.0",
     "mkdirp": "^0.5.5",
     "mongoose": "^5.10.13",
     "mongoose-geojson-schema": "^2.1.5",
@@ -34,7 +35,6 @@
       "."
     ]
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "node-sass utils/scss/main.scss public/stylesheets/styles/style.css",

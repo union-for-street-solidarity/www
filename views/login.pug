@@ -24,6 +24,12 @@ block content
 						label(for="password") Password
 						input(type="password", name="password", id="password")
 						p &nbsp
+					div.row
+						h3 Forgot password?
+							a.tb-font-s(href="/changepassword" v-text="'Change password'")
+							p &nbsp
+							#info #{info}
+
 					div.row(v-if="checked")
 						p
 							button.block(type="submit", ariaDescription="Log in")

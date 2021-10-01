@@ -22,7 +22,8 @@ script(type="text/javascript").
 				loading: true,
 				timeoutId: '',
 				wWidth: window.innerWidth,
-				wHeight: window.innerHeight
+				wHeight: window.innerHeight,
+				pwv: false
 			}
 		},
 		watch: {
@@ -72,6 +73,14 @@ script(type="text/javascript").
 				self.wWidth = window.innerWidth;
 				self.wHeight = window.innerHeight;
 			},
+			validatePassword: function() {
+				var self = this;
+				var pw1el = document.getElementById('pw1');
+				var pw2el = document.getElementById('pw2');
+	
+				self.pwv = (!pw1el || !pw2el ? false : pw1el.value === pw2el.value)
+			},
+
 			initOpenArticle(article) {
 				var self = this;
 				var rh = new RegExp(article)

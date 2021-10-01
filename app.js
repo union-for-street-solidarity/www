@@ -180,7 +180,7 @@ app.get('/', (req, res, next) => {
 app.param('category', (req, res, next, value) => {
 	// console.log('param')
 	// console.log(value)
-	if (['login', 'register', 'auth', 'loggedin', 'logout'].indexOf(value) !== -1) {
+	if (['login', 'register', 'auth', 'loggedin', 'logout', 'changepassword', 'updatepassword'].indexOf(value) !== -1) {
 		return next('route')
 	}
 	Blog.findOne({category: value}).lean().exec((err, doc) => {
@@ -213,6 +213,63 @@ app.get('/:category', (req, res, next) => {
 		}
 	})
 })
+
+app.get('/changepassword', csrfProtection, async(req, res, next) => {
+	const user = (!req.query || !req.query.id ? null : await User.findOne({_id: req.query.id}).then(user=>user).catch(err=>next(err))) ;
+	const sent = (!req.query || !req.query.sent ? null : req.query.sent);
+	console.log(user, sent)
+	return res.render('changepassword', {
+		csrfToken: req.csrfToken(),
+		user: user,
+		info: (!sent ? '' : 'An e-mail was sent to you containing a password-reset link.')
+	})
+})
+
+app.post('/changepassword', upload.array(), parseBody, csrfProtection, async (req, res, next) => {
+	const email = req.body.email;//decodeURIComponent(req.params.email);
+	// User
+	const encodedemail = encodeURIComponent(email)
+	const mailgun = require("mailgun-js");
+	const mg = mailgun({apiKey: process.env.MG_KEY, domain: process.env.MG_DOMAIN});
+	const user = (!req.session.user ? await User.findOne({email:email}).then(pu=>pu).catch(err=>next(err)) : req.session.user)
+	if (!user) {
+		return res.redirect('/login?info='+encodeURIComponent('No user found with that e-mail address. Please try again.'))
+	}
+	const url = config.appUrl +'/changepassword?id='+user._id
+	const data = {
+		from: 'Reset your password <info@streetsolidarity.com>',
+		to: email,
+		subject: 'Reset your password',
+		text: 'Click here to reset your password: '+url
+		//`<a href="${gameurl}" target="_blank">Click here to join the card game!</a>`
+	};
+	mg.messages().send(data, function (error, body) {
+		if (error) {
+			return next(error);
+		}
+		console.log(body);
+		return res.redirect('/changepassword?sent=true')
+	});
+})
+
+app.post('/updatepassword', upload.array(), parseBody, csrfProtection, async(req, res, next) => {
+	const username = req.body.username;
+	const user = await User.findOne({username: username}).then(user=>user).catch(err=>next(err));
+	const info = encodeURIComponent('Your password was updated successfully. Please log in to continue.')
+	user.setPassword(req.body.password, (err, usr) => {
+		if (err) {
+			return next(err)
+		} else {
+			usr.save(function(err){
+				if (err) {
+					return next(err)
+				}
+				console.log(user)
+				return res.redirect('/login?info='+info)
+			})
+		}
+	})
+});
 
 app.post('/auth/check/:username', async (req, res, next) => {
 	var username = req.params.username;
@@ -271,7 +328,8 @@ app.post('/register', upload.array(), parseBody, csrfProtection, function(req, r
 app.get('/login', csrfProtection, (req, res, next) => {
 	return res.render('login', {
 		csrfToken: req.csrfToken(),
-		menu: 'login'
+		menu: 'login',
+		info: (!req.query || !req.query.info ? '' : decodeURIComponent(req.query.info))
 	})
 })
 

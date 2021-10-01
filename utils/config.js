@@ -18,7 +18,11 @@ const envVarsSchema = Joi.object({
   AUTH_PASSWORD: Joi.string(),
   ADMIN: Joi.string(),
   SERVER_URL: Joi.string(),
-  DEVDB: Joi.string()
+  DEVDB: Joi.string(),
+  MG_KEY: Joi.string(),
+  MG_URL: Joi.string(),
+  MG_DOMAIN: Joi.string(),
+  APP_URL: Joi.string()
 })
   .unknown()
   .required();
@@ -42,7 +46,11 @@ const config = {
   authPassword: envVars.AUTH_PASSWORD,
 	admin: envVars.ADMIN,
   serverUrl: envVars.SERVER_URL,
-  devDb: envVars.DEVDB
+  devDb: envVars.DEVDB,
+  mgKey: envVars.MG_KEY,
+  mgUrl: envVars.MG_URL,
+  mgDomain: envVars.MG_DOMAIN,
+  appUrl: envVars.APP_URL
 };
 
 module.exports = config;
