@@ -655,7 +655,7 @@ if (mongoose.connection.readyState === 0) {
 	// connect to mongo db
 	const mongoUri = (process.env.NODE_ENV === 'development' ? config.devDb : config.fullMongoUrl );
 	const promise = async () => {
-		return await new mongoose.connect(uri, { 
+		return await new mongoose.connect(mongoUri, { 
 			useNewUrlParser: true, 
 			useUnifiedTopology: true,
 			useFindAndModify: false 
