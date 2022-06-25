@@ -654,10 +654,15 @@ app
 if (mongoose.connection.readyState === 0) {
 	// connect to mongo db
 	const mongoUri = (process.env.NODE_ENV === 'development' ? config.devDb : config.fullMongoUrl );
-	const promise = mongoose.connect(
-		mongoUri, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }
-	);
-	promise
+	const promise = async () => {
+		return await new mongoose.connect(uri, { 
+			useNewUrlParser: true, 
+			useUnifiedTopology: true,
+			useFindAndModify: false 
+		})
+	};
+
+	promise()
 		.then(() => {
 			console.log('MongoDB is connected');
 		})
