@@ -658,7 +658,8 @@ if (mongoose.connection.readyState === 0) {
 		return await new mongoose.connect(mongoUri, { 
 			useNewUrlParser: true, 
 			useUnifiedTopology: true,
-			useFindAndModify: false 
+			useFindAndModify: false,
+			useCreateIndex: true
 		})
 	};
 
